@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "628644844269",
+    "project_id": "smart-bike-93ffd",
+    "storage_bucket": "smart-bike-93ffd.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:628644844269:android:8742bb5bb0acb56946f2e4",
+        "android_client_info": {
+          "package_name": "com.smartbike"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "628644844269-k3n6lrd509pou2daarudo6toa55h2284.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAHhVoDHCUQWB9MM0fUxZkCLAbDQcV-qQk"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "628644844269-k3n6lrd509pou2daarudo6toa55h2284.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
