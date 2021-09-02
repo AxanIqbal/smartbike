@@ -25,11 +25,11 @@ import {
   LearnMoreLinks,
   ReloadInstructions,
 } from 'react-native/Libraries/NewAppScreen';
-import {store} from './services';
 import {createFirestoreInstance} from 'redux-firestore';
 import firebase from '@react-native-firebase/app';
 import {Provider} from 'react-redux';
 import {ReactReduxFirebaseProvider} from 'react-redux-firebase';
+import {store} from './services';
 
 const Section = ({children, title}): Node => {
   const isDarkMode = useColorScheme() === 'dark';

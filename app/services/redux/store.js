@@ -1,3 +1,9 @@
+/**
+ *
+ * @format
+ * @flow strict-local
+ */
+
 import {combineReducers, configureStore} from '@reduxjs/toolkit';
 import {
   actionTypes as rrfActionTypes,
