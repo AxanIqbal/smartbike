@@ -1,6 +1,7 @@
 import React, { FC } from "react"
 import { View, ViewStyle, TextStyle, ImageStyle, SafeAreaView } from "react-native"
 import { StackScreenProps } from "@react-navigation/stack"
+import { observer } from "mobx-react-lite"
 import {
   Button,
   Header,
@@ -85,7 +86,7 @@ const FOOTER_CONTENT: ViewStyle = {
   paddingHorizontal: spacing[4],
 }
 
-export const WelcomeScreen: FC<StackScreenProps<NavigatorParamList, "welcome">> =
+export const WelcomeScreen: FC<StackScreenProps<NavigatorParamList, "welcome">> = observer(
   ({ navigation }) => {
     const nextScreen = () => navigation.navigate("demo")
 
@@ -123,4 +124,5 @@ export const WelcomeScreen: FC<StackScreenProps<NavigatorParamList, "welcome">> 
         </SafeAreaView>
       </View>
     )
-  }
+  },
+)

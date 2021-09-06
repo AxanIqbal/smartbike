@@ -99,8 +99,7 @@ export const DemoScreen: FC<StackScreenProps<NavigatorParamList, "demo">> = obse
 
     const demoReactotron = React.useMemo(
       () => async () => {
-        console.tron.log("Your Friendly tron log message")
-        console.tron.logImportant("I am important")
+        console.log("Your Friendly tron log message")
         console.tron.display({
           name: "DISPLAY",
           value: {
@@ -167,8 +166,8 @@ export const DemoScreen: FC<StackScreenProps<NavigatorParamList, "demo">> = obse
           <Button
             style={DEMO}
             textStyle={DEMO_TEXT}
-            tx="demoScreen.demoList"
-            onPress={() => navigation.navigate("demoList")}
+            text={"to Test"}
+            onPress={() => navigation.navigate("test")}
           />
           <Image source={logoIgnite} style={IGNITE} />
           <View style={LOVE_WRAPPER}>

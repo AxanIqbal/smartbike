@@ -8,8 +8,9 @@ import React from "react"
 import { useColorScheme } from "react-native"
 import { NavigationContainer, DefaultTheme, DarkTheme } from "@react-navigation/native"
 import { createNativeStackNavigator } from "@react-navigation/native-stack"
-import { WelcomeScreen, DemoScreen, DemoListScreen } from "../screens"
+import { WelcomeScreen, DemoScreen, TestScreen } from "../screens"
 import { navigationRef } from "./navigation-utilities"
+import { createDrawerNavigator } from "@react-navigation/drawer"
 
 /**
  * This type allows TypeScript to know what routes are defined in this navigator
@@ -24,13 +25,29 @@ import { navigationRef } from "./navigation-utilities"
  *   https://reactnavigation.org/docs/typescript#type-checking-the-navigator
  */
 export type NavigatorParamList = {
+  drawer: undefined
   welcome: undefined
   demo: undefined
-  demoList: undefined
+  test: undefined
 }
 
 // Documentation: https://reactnavigation.org/docs/stack-navigator/
 const Stack = createNativeStackNavigator<NavigatorParamList>()
+const DStack = createDrawerNavigator<NavigatorParamList>()
+
+const DrawerStack = () => {
+  return (
+    <DStack.Navigator
+      screenOptions={{
+        headerShown: false,
+      }}
+      initialRouteName="welcome"
+    >
+      <DStack.Screen name="welcome" component={WelcomeScreen} />
+      <DStack.Screen name="demo" component={DemoScreen} />
+    </DStack.Navigator>
+  )
+}
 
 const AppStack = () => {
   return (
@@ -38,11 +55,10 @@ const AppStack = () => {
       screenOptions={{
         headerShown: false,
       }}
-      initialRouteName="welcome"
+      initialRouteName="drawer"
     >
-      <Stack.Screen name="welcome" component={WelcomeScreen} />
-      <Stack.Screen name="demo" component={DemoScreen} />
-      <Stack.Screen name="demoList" component={DemoListScreen} />
+      <Stack.Screen name="drawer" component={DrawerStack} />
+      <Stack.Screen name="test" component={TestScreen} />
     </Stack.Navigator>
   )
 }
@@ -73,5 +89,5 @@ AppNavigator.displayName = "AppNavigator"
  *
  * `canExit` is used in ./app/app.tsx in the `useBackButtonHandler` hook.
  */
-const exitRoutes = ["welcome"]
+const exitRoutes = ["drawer"]
 export const canExit = (routeName: string) => exitRoutes.includes(routeName)
