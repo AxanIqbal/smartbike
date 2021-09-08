@@ -2,6 +2,7 @@ import "react-native-gesture-handler"
 import "./i18n"
 import "./utils/ignore-warnings"
 import "@react-native-firebase/auth"
+import "@react-native-firebase/database"
 import firebase from "@react-native-firebase/app"
 import React, { useEffect } from "react"
 import { SafeAreaProvider, initialWindowMetrics } from "react-native-safe-area-context"
@@ -9,7 +10,7 @@ import { initFonts } from "./theme/fonts" // expo
 import * as storage from "./utils/storage"
 import { useBackButtonHandler, AppNavigator, canExit, useNavigationPersistence } from "./navigators"
 import { ToggleStorybook } from "../storybook/toggle-storybook"
-import { mainStore } from "./store/mainStore"
+import { store } from "./store/store"
 import { Provider } from "react-redux"
 import { ReactReduxFirebaseProvider } from "react-redux-firebase"
 // This puts screens in a native ViewController or Activity. If you want fully native
@@ -36,7 +37,7 @@ function App() {
   const rrfProps = {
     firebase: firebase,
     config: rrfConfig,
-    dispatch: mainStore.dispatch,
+    dispatch: store.dispatch,
   }
 
   // Kick off initial async loading actions, like loading fonts and RootStore
@@ -57,7 +58,7 @@ function App() {
   // otherwise, we're ready to render the app
   return (
     <ToggleStorybook>
-      <Provider store={mainStore}>
+      <Provider store={store}>
         <ReactReduxFirebaseProvider {...rrfProps}>
           <SafeAreaProvider initialMetrics={initialWindowMetrics}>
             <AppNavigator

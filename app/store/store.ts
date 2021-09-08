@@ -6,7 +6,7 @@ const reducer = combineReducers({
   firebase: firebaseReducer,
 })
 
-export const mainStore = configureStore({
+export const store = configureStore({
   reducer,
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware({
@@ -21,3 +21,8 @@ export const mainStore = configureStore({
     }),
   // enhancers: Reactotron.call('Reactotron.createEnhancer()')
 })
+
+// Infer the `RootState` and `AppDispatch` types from the store itself
+export type RootState = ReturnType<typeof store.getState>
+// Inferred type: {firebase: firebaseState }
+export type AppDispatch = typeof store.dispatch
