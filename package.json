@@ -4,6 +4,9 @@
   "private": true,
   "scripts": {
     "start": "react-native start",
+    "android": "react-native run-android",
+    "android:release": "cd android; ./gradlew clean;./gradlew assembleRelease;cd ..;",
+    "ios": "react-native run-ios",
     "test:e2e": "detox test -c ios.sim.debug",
     "build:e2e": "detox build -c ios.sim.debug",
     "ci:test:e2e": "detox test -c ios.sim.release -l verbose --cleanup",

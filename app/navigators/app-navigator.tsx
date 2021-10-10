@@ -8,9 +8,9 @@ import React from "react"
 import { useColorScheme } from "react-native"
 import { NavigationContainer, DefaultTheme, DarkTheme } from "@react-navigation/native"
 import { createNativeStackNavigator } from "@react-navigation/native-stack"
-import { WelcomeScreen, DemoScreen, TestScreen } from "../screens"
 import { navigationRef } from "./navigation-utilities"
 import { createDrawerNavigator } from "@react-navigation/drawer"
+import { HomeScreen } from "../screens"
 
 /**
  * This type allows TypeScript to know what routes are defined in this navigator
@@ -43,8 +43,7 @@ const DrawerStack = () => {
       }}
       initialRouteName="welcome"
     >
-      <DStack.Screen name="welcome" component={WelcomeScreen} />
-      <DStack.Screen name="demo" component={DemoScreen} />
+      <DStack.Screen name="welcome" component={HomeScreen} />
     </DStack.Navigator>
   )
 }
@@ -58,7 +57,6 @@ const AppStack = () => {
       initialRouteName="drawer"
     >
       <Stack.Screen name="drawer" component={DrawerStack} />
-      <Stack.Screen name="test" component={TestScreen} />
     </Stack.Navigator>
   )
 }
