@@ -10,7 +10,7 @@ import { NavigationContainer, DefaultTheme, DarkTheme } from "@react-navigation/
 import { createNativeStackNavigator } from "@react-navigation/native-stack"
 import { navigationRef } from "./navigation-utilities"
 import { createDrawerNavigator } from "@react-navigation/drawer"
-import { HomeScreen, MapsScreen, SearchScreen } from "../screens"
+import { DistanceScreen, HomeScreen, MapsScreen, SearchScreen } from "../screens"
 import Icon from "react-native-vector-icons/FontAwesome5"
 import { color } from "../theme"
 import { GooglePlacesAutocomplete } from "react-native-google-places-autocomplete"
@@ -33,6 +33,7 @@ export type NavigatorParamList = {
   welcome: undefined
   MapsScreen: undefined
   SearchScreen: undefined
+  DistanceScreen: undefined
 }
 const buttonStyle: ViewStyle = {
   backgroundColor: `${color.palette.white}`,
@@ -72,6 +73,7 @@ const DrawerStack = ({ navigation }) => {
           ),
         }}
       />
+      <DStack.Screen options={{ headerShown: false }} name="DistanceScreen" component={DistanceScreen} />
       <DStack.Screen options={{ headerShown: false }} name="SearchScreen" component={SearchScreen} />
     </DStack.Navigator>
   )
