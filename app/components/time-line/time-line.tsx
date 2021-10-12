@@ -1,9 +1,6 @@
 import * as React from "react"
-import { Dimensions, StyleProp, TextStyle, View, ViewStyle } from "react-native"
-import { observer } from "mobx-react-lite"
-import { color, typography } from "../../theme"
-import { Text } from "../"
-import { flatten } from "ramda"
+import { StyleProp, TextStyle, View, ViewStyle } from "react-native"
+import { color } from "../../theme"
 import Timeline from "react-native-timeline-flatlist"
 
 const CONTAINER: ViewStyle = {
@@ -29,6 +26,7 @@ const detailStyle: ViewStyle = {
   marginBottom: 40,
   marginTop: -40,
 }
+
 export interface TimeLineProps {
   /**
    * An optional style override useful for padding & margin.
@@ -48,9 +46,9 @@ const data = [
 /**
  * Describe your component here
  */
-export const TimeLine = observer(function TimeLine(props: TimeLineProps) {
-  const { style } = props
-  const styles = flatten([CONTAINER, style])
+export const TimeLine = function TimeLine(props: TimeLineProps) {
+  // const { style } = props
+  // const styles = flatten([CONTAINER, style])
 
   return (
     <View style={CONTAINER}>
@@ -67,4 +65,4 @@ export const TimeLine = observer(function TimeLine(props: TimeLineProps) {
       />
     </View>
   )
-})
+}

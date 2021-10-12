@@ -1,21 +1,19 @@
 import { StackScreenProps } from "@react-navigation/stack"
-import { observer } from "mobx-react-lite"
-import React, { FC, useState, useEffect } from "react"
-import { Dimensions, Image, SafeAreaView, TextStyle, View, ViewStyle } from "react-native"
+import React, { FC, useEffect, useState } from "react"
+import { SafeAreaView, TextStyle, View, ViewStyle } from "react-native"
 import { Header } from "react-native-elements"
 import { GooglePlacesAutocomplete } from "react-native-google-places-autocomplete"
-import { Button, PlaceRow, Screen, Text } from "../../components"
+import { Button, PlaceRow, Text } from "../../components"
 import { NavigatorParamList } from "../../navigators"
 import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons"
 // import { useNavigation } from "@react-navigation/native"
 // import { useStores } from "../../models"
 import { color } from "../../theme"
-import MapView, { Marker, PROVIDER_GOOGLE } from "react-native-maps"
 
-const ROOT: ViewStyle = {
-  backgroundColor: color.palette.black,
-  flex: 1,
-}
+// const ROOT: ViewStyle = {
+//   backgroundColor: color.palette.black,
+//   flex: 1,
+// }
 
 const container: ViewStyle = {
   marginTop: 20,
@@ -96,7 +94,7 @@ const Textstyle: TextStyle = {
   marginTop: 10,
 }
 
-export const SearchScreen: FC<StackScreenProps<NavigatorParamList, "SearchScreen">> = observer(
+export const SearchScreen: FC<StackScreenProps<NavigatorParamList, "SearchScreen">> =
   ({ navigation }) => {
     // Pull in one of our MST stores
     // const { someStore, anotherStore } = useStores()
@@ -180,5 +178,4 @@ export const SearchScreen: FC<StackScreenProps<NavigatorParamList, "SearchScreen
         </SafeAreaView>
       </View>
     )
-  },
-)
+  }

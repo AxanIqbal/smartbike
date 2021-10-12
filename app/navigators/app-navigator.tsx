@@ -5,16 +5,21 @@
  * and a "main" flow which the user will use once logged in.
  */
 import React from "react"
-import { Dimensions, TouchableOpacity, useColorScheme, View, ViewStyle } from "react-native"
-import { NavigationContainer, DefaultTheme, DarkTheme } from "@react-navigation/native"
-import { createNativeStackNavigator } from "@react-navigation/native-stack"
+import { Dimensions, useColorScheme, View, ViewStyle } from "react-native"
+// import { DarkTheme, DefaultTheme, NavigationContainer } from "@react-navigation/native"
+// import { createNativeStackNavigator } from "@react-navigation/native-stack"
 import { navigationRef } from "./navigation-utilities"
-import { createDrawerNavigator } from "@react-navigation/drawer"
+// import { createDrawerNavigator } from "@react-navigation/drawer"
 import { HomeScreen, MapsScreen, SearchScreen } from "../screens"
 import Icon from "react-native-vector-icons/FontAwesome5"
 import { color } from "../theme"
-import { GooglePlacesAutocomplete } from "react-native-google-places-autocomplete"
 import { Button } from "../components"
+import { createNativeStackNavigator } from "@react-navigation/native-stack"
+import { createDrawerNavigator } from "@react-navigation/drawer"
+import { DarkTheme, DefaultTheme, NavigationContainer } from "@react-navigation/native"
+import { useSelector } from "react-redux"
+import { RootState } from "../store/store"
+import { AuthStack } from "./auth/auth-navigator"
 
 /**
  * This type allows TypeScript to know what routes are defined in this navigator
@@ -90,17 +95,19 @@ const AppStack = () => {
   )
 }
 
-interface NavigationProps extends Partial<React.ComponentProps<typeof NavigationContainer>> {}
+interface NavigationProps extends Partial<React.ComponentProps<typeof NavigationContainer>> {
+}
 
 export const AppNavigator = (props: NavigationProps) => {
   const colorScheme = useColorScheme()
+  const auth = useSelector<RootState>(state => state.firebase.auth)
   return (
     <NavigationContainer
       ref={navigationRef}
       theme={colorScheme === "dark" ? DarkTheme : DefaultTheme}
       {...props}
     >
-      <AppStack />
+      {auth ? <AppStack /> : <AuthStack/>}
     </NavigationContainer>
   )
 }
@@ -116,5 +123,5 @@ AppNavigator.displayName = "AppNavigator"
  *
  * `canExit` is used in ./app/app.tsx in the `useBackButtonHandler` hook.
  */
-const exitRoutes = ["drawer"]
+const exitRoutes = ["drawer", "login"]
 export const canExit = (routeName: string) => exitRoutes.includes(routeName)

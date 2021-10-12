@@ -1,14 +1,12 @@
 import React, { FC } from "react"
-import { ViewStyle, TextStyle, View, Image, ImageStyle, ScrollView, Dimensions } from "react-native"
-import { Button, Screen, Text, TimeLine } from "../../components"
+import { Image, ImageStyle, ScrollView, TextStyle, View, ViewStyle } from "react-native"
+import { Button, Text, TimeLine } from "../../components"
 import { color } from "../../theme"
 import { Header } from "react-native-elements"
 import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons"
 import { AnimatedCircularProgress } from "react-native-circular-progress"
 import { NavigatorParamList } from "../../navigators"
-import { StackScreenProps } from "@react-navigation/stack"
-import { observer } from "mobx-react-lite"
-import { GooglePlacesAutocomplete } from "react-native-google-places-autocomplete"
+import { DrawerScreenProps } from "@react-navigation/drawer"
 
 const ROOT: ViewStyle = {
   backgroundColor: color.palette.white,
@@ -61,14 +59,14 @@ const timeLIneStyle: ViewStyle = {
   padding: 20,
   paddingTop: 65,
   backgroundColor: "white",
-  height: '100%',
+  height: "100%",
 }
 
 const headerButton: ViewStyle = {
   backgroundColor: "transparent",
 }
 
-export const HomeScreen: FC<StackScreenProps<NavigatorParamList, "welcome">> = observer(
+export const HomeScreen: FC<DrawerScreenProps<NavigatorParamList, "welcome">> =
   ({ navigation }) => {
     return (
       <>
@@ -117,5 +115,4 @@ export const HomeScreen: FC<StackScreenProps<NavigatorParamList, "welcome">> = o
         </ScrollView>
       </>
     )
-  },
-)
+  }

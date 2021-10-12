@@ -1,7 +1,6 @@
 import * as React from "react"
 import { StyleProp, TextStyle, View, ViewStyle } from "react-native"
-import { observer } from "mobx-react-lite"
-import { color, typography } from "../../theme"
+import { color } from "../../theme"
 import { Text } from "../"
 import { flatten } from "ramda"
 import Entypo from "react-native-vector-icons/Entypo"
@@ -33,7 +32,7 @@ export interface PlaceRowProps {
 /**
  * Describe your component here
  */
-export const PlaceRow = observer(function PlaceRow(props: PlaceRowProps) {
+export const PlaceRow = function PlaceRow(props: PlaceRowProps) {
   const { style, data } = props
   const styles = flatten([CONTAINER, style])
   console.log(data)
@@ -46,4 +45,4 @@ export const PlaceRow = observer(function PlaceRow(props: PlaceRowProps) {
       <Text style={locationText}>{data.description}</Text>
     </View>
   )
-})
+}

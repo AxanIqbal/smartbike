@@ -1,13 +1,11 @@
 import React, { FC, useState } from "react"
-import { Dimensions, Image, ImageStyle, SafeAreaView, View, ViewStyle } from "react-native"
-import { Button, Header, Screen, Text, TextField } from "../../components"
+import { Dimensions, Image, ImageStyle, ViewStyle } from "react-native"
+import { Button } from "../../components"
 import { SearchBar } from "react-native-elements"
 import { color } from "../../theme"
 import { NavigatorParamList } from "../../navigators"
 import { StackScreenProps } from "@react-navigation/stack"
-import { observer } from "mobx-react-lite"
 import MapView, { Marker, PROVIDER_GOOGLE } from "react-native-maps"
-import { GooglePlacesAutocomplete } from "react-native-google-places-autocomplete"
 
 const ROOT: ViewStyle = { width: "100%", height: "90%" }
 const blankScreen: ViewStyle = {
@@ -42,12 +40,12 @@ const imageStyle: ImageStyle = {
   ],
 }
 
-export const MapsScreen: FC<StackScreenProps<NavigatorParamList, "MapsScreen">> = observer(
+export const MapsScreen: FC<StackScreenProps<NavigatorParamList, "MapsScreen">> =
   ({ navigation }) => {
     // Pull in one of our MST stores
     // const { someStore, anotherStore } = useStores()
     const [text, setText] = useState("")
-    const updateSearch = (input) => {
+    const updateSearch = (input: string) => {
       console.log(input)
       setText(input)
     }
@@ -76,17 +74,18 @@ export const MapsScreen: FC<StackScreenProps<NavigatorParamList, "MapsScreen">> 
             <Image style={imageStyle} source={require("./BikeMarker.png")} />
           </Marker>
         </MapView>
-          <Button onPress={()=>{navigation.navigate('SearchScreen')}} style={buttonStyle}>
-            <SearchBar
-              lightTheme={true}
-              containerStyle={fieldStyle}
-              inputContainerStyle={{ backgroundColor: "transparent", marginTop: -9 }}
-              placeholder="Search..."
-              onChangeText={updateSearch}
-              value={text}
-            />
-          </Button>
+        <Button onPress={() => {
+          navigation.navigate("SearchScreen")
+        }} style={buttonStyle}>
+          <SearchBar
+            lightTheme={true}
+            containerStyle={fieldStyle}
+            inputContainerStyle={{ backgroundColor: "transparent", marginTop: -9 }}
+            placeholder="Search..."
+            onChangeText={updateSearch}
+            value={text}
+          />
+        </Button>
       </>
     )
-  },
-)
+  }
