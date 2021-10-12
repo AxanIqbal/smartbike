@@ -1,3 +1,4 @@
+import { Formik } from "formik"
 import React from "react"
 import { ViewStyle } from "react-native"
 import { Screen, Text } from "../../components"
@@ -18,7 +19,20 @@ export const LoginScreen = function LoginScreen() {
   // const navigation = useNavigation()
   return (
     <Screen style={ROOT} preset="scroll">
-      <Text preset="header" text="" />
+      <Formik
+        initialValues={{
+          email: '',
+          password: '',
+        }}
+        onSubmit={(values)=> {
+          console.log(values)
+        }}
+      >
+        {({values,handleSubmit})=> (
+          <Text text={'testing'}/>
+        )}
+
+      </Formik>
     </Screen>
   )
 }
