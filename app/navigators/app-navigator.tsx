@@ -5,12 +5,16 @@
  * and a "main" flow which the user will use once logged in.
  */
 import React from "react"
-import { useColorScheme } from "react-native"
+import { Dimensions, TouchableOpacity, useColorScheme, View, ViewStyle } from "react-native"
 import { NavigationContainer, DefaultTheme, DarkTheme } from "@react-navigation/native"
 import { createNativeStackNavigator } from "@react-navigation/native-stack"
 import { navigationRef } from "./navigation-utilities"
 import { createDrawerNavigator } from "@react-navigation/drawer"
-import { HomeScreen } from "../screens"
+import { HomeScreen, MapsScreen, SearchScreen } from "../screens"
+import Icon from "react-native-vector-icons/FontAwesome5"
+import { color } from "../theme"
+import { GooglePlacesAutocomplete } from "react-native-google-places-autocomplete"
+import { Button } from "../components"
 
 /**
  * This type allows TypeScript to know what routes are defined in this navigator
@@ -27,23 +31,48 @@ import { HomeScreen } from "../screens"
 export type NavigatorParamList = {
   drawer: undefined
   welcome: undefined
-  demo: undefined
-  test: undefined
+  MapsScreen: undefined
+  SearchScreen: undefined
+}
+const buttonStyle: ViewStyle = {
+  backgroundColor: `${color.palette.white}`,
+  height: 50,
+  marginHorizontal: 20,
+  borderRadius: 100,
+  width: 50,
 }
 
 // Documentation: https://reactnavigation.org/docs/stack-navigator/
 const Stack = createNativeStackNavigator<NavigatorParamList>()
 const DStack = createDrawerNavigator<NavigatorParamList>()
 
-const DrawerStack = () => {
+const DrawerStack = ({ navigation }) => {
   return (
-    <DStack.Navigator
-      screenOptions={{
-        headerShown: false,
-      }}
-      initialRouteName="welcome"
-    >
-      <DStack.Screen name="welcome" component={HomeScreen} />
+    <DStack.Navigator initialRouteName="welcome">
+      <DStack.Screen options={{ headerShown: false }} name="welcome" component={HomeScreen} />
+      <DStack.Screen
+        name="MapsScreen"
+        component={MapsScreen}
+        options={{
+          headerTransparent: true,
+          title: "",
+          headerLeft: () => (
+            <View
+              style={{
+                flexDirection: "row",
+                alignSelf: "center",
+                width: Dimensions.get("window").width - 60,
+                marginTop: 20,
+              }}
+            >
+              <Button onPress={() => navigation.goBack()} style={buttonStyle}>
+                <Icon name="arrow-left" color={color.appcolor} size={25} />
+              </Button>
+            </View>
+          ),
+        }}
+      />
+      <DStack.Screen options={{ headerShown: false }} name="SearchScreen" component={SearchScreen} />
     </DStack.Navigator>
   )
 }

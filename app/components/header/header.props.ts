@@ -42,4 +42,6 @@ export interface HeaderProps {
    * Title style overrides.
    */
   titleStyle?: StyleProp<TextStyle>
+
+  children?: React.ReactNode
 }

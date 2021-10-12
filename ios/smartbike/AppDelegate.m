@@ -3,6 +3,7 @@
 #import <React/RCTBridge.h>
 #import <React/RCTBundleURLProvider.h>
 #import <React/RCTRootView.h>
+#import <GoogleMaps/GoogleMaps.h>
 
 // UniModules per https://docs.expo.io/bare/installing-unimodules/
 #import <UMCore/UMModuleRegistry.h>
@@ -38,6 +39,7 @@ static void InitializeFlipper(UIApplication *application) {
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
+[GMSServices provideAPIKey:@"AIzaSyBQsbHq47NyaiWSCpcSuhj3yKiT7HeTsXs"];
 #ifdef FB_SONARKIT_ENABLED
   InitializeFlipper(application);
 #endif

@@ -1,10 +1,14 @@
-import React from "react"
-import { ViewStyle, TextStyle, View, Image, ImageStyle, ScrollView } from "react-native"
+import React, { FC } from "react"
+import { ViewStyle, TextStyle, View, Image, ImageStyle, ScrollView, Dimensions } from "react-native"
 import { Button, Screen, Text, TimeLine } from "../../components"
 import { color } from "../../theme"
 import { Header } from "react-native-elements"
 import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons"
 import { AnimatedCircularProgress } from "react-native-circular-progress"
+import { NavigatorParamList } from "../../navigators"
+import { StackScreenProps } from "@react-navigation/stack"
+import { observer } from "mobx-react-lite"
+import { GooglePlacesAutocomplete } from "react-native-google-places-autocomplete"
 
 const ROOT: ViewStyle = {
   backgroundColor: color.palette.white,
@@ -12,12 +16,12 @@ const ROOT: ViewStyle = {
 
 const Textstyle: TextStyle = {
   fontSize: 20,
+  marginTop: 10,
 }
 
 const HeaderStyle: ViewStyle = {
   backgroundColor: color.appcolor,
   justifyContent: "space-around",
-  height: 86,
   shadowOpacity: 0.34,
   shadowRadius: 6.27,
   elevation: 5,
@@ -57,24 +61,38 @@ const timeLIneStyle: ViewStyle = {
   padding: 20,
   paddingTop: 65,
   backgroundColor: "white",
+  height: '100%',
 }
 
-export const HomeScreen = function HomeScreen() {
-  return (
-    <>
-      <Header
-        leftComponent={<MaterialCommunityIcons color="#ffff" name="format-align-left" size={25} />}
-        centerComponent={<Text style={Textstyle}>HOME</Text>}
-        rightComponent={<MaterialCommunityIcons color="#ffff" name="bike" size={25} />}
-        containerStyle={HeaderStyle}
-        backgroundColor={color.appcolor}
-      />
+const headerButton: ViewStyle = {
+  backgroundColor: "transparent",
+}
+
+export const HomeScreen: FC<StackScreenProps<NavigatorParamList, "welcome">> = observer(
+  ({ navigation }) => {
+    return (
+      <>
+        <Header
+          leftComponent={
+            <Button style={headerButton} onPress={() => navigation.openDrawer()}>
+              <MaterialCommunityIcons color="#ffff" name="format-align-left" size={25} />
+            </Button>
+          }
+          centerComponent={<Text style={Textstyle}>HOME</Text>}
+          rightComponent={
+            <Button style={headerButton} onPress={() => navigation.navigate("MapsScreen")}>
+              <MaterialCommunityIcons color="#ffff" name="bike" size={25} />
+            </Button>
+          }
+          containerStyle={HeaderStyle}
+          backgroundColor={color.appcolor}
+        />
         <ScrollView style={ROOT}>
           <View style={animationStyle}>
             <AnimatedCircularProgress
               size={250}
               width={20}
-              fill={70}
+              fill={10}
               tintColor={color.appcolor}
               onAnimationComplete={() => console.log("onAnimationComplete")}
               backgroundColor={color.palette.offWhite}
@@ -97,6 +115,7 @@ export const HomeScreen = function HomeScreen() {
             <TimeLine />
           </View>
         </ScrollView>
-    </>
-  )
-}
+      </>
+    )
+  },
+)
