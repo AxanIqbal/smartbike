@@ -13,6 +13,8 @@ import { ToggleStorybook } from "../storybook/toggle-storybook"
 import { store } from "./store/store"
 import { Provider } from "react-redux"
 import { ReactReduxFirebaseProvider } from "react-redux-firebase"
+import { persistStore } from "redux-persist"
+import { PersistGate } from "redux-persist/integration/react"
 // This puts screens in a native ViewController or Activity. If you want fully native
 // stack navigation, use `createNativeStackNavigator` in place of `createStackNavigator`:
 // https://github.com/kmagiera/react-native-screens#using-native-stack-navigator
@@ -40,6 +42,8 @@ function App() {
     dispatch: store.dispatch,
   }
 
+  const persist = persistStore(store)
+
   // Kick off initial async loading actions, like loading fonts and RootStore
   useEffect(() => {
     ;(async () => {
@@ -60,12 +64,14 @@ function App() {
     <ToggleStorybook>
       <Provider store={store}>
         <ReactReduxFirebaseProvider {...rrfProps}>
+          <PersistGate loading={null} persistor={persist}>
           <SafeAreaProvider initialMetrics={initialWindowMetrics}>
             <AppNavigator
               initialState={initialNavigationState}
               onStateChange={onNavigationStateChange}
             />
           </SafeAreaProvider>
+          </PersistGate>
         </ReactReduxFirebaseProvider>
       </Provider>
     </ToggleStorybook>

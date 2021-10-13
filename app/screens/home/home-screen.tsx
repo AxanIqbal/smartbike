@@ -1,12 +1,16 @@
 import React, { FC } from "react"
-import { Image, ImageStyle, ScrollView, TextStyle, View, ViewStyle } from "react-native"
-import { Button, Text, TimeLine } from "../../components"
+import { Image, ImageStyle, TextStyle, View, ViewStyle } from "react-native"
+import { Button, Screen, Text, TimeLine } from "../../components"
 import { color } from "../../theme"
 import { Header } from "react-native-elements"
 import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons"
 import { AnimatedCircularProgress } from "react-native-circular-progress"
 import { NavigatorParamList } from "../../navigators"
 import { DrawerScreenProps } from "@react-navigation/drawer"
+import { watchCurrentLocation } from "../../utils/geolocation"
+import { useAppDispatch } from "../../store/store"
+import { selectCords, setLocation } from "../../store/slices"
+import { useSelector } from "react-redux"
 
 const ROOT: ViewStyle = {
   backgroundColor: color.palette.white,
@@ -68,6 +72,27 @@ const headerButton: ViewStyle = {
 
 export const HomeScreen: FC<DrawerScreenProps<NavigatorParamList, "welcome">> =
   ({ navigation }) => {
+    const dispatch = useAppDispatch()
+    console.log(useSelector(selectCords))
+    React.useEffect(() => {
+      watchCurrentLocation().then(r => {
+        console.log(r,"from useEffect HomeScreen")
+        dispatch(setLocation(r.coords))
+      },reason => {
+          console.log(reason,"from useEffect HomeScreen")
+        })
+      // getCurrentLocation().then(r => {
+      //   console.log(r)
+      //   dispatch(setLocation(r.coords))
+      // }, reason => {
+      //   console.log(reason)
+      // })
+
+      return () => {
+        // stopObserving()
+      }
+    }, [])
+
     return (
       <>
         <Header
@@ -85,7 +110,7 @@ export const HomeScreen: FC<DrawerScreenProps<NavigatorParamList, "welcome">> =
           containerStyle={HeaderStyle}
           backgroundColor={color.appcolor}
         />
-        <ScrollView style={ROOT}>
+        <Screen preset={"scroll"} style={ROOT}>
           <View style={animationStyle}>
             <AnimatedCircularProgress
               size={250}
@@ -112,7 +137,7 @@ export const HomeScreen: FC<DrawerScreenProps<NavigatorParamList, "welcome">> =
           <View style={timeLIneStyle}>
             <TimeLine />
           </View>
-        </ScrollView>
+        </Screen>
       </>
     )
   }

@@ -35,7 +35,9 @@ export const LoginScreen = function LoginScreen() {
           console.log(values)
           setSubmitting(true)
           try {
-            await firebase.login({ email: values.email, password: values.password })
+            await firebase.login({ email: values.email, password: values.password }).then(value => {
+              console.log(value)
+            })
           } catch (e) {
             console.log(e)
             setFieldError("Firebase", e.message)
@@ -43,25 +45,21 @@ export const LoginScreen = function LoginScreen() {
           }
           setSubmitting(false)
         }}
-        validate={values => {
-          console.log(values)
-          const val = validate({
+        validate={values => validate({
             email: {
-              presence: { message: 'Please Enter your email', allowEmpty: false },
-              email: { message: 'Not a valid email address' },
+              presence: { message: "Please Enter your email", allowEmpty: false },
+              email: { message: "Not a valid email address" },
             },
-              password: {
-                presence: { message: 'Please Enter your password', allowEmpty: false },
-                length: {
-                  minimum: 3,
-                  tooShort: "Password must contain more then 3 Characters",
-                },
-              }
+            password: {
+              presence: { message: "Please Enter your password", allowEmpty: false },
+              length: {
+                minimum: 3,
+                tooShort: "Password must contain more then 3 Characters",
+              },
             },
-            values)
-          console.log(val)
-          return val
-        }}
+          },
+          values)
+        }
       >
         {({
             values,
@@ -83,6 +81,7 @@ export const LoginScreen = function LoginScreen() {
               renderErrorMessage={touched.email && Boolean(errors.email)}
               errorMessage={errors.email && errors.email}
               textAlign={undefined}
+              disabled={isSubmitting}
             />
             <Input
               label={"Password"}
@@ -90,11 +89,13 @@ export const LoginScreen = function LoginScreen() {
               onBlur={handleBlur("password")}
               value={values.password}
               secureTextEntry={true}
+              renderErrorMessage={touched.password && Boolean(errors.password)}
               errorMessage={errors.password && errors.password[0]}
               textAlign={undefined}
+              disabled={isSubmitting}
             />
             {errors.Firebase && <Text>{errors.Firebase}</Text>}
-            <Button onPress={()=>handleSubmit()} title={"LogIn"} loading={isSubmitting} />
+            <Button onPress={handleSubmit} title={"LogIn"} loading={isSubmitting} disabled={isSubmitting} />
           </View>
         )}
 

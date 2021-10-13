@@ -6,6 +6,8 @@ import { color } from "../../theme"
 import { NavigatorParamList } from "../../navigators"
 import { StackScreenProps } from "@react-navigation/stack"
 import MapView, { Marker, PROVIDER_GOOGLE } from "react-native-maps"
+import { useSelector } from "react-redux"
+import { selectCords } from "../../store/slices"
 
 const ROOT: ViewStyle = { width: "100%", height: "90%" }
 const blankScreen: ViewStyle = {
@@ -42,6 +44,8 @@ const imageStyle: ImageStyle = {
 
 export const MapsScreen: FC<StackScreenProps<NavigatorParamList, "MapsScreen">> =
   ({ navigation }) => {
+    const location = useSelector(selectCords)
+    // watchCurrentLocation()
     // Pull in one of our MST stores
     // const { someStore, anotherStore } = useStores()
     const [text, setText] = useState("")
@@ -58,8 +62,8 @@ export const MapsScreen: FC<StackScreenProps<NavigatorParamList, "MapsScreen">> 
           provider={PROVIDER_GOOGLE}
           loadingEnabled={true}
           initialRegion={{
-            latitude: 24.859142640646972,
-            longitude: 67.03130068682259,
+            latitude: location.latitude,
+            longitude: location.longitude,
             latitudeDelta: 0.0922,
             longitudeDelta: 0.0421,
           }}
@@ -67,8 +71,8 @@ export const MapsScreen: FC<StackScreenProps<NavigatorParamList, "MapsScreen">> 
           <Marker
             title="Your Location"
             coordinate={{
-              latitude: 24.859142640646972,
-              longitude: 67.03130068682259,
+              latitude: location.latitude,
+              longitude: location.longitude,
             }}
           >
             <Image style={imageStyle} source={require("./BikeMarker.png")} />
