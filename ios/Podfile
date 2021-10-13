@@ -20,6 +20,8 @@ target 'smartbike' do
 
   pod 'RNSVG', :path => '../node_modules/react-native-svg'
 
+  pod 'react-native-geolocation-service', :path => '../node_modules/react-native-geolocation-service'
+
   target 'smartbikeTests' do
     inherit! :complete
     # Pods for testing
