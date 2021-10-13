@@ -1,8 +1,8 @@
 import * as React from "react"
 import { StyleProp, TextStyle, View, ViewStyle } from "react-native"
 import { color } from "../../theme"
-import { Text } from "../"
 import { flatten } from "ramda"
+import {Text} from "../text/text"
 import Entypo from "react-native-vector-icons/Entypo"
 
 const CONTAINER: ViewStyle = {

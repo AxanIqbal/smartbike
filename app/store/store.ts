@@ -1,5 +1,6 @@
 import { combineReducers, configureStore } from "@reduxjs/toolkit"
 import { actionTypes as rrfActionTypes, firebaseReducer, getFirebase } from "react-redux-firebase"
+import { useDispatch } from "react-redux"
 // import { Reactotron } from "../services/reactotron"
 
 const reducer = combineReducers({
@@ -7,7 +8,9 @@ const reducer = combineReducers({
 })
 
 export const store = configureStore({
-  reducer,
+  reducer: {
+    firebase: firebaseReducer,
+  },
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware({
       serializableCheck: {
@@ -26,3 +29,4 @@ export const store = configureStore({
 export type RootState = ReturnType<typeof store.getState>
 // Inferred type: {firebase: firebaseState }
 export type AppDispatch = typeof store.dispatch
+export const useAppDispatch = () => useDispatch<AppDispatch>()

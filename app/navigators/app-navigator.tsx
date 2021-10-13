@@ -20,6 +20,7 @@ import { DarkTheme, DefaultTheme, NavigationContainer } from "@react-navigation/
 import { useSelector } from "react-redux"
 import { RootState } from "../store/store"
 import { AuthStack } from "./auth/auth-navigator"
+import { isEmpty } from "react-redux-firebase"
 
 /**
  * This type allows TypeScript to know what routes are defined in this navigator
@@ -103,13 +104,14 @@ interface NavigationProps extends Partial<React.ComponentProps<typeof Navigation
 export const AppNavigator = (props: NavigationProps) => {
   const colorScheme = useColorScheme()
   const auth = useSelector<RootState>(state => state.firebase.auth)
+  console.log(auth,'<== auth')
   return (
     <NavigationContainer
       ref={navigationRef}
       theme={colorScheme === "dark" ? DarkTheme : DefaultTheme}
       {...props}
     >
-      {auth ? <AppStack /> : <AuthStack />}
+       {isEmpty(auth) ? <AuthStack /> : <AppStack />}
     </NavigationContainer>
   )
 }

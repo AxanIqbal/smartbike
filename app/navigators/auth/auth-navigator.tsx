@@ -11,7 +11,10 @@ export type AuthParamList = {
 const Stack = createStackNavigator<AuthParamList>()
 export const AuthStack = () => {
   return (
-    <Stack.Navigator screenOptions={{ cardStyle: { backgroundColor: "transparent" }, headerShown: false, }}>
+    <Stack.Navigator
+      screenOptions={{ cardStyle: { backgroundColor: "transparent" }, headerShown: false, }}
+      initialRouteName={'login'}
+    >
       <Stack.Screen name="login" component={LoginScreen} />
     </Stack.Navigator>
   )
