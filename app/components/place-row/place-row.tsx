@@ -1,13 +1,15 @@
 import * as React from "react"
-import { StyleProp, TextStyle, View, ViewStyle } from "react-native"
+import { Dimensions, StyleProp, TextStyle, View, ViewStyle } from "react-native"
 import { color } from "../../theme"
 import { flatten } from "ramda"
 import {Text} from "../text/text"
 import Entypo from "react-native-vector-icons/Entypo"
 
 const CONTAINER: ViewStyle = {
+  backgroundColor:color.palette.white,
   flexDirection: "row",
-  paddingVertical: 10,
+  padding: 10,
+  borderRadius: 30,
 }
 
 const TEXT: TextStyle = {
@@ -19,6 +21,7 @@ const TEXT: TextStyle = {
 const locationText: TextStyle = {
   padding: 10,
   color: color.palette.black,
+  width: Dimensions.get('screen').width * 0.7,
 }
 
 export interface PlaceRowProps {
@@ -42,7 +45,7 @@ export const PlaceRow = function PlaceRow(props: PlaceRowProps) {
       <View style={TEXT}>
         <Entypo name="location-pin" size={20} color={'grey'} />
       </View>
-      <Text style={locationText}>{data.description}</Text>
+      <Text numberOfLines={1} style={locationText}>{data.description}</Text>
     </View>
   )
 }

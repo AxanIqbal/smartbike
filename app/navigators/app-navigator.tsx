@@ -40,6 +40,7 @@ export type NavigatorParamList = {
   MapsScreen: undefined
   SearchScreen: undefined
   DistanceScreen: undefined
+  LoginScreen: undefined
 }
 const buttonStyle: ViewStyle = {
   backgroundColor: `${color.palette.white}`,
@@ -111,7 +112,7 @@ export const AppNavigator = (props: NavigationProps) => {
       theme={colorScheme === "dark" ? DarkTheme : DefaultTheme}
       {...props}
     >
-       {isEmpty(auth) ? <AuthStack /> : <AppStack />}
+       {isEmpty(auth) ?  <AppStack />: <AuthStack />}
     </NavigationContainer>
   )
 }

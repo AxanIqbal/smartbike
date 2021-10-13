@@ -1,5 +1,5 @@
 import { Formik } from "formik"
-import React from "react"
+import React, { FC } from "react"
 import { View, ViewStyle } from "react-native"
 import { Screen } from "../../components"
 // import { useNavigation } from "@react-navigation/native"
@@ -8,6 +8,8 @@ import { color } from "../../theme"
 import { useFirebase } from "react-redux-firebase"
 import { Button, Input, Text } from "react-native-elements"
 import { validate } from "../../utils/validate"
+import { NavigatorParamList } from "../../navigators"
+import { StackScreenProps } from "@react-navigation/stack"
 // import { Button } from "react-native-elements"
 
 const ROOT: ViewStyle = {
@@ -16,7 +18,8 @@ const ROOT: ViewStyle = {
   justifyContent: "center",
 }
 
-export const LoginScreen = function LoginScreen() {
+export const LoginScreen: FC<StackScreenProps<NavigatorParamList, "LoginScreen">> =
+  ({ navigation }) => {
   const firebase = useFirebase()
   // Pull in one of our MST stores
   // const { someStore, anotherStore } = useStores()
@@ -36,7 +39,8 @@ export const LoginScreen = function LoginScreen() {
           setSubmitting(true)
           try {
             await firebase.login({ email: values.email, password: values.password }).then(value => {
-              console.log(value)
+              console.log(value,"ybhjhy");
+              navigation.navigate('welcome')
             })
           } catch (e) {
             console.log(e)

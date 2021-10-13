@@ -1,6 +1,6 @@
 import { StackScreenProps } from "@react-navigation/stack"
 import React, { FC, useEffect, useState } from "react"
-import { SafeAreaView, TextStyle, View, ViewStyle } from "react-native"
+import { Image, Platform, ImageStyle, KeyboardAvoidingView, SafeAreaView, TextStyle, View, ViewStyle } from "react-native"
 import { Header } from "react-native-elements"
 import { GooglePlacesAutocomplete } from "react-native-google-places-autocomplete"
 import { Button, PlaceRow, Text } from "../../components"
@@ -9,6 +9,9 @@ import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityI
 // import { useNavigation } from "@react-navigation/native"
 // import { useStores } from "../../models"
 import { color } from "../../theme"
+import { DistanceScreen } from "../distance/distance-screen"
+import MapView, { Marker, PROVIDER_GOOGLE } from "react-native-maps"
+import MapViewDirections from "react-native-maps-directions"
 
 // const ROOT: ViewStyle = {
 //   backgroundColor: color.palette.black,
@@ -16,14 +19,14 @@ import { color } from "../../theme"
 // }
 
 const container: ViewStyle = {
-  marginTop: 20,
+  marginVertical: 10,
   padding: 10,
-  height: "100%",
+  height: "62%",
 }
 
 const textInputStyle: TextStyle = {
   padding: 10,
-  backgroundColor: "#dddddded",
+  backgroundColor: '#eeee',
   marginVertical: 5,
   marginLeft: 20,
   // borderRadius:20,
@@ -59,6 +62,8 @@ const listViewStyle: ViewStyle = {
 const seperatorStyle: ViewStyle = {
   backgroundColor: color.palette.lighterGrey,
   height: 1,
+  width: '90%',
+  alignSelf: 'center',
 }
 
 const circle: ViewStyle = {
@@ -94,6 +99,28 @@ const Textstyle: TextStyle = {
   marginTop: 10,
 }
 
+const ROOT: ViewStyle = {
+  flex: 1,
+  borderRadius: 20,
+  overflow: 'hidden',
+}
+
+const imageStyle: ImageStyle = {
+  width: 50,
+  height: 50,
+  marginTop: 28,
+  resizeMode: "contain",
+  transform: [
+    {
+      rotate: "80deg",
+    },
+  ],
+}
+
+const origin = { latitude: 24.859142640646972, longitude: 67.03130068682259 }
+const destination = { latitude: 24.89536668796498, longitude: 67.06446083144998 }
+const GOOGLE_MAPS_APIKEY = "AIzaSyDEXI0NflTOvRTBLOpA8w5zG7ZzHww_YtU"
+
 export const SearchScreen: FC<StackScreenProps<NavigatorParamList, "SearchScreen">> =
   ({ navigation }) => {
     // Pull in one of our MST stores
@@ -107,7 +134,11 @@ export const SearchScreen: FC<StackScreenProps<NavigatorParamList, "SearchScreen
       }
     }, [originPlace, destinationPlace])
     return (
-      <View>
+      <KeyboardAvoidingView
+        behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+        style={{flex: 1,
+          backgroundColor: 'white'}}>
+      <View style={{backgroundColor: color.palette.white}}>
         <Header
           leftComponent={
             <Button style={headerButton} onPress={() => navigation.goBack()}>
@@ -123,7 +154,6 @@ export const SearchScreen: FC<StackScreenProps<NavigatorParamList, "SearchScreen
           containerStyle={HeaderStyle}
           backgroundColor={color.appcolor}
         />
-        <SafeAreaView>
           <View style={container}>
             <GooglePlacesAutocomplete
               placeholder="Where from?"
@@ -175,7 +205,49 @@ export const SearchScreen: FC<StackScreenProps<NavigatorParamList, "SearchScreen
             {/* sqaure near destination */}
             <View style={square} />
           </View>
-        </SafeAreaView>
+        <View style={{
+          marginTop:"56%",
+          zIndex: -1,
+          height:'95%',
+          width: '95%',
+          margin: 10,
+          borderWidth:1,
+          borderColor: color.palette.white,
+          borderRadius:20,
+          overflow: 'hidden',
+          position:'absolute'
+        }}
+        >
+          <MapView
+          style={ROOT}
+          provider={PROVIDER_GOOGLE}
+          loadingEnabled={true}
+          initialRegion={{
+            latitude: origin.latitude,
+            longitude: origin.longitude,
+            latitudeDelta: 0.0922,
+            longitudeDelta: 0.0421,
+          }}
+        >
+          <Marker
+            title="Your Bike"
+            coordinate={{
+              latitude: origin.latitude,
+              longitude: origin.longitude,
+            }}
+          >
+            <Image style={imageStyle} source={require("../maps/BikeMarker.png")} />
+          </Marker>
+          <Marker
+            title="Your Destination"
+            coordinate={{
+              latitude: destination.latitude,
+              longitude: destination.longitude,
+            }}
+          />
+        </MapView>
+        </View>
       </View>
+      </KeyboardAvoidingView>
     )
   }
