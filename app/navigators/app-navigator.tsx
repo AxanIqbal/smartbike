@@ -104,14 +104,15 @@ interface NavigationProps extends Partial<React.ComponentProps<typeof Navigation
 export const AppNavigator = (props: NavigationProps) => {
   const colorScheme = useColorScheme()
   const auth = useSelector<RootState>(state => state.firebase.auth)
-  console.log(auth,'<== auth')
+  console.log(auth, "<== auth")
   return (
     <NavigationContainer
       ref={navigationRef}
       theme={colorScheme === "dark" ? DarkTheme : DefaultTheme}
       {...props}
     >
-       {isEmpty(auth) ?  <AuthStack /> : <AppStack /> }
+        {isEmpty(auth) ?  <AuthStack /> : <AppStack /> }
+      {/* <AuthStack /> */}
     </NavigationContainer>
   )
 }

@@ -15,6 +15,7 @@ import { Provider } from "react-redux"
 import { ReactReduxFirebaseProvider } from "react-redux-firebase"
 import { persistStore } from "redux-persist"
 import { PersistGate } from "redux-persist/integration/react"
+import { LoadingScreen } from "./screens"
 // This puts screens in a native ViewController or Activity. If you want fully native
 // stack navigation, use `createNativeStackNavigator` in place of `createStackNavigator`:
 // https://github.com/kmagiera/react-native-screens#using-native-stack-navigator
@@ -57,7 +58,11 @@ function App() {
   // In iOS: application:didFinishLaunchingWithOptions:
   // In Android: https://stackoverflow.com/a/45838109/204044
   // You can replace with your own loading component if you wish.
-  if (!isNavigationStateRestored) return null
+  if (!isNavigationStateRestored) return (
+  <SafeAreaProvider>
+    <LoadingScreen/>
+  </SafeAreaProvider>
+  );
 
   // otherwise, we're ready to render the app
   return (

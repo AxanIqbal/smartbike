@@ -1,14 +1,16 @@
-import React, { FC, useState } from "react"
+import React, { FC } from "react"
 import { Dimensions, Image, ImageStyle, View, ViewStyle } from "react-native"
 import { Button, Text } from "../../components"
-import { SearchBar } from "react-native-elements"
 import { color } from "../../theme"
 import { NavigatorParamList } from "../../navigators"
 import { StackScreenProps } from "@react-navigation/stack"
 import MapView, { Marker, PROVIDER_GOOGLE } from "react-native-maps"
 import { useSelector } from "react-redux"
-import { selectCords } from "../../store/slices"
+import { selectCords, setLocation } from "../../store/slices"
 import Ionicons from "react-native-vector-icons/Ionicons"
+import { useAppDispatch } from "../../store/store"
+import Geolocation from "react-native-geolocation-service"
+import { watchCurrentLocation } from "../../utils/geolocation"
 
 const ROOT: ViewStyle = { width: "100%", height: "90%" }
 const blankScreen: ViewStyle = {
@@ -34,11 +36,11 @@ const fieldStyle: ViewStyle = {
 }
 const searchStyle: ViewStyle = {
   backgroundColor: color.palette.white,
-  justifyContent:'flex-end',
-  width:'90%',
+  justifyContent: "flex-end",
+  width: "90%",
   shadowRadius: 0.27,
   elevation: 2,
-  padding:20,
+  padding: 20,
   borderRadius: 80,
 }
 const imageStyle: ImageStyle = {
@@ -56,17 +58,43 @@ const imageStyle: ImageStyle = {
 export const MapsScreen: FC<StackScreenProps<NavigatorParamList, "MapsScreen">> =
   ({ navigation }) => {
     const location = useSelector(selectCords)
-    console.log(location)
+    const dispatch = useAppDispatch()
+    // watchCurrentLocation().then(r => {
+    //   console.log(r)
+    // })
+
+    // const dispatch = useAppDispatch()
     // watchCurrentLocation()
     // Pull in one of our MST stores
     // const { someStore, anotherStore } = useStores()
-    const [text, setText] = useState("")
-    const updateSearch = (input: string) => {
-      console.log(input)
-      setText(input)
-    }
+    // const [text, setText] = useState("")
+    // const updateSearch = (input: string) => {
+    //   console.log(input)
+    //   setText(input)
+    // }
     // Pull in navigation via hook
     // const navigation = useNavigation()
+
+    React.useEffect(() => {
+      console.log("sub")
+      watchCurrentLocation().then(position => {
+        dispatch(setLocation(position.coords))
+      },reason => {
+        console.warn(reason)
+      })
+      // Geolocation.watchPosition(position => {
+      //   console.log(position.coords)
+      //   dispatch(setLocation(position.coords))
+      // }, error => {
+      //   console.warn(error)
+      // }, {
+      //   enableHighAccuracy: true,
+      //   distanceFilter: 0,
+      //   forceRequestLocation: true,
+      //   showLocationDialog: true,
+      // })
+    }, [])
+
     return (
       <>
         <MapView
@@ -74,17 +102,19 @@ export const MapsScreen: FC<StackScreenProps<NavigatorParamList, "MapsScreen">> 
           provider={PROVIDER_GOOGLE}
           loadingEnabled={true}
           initialRegion={{
-            latitude: 24.942114588644632,
-            longitude: 67.07928649736084,
+            latitude: location.latitude || 24.942114588644632,
+            longitude: location.longitude || 67.07928649736084,
             latitudeDelta: 0.0922,
             longitudeDelta: 0.0421,
           }}
+          showsUserLocation={true}
+          // followsUserLocation={true}
         >
           <Marker
             title="Your Location"
             coordinate={{
-              latitude: 24.942114588644632,
-              longitude: 67.07928649736084,
+              latitude: location.latitude || 24.942114588644632,
+              longitude: location.longitude || 67.07928649736084,
             }}
           >
             <Image style={imageStyle} source={require("./BikeMarker.png")} />
@@ -94,9 +124,9 @@ export const MapsScreen: FC<StackScreenProps<NavigatorParamList, "MapsScreen">> 
           navigation.navigate("SearchScreen")
         }} style={buttonStyle}>
           <View style={searchStyle}>
-            <View style={{flexDirection:'row'}}>
-              <Ionicons size={20} style={{paddingRight: 10}} name="ios-search-outline"/>
-              <Text text="Search" style={{color:`${color.palette.lightGrey}`}}/>
+            <View style={{ flexDirection: "row" }}>
+              <Ionicons size={20} style={{ paddingRight: 10 }} name="ios-search-outline" />
+              <Text text="Search" style={{ color: `${color.palette.lightGrey}` }} />
             </View>
           </View>
         </Button>

@@ -1,13 +1,13 @@
-import { Formik } from "formik"
 import React, { FC } from "react"
-import { View, ViewStyle } from "react-native"
-import { Screen } from "../../components"
-import auth from "@react-native-firebase/auth"
+import { ToastAndroid, View, ViewStyle } from "react-native"
+import { Button, Screen, Text } from "../../components"
 import { color } from "../../theme"
-import { Button, Input, Text } from "react-native-elements"
-import { validate } from "../../utils/validate"
+import { Input } from "react-native-elements"
 import { AuthParamList } from "../../navigators"
 import { StackScreenProps } from "@react-navigation/stack"
+import { Controller, useForm } from "react-hook-form"
+import { validate } from "../../utils/validate"
+import auth from '@react-native-firebase/auth'
 
 const ROOT: ViewStyle = {
   backgroundColor: color.palette.white,
@@ -17,88 +17,106 @@ const ROOT: ViewStyle = {
 
 export const LoginScreen: FC<StackScreenProps<AuthParamList, "login">> =
   ({ navigation }) => {
-    // Pull in one of our MST stores
-    // const { someStore, anotherStore } = useStores()
+    const {
+      control,
+      handleSubmit,
+      formState: { errors, isValid, isSubmitted, isSubmitting, submitCount, isValidating },
+    } = useForm({
+      defaultValues: {
+        email: "",
+        password: ""
+      },
+    })
 
-    // Pull in navigation via hook
-    // const navigation = useNavigation()
+    const onSubmit = async (data) => {
+      console.log(data)
+      try {
+        await auth().signInWithEmailAndPassword(data.email, data.password)
+      } catch (e) {
+        console.log(e.message)
+        ToastAndroid.show(
+          e.message,
+          ToastAndroid.LONG,
+        )
+      }
+    }
+
+    const onError = (data) => {
+      console.log(data)
+    }
+
     return (
       <Screen style={ROOT} preset="scroll">
-        <Formik
-          initialValues={{
-            email: "",
-            password: "",
-            Firebase: null,
-          }}
-          onSubmit={async (values, { setSubmitting, setFieldError }) => {
-            console.log(values)
-            setSubmitting(true)
-            try {
-              await auth().signInWithEmailAndPassword(values.email, values.password)
-              console.log("loged in")
-            } catch (e) {
-              console.log(e.code, e.message)
-              setFieldError("Firebase", e.message)
-              setSubmitting(false)
-            }
-            setSubmitting(false)
-          }}
-          validate={values => validate({
-              email: {
-                presence: { message: "Please Enter your email", allowEmpty: false },
-                email: { message: "Not a valid email address" },
+        <View>
+          <Controller
+            name={"email"}
+            control={control}
+            defaultValue={""}
+            rules={{
+              required: {
+                value: true,
+                message: "Email is Required",
               },
-              password: {
-                presence: { message: "Please Enter your password", allowEmpty: false },
-                length: {
-                  minimum: 3,
-                  tooShort: "Password must contain more then 3 Characters",
-                },
+              validate: value => {
+                const val = validate({
+                  email: {
+                    email: { message: "Not a valid email address" },
+                  },
+                }, { email: value })
+                if (val.email) {
+                  return val.email[0]
+                }
+                return null
               },
-            },
-            values)
-          }
-        >
-          {({
-              values,
-              handleChange,
-              handleBlur,
-              errors,
-              isSubmitting,
-              touched,
-              handleSubmit,
-            }) => (
-            <View>
+            }}
+            render={({ field, fieldState }) =>
               <Input
                 label={"Email"}
-                autoCapitalize="none"
-                keyboardType="email-address"
-                onChangeText={handleChange("email")}
-                onBlur={handleBlur("email")}
-                value={values.email}
-                renderErrorMessage={touched.email && Boolean(errors.email)}
-                errorMessage={errors.email && errors.email}
+                value={field.value}
+                onChangeText={field.onChange}
+                onBlur={field.onBlur}
+                renderErrorMessage={fieldState.isTouched && Boolean(fieldState.error?.message)}
+                errorMessage={fieldState.error?.message}
                 textAlign={undefined}
-                disabled={isSubmitting}
               />
+            }
+          />
+          <Controller
+            name={"password"}
+            control={control}
+            defaultValue={""}
+            rules={{
+              required: {
+                value: true,
+                message: "Password is Required",
+              },
+              minLength: {
+                value: 3,
+                message: "Enter more then 3 Char",
+              },
+            }}
+            render={({ field, fieldState }) =>
               <Input
                 label={"Password"}
-                onChangeText={handleChange("password")}
-                onBlur={handleBlur("password")}
-                value={values.password}
+                value={field.value}
+                onChangeText={field.onChange}
+                onBlur={field.onBlur}
+                renderErrorMessage={fieldState.isTouched && Boolean(fieldState.error?.message)}
+                errorMessage={fieldState.error?.message}
                 secureTextEntry={true}
-                renderErrorMessage={touched.password && Boolean(errors.password)}
-                errorMessage={errors.password && errors.password[0]}
                 textAlign={undefined}
-                disabled={isSubmitting}
               />
-              {errors.Firebase && <Text>{errors.Firebase}</Text>}
-              <Button onPress={handleSubmit} title={"LogIn"}
-                      loading={isSubmitting} disabled={isSubmitting} />
-            </View>
-          )}
-
-        </Formik>
+            }
+          />
+          <Text text={JSON.stringify(errors, null, 2)} />
+          <Text text={JSON.stringify({ isSubmitted, isSubmitting, submitCount, isValidating, isValid }, null, 2)} />
+          <Button
+            text={"LogIn"}
+            // type={"submit"}
+            disabled={isSubmitting}
+            onPress={handleSubmit(onSubmit, onError)}
+          />
+        </View>
       </Screen>
     )
   }

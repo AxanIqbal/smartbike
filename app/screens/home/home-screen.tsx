@@ -72,15 +72,9 @@ const headerButton: ViewStyle = {
 
 export const HomeScreen: FC<DrawerScreenProps<NavigatorParamList, "welcome">> =
   ({ navigation }) => {
-    const dispatch = useAppDispatch()
+
     console.log(useSelector(selectCords))
     React.useEffect(() => {
-      watchCurrentLocation().then(r => {
-        console.log(r,"from useEffect HomeScreen")
-        dispatch(setLocation(r.coords))
-      },reason => {
-          console.log(reason,"from useEffect HomeScreen")
-        })
       // getCurrentLocation().then(r => {
       //   console.log(r)
       //   dispatch(setLocation(r.coords))

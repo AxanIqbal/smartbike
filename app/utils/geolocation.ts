@@ -5,27 +5,39 @@ import appConfig from "../../app.json"
 
 export const watchCurrentLocation = async () => {
   await hasLocationPermission()
-  // const dispatch = useAppDispatch()
 
+  // const dispatch = useAppDispatch()
+  // console.log(hasPermission)
   // if (!hasPermission) {
   //   return null
   // }
 
-  return new Promise((resolve, reject) =>
-    Geolocation.watchPosition(resolve,reject,{
-      enableHighAccuracy: true,
-      // distanceFilter: 0,
-      // forceRequestLocation: true,
-      // forceLocationManager: false,
-      // showLocationDialog: true,
-    })
+  // return Geolocation.watchPosition(position => {
+  //   console.log(position.coords)
+  //   dispatch(setLocation(position.coords))
+  // },error => {
+  //   console.warn(error)
+  // },{
+  //   enableHighAccuracy: true,
+  //   distanceFilter: 0,
+  //   forceRequestLocation: true,
+  //   showLocationDialog: true,
+  // })
+
+  return new Promise((resolve: Geolocation.SuccessCallback, reject: Geolocation.ErrorCallback) =>
+    Geolocation.watchPosition(resolve, reject, {
+      enableHighAccuracy: false,
+      distanceFilter: 0,
+      forceRequestLocation: true,
+      showLocationDialog: true,
+    }),
   )
 }
 
 export const getCurrentLocation = async () => {
   const hasPermission = await hasLocationPermission()
 
-  console.log('has permission?', hasPermission)
+  console.log("has permission?", hasPermission)
 
   // if (!hasPermission) {
   //   return null
@@ -42,7 +54,6 @@ export const getCurrentLocation = async () => {
       maximumAge: 10000,
       distanceFilter: 0,
       forceRequestLocation: true,
-      forceLocationManager: false,
       showLocationDialog: true,
     }),
   )
