@@ -23,7 +23,7 @@ const locationSlice = createSlice({
   reducers: {
     setLocation: ((state, action: PayloadAction<GeoCoordinates>) => {
       state = action.payload
-      console.log(state, action.payload)
+      // console.log(state, action.payload)
       return state
     }),
   },

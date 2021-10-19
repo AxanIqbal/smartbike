@@ -1,5 +1,5 @@
 import React, { FC } from "react"
-import { Dimensions, Image, ImageStyle, View, ViewStyle } from "react-native"
+import { Image, ImageStyle, View, ViewStyle } from "react-native"
 import { Button, Text } from "../../components"
 import { color } from "../../theme"
 import { NavigatorParamList } from "../../navigators"
@@ -10,13 +10,12 @@ import { selectCords, setLocation } from "../../store/slices"
 import Ionicons from "react-native-vector-icons/Ionicons"
 import { useAppDispatch } from "../../store/store"
 import Geolocation from "react-native-geolocation-service"
-import { watchCurrentLocation } from "../../utils/geolocation"
 
 const ROOT: ViewStyle = { width: "100%", height: "90%" }
-const blankScreen: ViewStyle = {
-  backgroundColor: color.palette.white,
-  zIndex: 10,
-}
+// const blankScreen: ViewStyle = {
+//   backgroundColor: color.palette.white,
+//   zIndex: 10,
+// }
 const buttonStyle: ViewStyle = {
   backgroundColor: color.palette.white,
   height: 90,
@@ -24,16 +23,16 @@ const buttonStyle: ViewStyle = {
   borderTopRightRadius: 10,
   borderTopLeftRadius: 80,
 }
-const fieldStyle: ViewStyle = {
-  width: Dimensions.get("screen").width * 0.9,
-  marginTop: -10,
-  borderRadius: 80,
-  shadowOpacity: 0.34,
-  backgroundColor: color.palette.white,
-  shadowRadius: 0.27,
-  elevation: 2,
-  height: 50,
-}
+// const fieldStyle: ViewStyle = {
+//   width: Dimensions.get("screen").width * 0.9,
+//   marginTop: -10,
+//   borderRadius: 80,
+//   shadowOpacity: 0.34,
+//   backgroundColor: color.palette.white,
+//   shadowRadius: 0.27,
+//   elevation: 2,
+//   height: 50,
+// }
 const searchStyle: ViewStyle = {
   backgroundColor: color.palette.white,
   justifyContent: "flex-end",
@@ -50,7 +49,7 @@ const imageStyle: ImageStyle = {
   resizeMode: "contain",
   transform: [
     {
-      rotate: "80deg",
+      rotate: "38.93915557861328deg",
     },
   ],
 }
@@ -77,22 +76,23 @@ export const MapsScreen: FC<StackScreenProps<NavigatorParamList, "MapsScreen">> 
 
     React.useEffect(() => {
       console.log("sub")
-      watchCurrentLocation().then(position => {
-        dispatch(setLocation(position.coords))
-      },reason => {
-        console.warn(reason)
-      })
-      // Geolocation.watchPosition(position => {
-      //   console.log(position.coords)
+      // watchCurrentLocation().then(position => {
+      //   console.log(position)
       //   dispatch(setLocation(position.coords))
-      // }, error => {
-      //   console.warn(error)
-      // }, {
-      //   enableHighAccuracy: true,
-      //   distanceFilter: 0,
-      //   forceRequestLocation: true,
-      //   showLocationDialog: true,
+      // },reason => {
+      //   console.warn(reason)
       // })
+      Geolocation.watchPosition(position => {
+        console.log(position.coords)
+        dispatch(setLocation(position.coords))
+      }, error => {
+        console.warn(error)
+      }, {
+        enableHighAccuracy: true,
+        distanceFilter: 10,
+        forceRequestLocation: true,
+        showLocationDialog: true,
+      })
     }, [])
 
     return (
