@@ -39,7 +39,12 @@ export type NavigatorParamList = {
   welcome: undefined
   MapsScreen: undefined
   SearchScreen: undefined
-  DistanceScreen: undefined
+  DistanceScreen: {
+    destinationLat: number
+    destinationLng: number
+    originLat: number
+    originLng: number
+  }
 }
 const buttonStyle: ViewStyle = {
   backgroundColor: `${color.palette.white}`,
@@ -62,7 +67,6 @@ const DrawerStack = ({ navigation }) => {
         component={MapsScreen}
         options={{
           headerTransparent: true,
-          title: "",
           headerLeft: () => (
             <View
               style={{
@@ -79,8 +83,32 @@ const DrawerStack = ({ navigation }) => {
           ),
         }}
       />
-      <DStack.Screen options={{ headerShown: false }} name="DistanceScreen" component={DistanceScreen} />
-      <DStack.Screen options={{ headerShown: false }} name="SearchScreen" component={SearchScreen} />
+      <DStack.Screen
+        options={{
+          headerTransparent: true,
+          headerLeft: () => (
+            <View
+              style={{
+                flexDirection: "row",
+                alignSelf: "center",
+                width: Dimensions.get("window").width - 60,
+                marginTop: 20,
+              }}
+            >
+              <Button onPress={() => navigation.goBack()} style={buttonStyle}>
+                <Icon name="arrow-left" color={color.appcolor} size={25} />
+              </Button>
+            </View>
+          ),
+        }}
+        name="DistanceScreen"
+        component={DistanceScreen}
+      />
+      <DStack.Screen
+        options={{ headerShown: false }}
+        name="SearchScreen"
+        component={SearchScreen}
+      />
     </DStack.Navigator>
   )
 }
@@ -98,12 +126,11 @@ const AppStack = () => {
   )
 }
 
-interface NavigationProps extends Partial<React.ComponentProps<typeof NavigationContainer>> {
-}
+interface NavigationProps extends Partial<React.ComponentProps<typeof NavigationContainer>> {}
 
 export const AppNavigator = (props: NavigationProps) => {
   const colorScheme = useColorScheme()
-  const auth = useSelector<RootState>(state => state.firebase.auth)
+  const auth = useSelector<RootState>((state) => state.firebase.auth)
   console.log(auth, "<== auth")
   return (
     <NavigationContainer
@@ -111,7 +138,7 @@ export const AppNavigator = (props: NavigationProps) => {
       theme={colorScheme === "dark" ? DarkTheme : DefaultTheme}
       {...props}
     >
-        {isEmpty(auth) ?  <AuthStack /> : <AppStack /> }
+      {isEmpty(auth) ? <AuthStack /> : <AppStack />}
       {/* <AuthStack /> */}
     </NavigationContainer>
   )

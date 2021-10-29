@@ -14,8 +14,8 @@ const ListStyle: TextStyle = {
 
 const timeStyle: TextStyle = {
   textAlign: "center",
-  backgroundColor: `${color.appcolor}`,
-  color: "white",
+  // backgroundColor: `${color.appcolor}`,
+  color: `${color.appcolor}`,
   padding: 7,
   borderTopLeftRadius: 10,
   borderBottomRightRadius: 10,

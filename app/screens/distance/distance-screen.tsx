@@ -26,49 +26,53 @@ const imageStyle: ImageStyle = {
   ],
 }
 
-const origin = { latitude: 24.859142640646972, longitude: 67.03130068682259 }
-const destination = { latitude: 24.89536668796498, longitude: 67.06446083144998 }
-const GOOGLE_MAPS_APIKEY = "AIzaSyDEXI0NflTOvRTBLOpA8w5zG7ZzHww_YtU"
+export const DistanceScreen: FC<StackScreenProps<NavigatorParamList, "DistanceScreen">> = ({
+  navigation,
+  route: {
+    params: { destinationLat, destinationLng, originLat, originLng },
+  },
+}) => {
+  const origin = { latitude: originLat, longitude: originLng }
+  const destination = { latitude: destinationLat, longitude: destinationLng }
+  const GOOGLE_MAPS_APIKEY = "AIzaSyDEXI0NflTOvRTBLOpA8w5zG7ZzHww_YtU"
 
-export const DistanceScreen: FC<StackScreenProps<NavigatorParamList, "DistanceScreen">> =
-  ({ navigation, route }) => {
-    return (
-      <Screen style={ROOT} preset="scroll">
-        <MapView
-          style={ROOT}
-          provider={PROVIDER_GOOGLE}
-          loadingEnabled={true}
-          initialRegion={{
+  return (
+    <Screen style={ROOT} preset="scroll">
+      <MapView
+        style={ROOT}
+        provider={PROVIDER_GOOGLE}
+        loadingEnabled={true}
+        initialRegion={{
+          latitude: origin.latitude,
+          longitude: origin.longitude,
+          latitudeDelta: 0.0922,
+          longitudeDelta: 0.0421,
+        }}
+      >
+        <Marker
+          title="Your Bike"
+          coordinate={{
             latitude: origin.latitude,
             longitude: origin.longitude,
-            latitudeDelta: 0.0922,
-            longitudeDelta: 0.0421,
           }}
         >
-          <Marker
-            title="Your Bike"
-            coordinate={{
-              latitude: origin.latitude,
-              longitude: origin.longitude,
-            }}
-          >
-            <Image style={imageStyle} source={require("../maps/BikeMarker.png")} />
-          </Marker>
-          <Marker
-            title="Your Destination"
-            coordinate={{
-              latitude: destination.latitude,
-              longitude: destination.longitude,
-            }}
-          />
-          <MapViewDirections
-            origin={origin}
-            destination={destination}
-            apikey={GOOGLE_MAPS_APIKEY}
-            strokeWidth={5}
-            strokeColor={color.appcolor}
-          />
-        </MapView>
-      </Screen>
-    )
-  }
+          <Image style={imageStyle} source={require("../maps/BikeMarker.png")} />
+        </Marker>
+        <Marker
+          title="Your Destination"
+          coordinate={{
+            latitude: destination.latitude,
+            longitude: destination.longitude,
+          }}
+        />
+        <MapViewDirections
+          origin={origin}
+          destination={destination}
+          apikey={GOOGLE_MAPS_APIKEY}
+          strokeWidth={5}
+          strokeColor={color.appcolor}
+        />
+      </MapView>
+    </Screen>
+  )
+}

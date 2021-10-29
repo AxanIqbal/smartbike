@@ -11,17 +11,16 @@ import Ionicons from "react-native-vector-icons/Ionicons"
 import { useAppDispatch } from "../../store/store"
 import Geolocation from "react-native-geolocation-service"
 
-const ROOT: ViewStyle = { width: "100%", height: "90%" }
+const ROOT: ViewStyle = { width: "100%", height: "100%" }
 // const blankScreen: ViewStyle = {
 //   backgroundColor: color.palette.white,
 //   zIndex: 10,
 // }
 const buttonStyle: ViewStyle = {
-  backgroundColor: color.palette.white,
-  height: 90,
+  backgroundColor: "transparent",
+  position: "absolute",
   width: "100%",
-  borderTopRightRadius: 10,
-  borderTopLeftRadius: 80,
+  bottom: 20,
 }
 // const fieldStyle: ViewStyle = {
 //   width: Dimensions.get("screen").width * 0.9,
@@ -42,94 +41,107 @@ const searchStyle: ViewStyle = {
   padding: 20,
   borderRadius: 80,
 }
-const imageStyle: ImageStyle = {
-  width: 50,
-  height: 50,
-  marginTop: 28,
-  resizeMode: "contain",
-  transform: [
-    {
-      rotate: "38.93915557861328deg",
-    },
-  ],
-}
 
-export const MapsScreen: FC<StackScreenProps<NavigatorParamList, "MapsScreen">> =
-  ({ navigation }) => {
-    const location = useSelector(selectCords)
-    const dispatch = useAppDispatch()
-    // watchCurrentLocation().then(r => {
-    //   console.log(r)
+export const MapsScreen: FC<StackScreenProps<NavigatorParamList, "MapsScreen">> = ({
+  navigation,
+}) => {
+  const location = useSelector(selectCords)
+  const dispatch = useAppDispatch()
+  // watchCurrentLocation().then(r => {
+  //   console.log(r)
+  // })
+
+  // const dispatch = useAppDispatch()
+  // watchCurrentLocation()
+  // Pull in one of our MST stores
+  // const { someStore, anotherStore } = useStores()
+  // const [text, setText] = useState("")
+  // const updateSearch = (input: string) => {
+  //   console.log(input)
+  //   setText(input)
+  // }
+  // Pull in navigation via hook
+  // const navigation = useNavigation()
+
+  const imageStyle: ImageStyle = {
+    width: 50,
+    height: 50,
+    marginTop: 28,
+    resizeMode: "contain",
+    transform: [
+      {
+        rotate: `${location.accuracy}deg`,
+      },
+    ],
+  }
+
+  React.useEffect(() => {
+    console.log("sub")
+    // watchCurrentLocation().then(position => {
+    //   console.log(position)
+    //   dispatch(setLocation(position.coords))
+    // },reason => {
+    //   console.warn(reason)
     // })
-
-    // const dispatch = useAppDispatch()
-    // watchCurrentLocation()
-    // Pull in one of our MST stores
-    // const { someStore, anotherStore } = useStores()
-    // const [text, setText] = useState("")
-    // const updateSearch = (input: string) => {
-    //   console.log(input)
-    //   setText(input)
-    // }
-    // Pull in navigation via hook
-    // const navigation = useNavigation()
-
-    React.useEffect(() => {
-      console.log("sub")
-      // watchCurrentLocation().then(position => {
-      //   console.log(position)
-      //   dispatch(setLocation(position.coords))
-      // },reason => {
-      //   console.warn(reason)
-      // })
-      Geolocation.watchPosition(position => {
+    Geolocation.watchPosition(
+      (position) => {
         console.log(position.coords)
         dispatch(setLocation(position.coords))
-      }, error => {
+      },
+      (error) => {
         console.warn(error)
-      }, {
+      },
+      {
         enableHighAccuracy: true,
         distanceFilter: 10,
         forceRequestLocation: true,
         showLocationDialog: true,
-      })
-    }, [])
+      },
+    )
+  }, [])
 
-    return (
-      <>
-        <MapView
-          style={ROOT}
-          provider={PROVIDER_GOOGLE}
-          loadingEnabled={true}
-          initialRegion={{
+  return (
+    <>
+      <MapView
+        style={ROOT}
+        provider={PROVIDER_GOOGLE}
+        loadingEnabled={true}
+        initialRegion={{
+          latitude: location.latitude || 24.942114588644632,
+          longitude: location.longitude || 67.07928649736084,
+          latitudeDelta: 0.0922,
+          longitudeDelta: 0.0421,
+        }}
+        // showsUserLocation={true}
+        // followsUserLocation={true}
+      >
+        <Marker
+          title="Your Location"
+          coordinate={{
             latitude: location.latitude || 24.942114588644632,
             longitude: location.longitude || 67.07928649736084,
-            latitudeDelta: 0.0922,
-            longitudeDelta: 0.0421,
           }}
-          showsUserLocation={true}
-          // followsUserLocation={true}
         >
-          <Marker
-            title="Your Location"
-            coordinate={{
-              latitude: location.latitude || 24.942114588644632,
-              longitude: location.longitude || 67.07928649736084,
-            }}
-          >
-            <Image style={imageStyle} source={require("./BikeMarker.png")} />
-          </Marker>
-        </MapView>
-        <Button onPress={() => {
+          <Image style={imageStyle} source={require("./BikeMarker.png")} />
+        </Marker>
+      </MapView>
+      <Button
+        onPress={() => {
           navigation.navigate("SearchScreen")
-        }} style={buttonStyle}>
-          <View style={searchStyle}>
-            <View style={{ flexDirection: "row" }}>
-              <Ionicons size={20} style={{ paddingRight: 10 }} name="ios-search-outline" />
-              <Text text="Search" style={{ color: `${color.palette.lightGrey}` }} />
-            </View>
+        }}
+        style={buttonStyle}
+      >
+        <View style={searchStyle}>
+          <View style={{ flexDirection: "row" }}>
+            <Ionicons
+              size={20}
+              style={{ paddingRight: 10, color: `${color.appcolor}` }}
+              name="ios-search-outline"
+            />
+            <Text text="Search" style={{ color: `${color.appcolor}` }} />
           </View>
-        </Button>
-      </>
-    )
-  }
+        </View>
+      </Button>
+    </>
+  )
+}

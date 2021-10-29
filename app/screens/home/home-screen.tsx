@@ -19,6 +19,7 @@ const ROOT: ViewStyle = {
 const Textstyle: TextStyle = {
   fontSize: 20,
   marginTop: 10,
+  color: `${color.palette.white}`,
 }
 
 const HeaderStyle: ViewStyle = {
@@ -31,7 +32,7 @@ const HeaderStyle: ViewStyle = {
 
 const animationStyle: ViewStyle = {
   alignItems: "center",
-  paddingTop: 30,
+  paddingTop: 20,
 }
 
 const buttonStyle: ViewStyle = {
@@ -54,14 +55,13 @@ const imageStyle: ImageStyle = {
 
 const buttonView: ViewStyle = {
   flexDirection: "row",
-  marginTop: 30,
+  marginTop: 10,
   alignSelf: "center",
 }
 
 const timeLIneStyle: ViewStyle = {
-  flex: 1,
   padding: 20,
-  paddingTop: 65,
+  paddingTop: 45,
   backgroundColor: "white",
   height: "100%",
 }
@@ -70,68 +70,78 @@ const headerButton: ViewStyle = {
   backgroundColor: "transparent",
 }
 
-export const HomeScreen: FC<DrawerScreenProps<NavigatorParamList, "welcome">> =
-  ({ navigation }) => {
+const HeadingStyle: TextStyle = {
+  fontSize:25,
+  textAlign:'center',
+  color: `${color.appcolor}`,
+  paddingTop: 5,
+  fontWeight: 'bold',
+}
 
-    console.log(useSelector(selectCords))
-    React.useEffect(() => {
-      // getCurrentLocation().then(r => {
-      //   console.log(r)
-      //   dispatch(setLocation(r.coords))
-      // }, reason => {
-      //   console.log(reason)
-      // })
+export const HomeScreen: FC<DrawerScreenProps<NavigatorParamList, "welcome">> = ({
+  navigation,
+}) => {
+  console.log(useSelector(selectCords))
+  React.useEffect(() => {
+    // getCurrentLocation().then(r => {
+    //   console.log(r)
+    //   dispatch(setLocation(r.coords))
+    // }, reason => {
+    //   console.log(reason)
+    // })
 
-      return () => {
-        // stopObserving()
-      }
-    }, [])
+    return () => {
+      // stopObserving()
+    }
+  }, [])
 
-    return (
-      <>
-        <Header
-          leftComponent={
-            <Button style={headerButton} onPress={() => navigation.openDrawer()}>
-              <MaterialCommunityIcons color="#ffff" name="format-align-left" size={25} />
-            </Button>
-          }
-          centerComponent={<Text style={Textstyle}>HOME</Text>}
-          rightComponent={
-            <Button style={headerButton} onPress={() => navigation.navigate("MapsScreen")}>
-              <MaterialCommunityIcons color="#ffff" name="bike" size={25} />
-            </Button>
-          }
-          containerStyle={HeaderStyle}
-          backgroundColor={color.appcolor}
-        />
-        <Screen preset={"scroll"} style={ROOT}>
-          <View style={animationStyle}>
-            <AnimatedCircularProgress
-              size={250}
-              width={20}
-              fill={10}
-              tintColor={color.appcolor}
-              onAnimationComplete={() => console.log("onAnimationComplete")}
-              backgroundColor={color.palette.offWhite}
-            >
-              {(fill) => <Image source={require("./ChargingAnimation.png")} style={imageStyle} />}
-            </AnimatedCircularProgress>
-          </View>
-          <View style={buttonView}>
-            <Button style={buttonStyle}>
-              <MaterialCommunityIcons size={25} name="history" color={color.appcolor} />
-            </Button>
-            <Button style={buttonStyle}>
-              <MaterialCommunityIcons size={25} name="map-marker" color={color.appcolor} />
-            </Button>
-            <Button style={buttonStyle}>
-              <MaterialCommunityIcons size={25} name="account" color={color.appcolor} />
-            </Button>
-          </View>
-          <View style={timeLIneStyle}>
-            <TimeLine />
-          </View>
-        </Screen>
-      </>
-    )
-  }
+  return (
+    <>
+      <Header
+        leftComponent={
+          <Button style={headerButton} onPress={() => navigation.openDrawer()}>
+            <MaterialCommunityIcons color="#ffff" name="format-align-left" size={25} />
+          </Button>
+        }
+        centerComponent={<Text style={Textstyle}>HOME</Text>}
+        rightComponent={
+          <Button style={headerButton} onPress={() => navigation.navigate("MapsScreen")}>
+            <MaterialCommunityIcons color="#ffff" name="bike" size={25} />
+          </Button>
+        }
+        containerStyle={HeaderStyle}
+        backgroundColor={color.appcolor}
+      />
+      <Screen unsafe={true} preset={"scroll"} style={ROOT}>
+        <View style={animationStyle}>
+          <AnimatedCircularProgress
+            size={250}
+            width={20}
+            fill={75}
+            rotation={180}
+            tintColor={color.appcolor}
+            onAnimationComplete={() => console.log("onAnimationComplete")}
+            backgroundColor={color.palette.offWhite}
+          >
+            {(fill) => <Image source={require("./ChargingAnimation.png")} style={imageStyle} />}
+          </AnimatedCircularProgress>
+        </View>
+        <View style={buttonView}>
+          <Button style={buttonStyle}>
+            <MaterialCommunityIcons size={25} name="history" color={color.appcolor} />
+          </Button>
+          <Button style={buttonStyle}>
+            <MaterialCommunityIcons size={25} name="map-marker" color={color.appcolor} />
+          </Button>
+          <Button style={buttonStyle}>
+            <MaterialCommunityIcons size={25} name="account" color={color.appcolor} />
+          </Button>
+        </View>
+        <Text style={HeadingStyle} text="Your TimeLine" />
+        <View style={timeLIneStyle}>
+          <TimeLine />
+        </View>
+      </Screen>
+    </>
+  )
+}
