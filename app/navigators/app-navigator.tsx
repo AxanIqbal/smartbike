@@ -45,6 +45,7 @@ export type NavigatorParamList = {
     originLat: number
     originLng: number
   }
+  Maps: any
 }
 const buttonStyle: ViewStyle = {
   backgroundColor: `${color.palette.white}`,
@@ -57,16 +58,17 @@ const buttonStyle: ViewStyle = {
 // Documentation: https://reactnavigation.org/docs/stack-navigator/
 const Stack = createNativeStackNavigator<NavigatorParamList>()
 const DStack = createDrawerNavigator<NavigatorParamList>()
+const MapStack = createDrawerNavigator<NavigatorParamList>()
 
-const DrawerStack = ({ navigation }) => {
+const MapStackScreen = ({ navigation }) => {
   return (
-    <DStack.Navigator initialRouteName="welcome">
-      <DStack.Screen options={{ headerShown: false }} name="welcome" component={HomeScreen} />
-      <DStack.Screen
+    <MapStack.Navigator initialRouteName="MapsScreen">
+      <MapStack.Screen
         name="MapsScreen"
         component={MapsScreen}
         options={{
           headerTransparent: true,
+          title: "",
           headerLeft: () => (
             <View
               style={{
@@ -83,9 +85,10 @@ const DrawerStack = ({ navigation }) => {
           ),
         }}
       />
-      <DStack.Screen
+      <MapStack.Screen
         options={{
           headerTransparent: true,
+          title: "",
           headerLeft: () => (
             <View
               style={{
@@ -104,10 +107,29 @@ const DrawerStack = ({ navigation }) => {
         name="DistanceScreen"
         component={DistanceScreen}
       />
-      <DStack.Screen
+      <MapStack.Screen
         options={{ headerShown: false }}
         name="SearchScreen"
         component={SearchScreen}
+      />
+    </MapStack.Navigator>
+  )
+}
+
+const DrawerStack = () => {
+  return (
+    <DStack.Navigator initialRouteName="welcome">
+      <DStack.Screen
+        options={{ headerShown: false, title: "Welcome" }}
+        name="welcome"
+        component={HomeScreen}
+      />
+      <DStack.Screen
+        options={{
+          headerShown: false,
+        }}
+        name="Maps"
+        component={MapStackScreen}
       />
     </DStack.Navigator>
   )
