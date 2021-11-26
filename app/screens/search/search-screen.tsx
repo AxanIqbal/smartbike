@@ -111,7 +111,7 @@ const square: ViewStyle = {
 const Textstyle: TextStyle = {
   fontSize: 20,
   marginTop: 10,
-  color: '#ffff',
+  color: "#ffff",
 }
 
 const searchStyle: ViewStyle = {
