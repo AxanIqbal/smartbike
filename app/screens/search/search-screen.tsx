@@ -43,7 +43,7 @@ const textInputStyle: TextStyle = {
   shadowOpacity: 0.34,
   shadowRadius: 6.27,
   elevation: 5,
-  // borderRadius:20,
+  color: color.palette.lightGrey,
   borderTopRightRadius: 25,
   borderBottomLeftRadius: 25,
   // borderBottomLeftRadius: 10,
@@ -93,7 +93,7 @@ const circle: ViewStyle = {
 const line: ViewStyle = {
   width: 1,
   height: 53,
-  backgroundColor: color.palette.lightGrey,
+  backgroundColor: "#686767",
   position: "absolute",
   top: 31.5,
   left: 17,
@@ -215,6 +215,7 @@ export const SearchScreen: FC<StackScreenProps<NavigatorParamList, "SearchScreen
                 longitudeDelta: 0.001,
               })
             }}
+            textInputProps={{ placeholderTextColor: color.palette.lightGrey }}
             suppressDefaultStyles
             styles={{
               textInput: textInputStyle,
@@ -241,6 +242,7 @@ export const SearchScreen: FC<StackScreenProps<NavigatorParamList, "SearchScreen
                 longitudeDelta: 0.001,
               })
             }}
+            textInputProps={{ placeholderTextColor: color.palette.lightGrey }}
             suppressDefaultStyles
             styles={{
               textInput: textInputStyle,

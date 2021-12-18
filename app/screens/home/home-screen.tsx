@@ -7,8 +7,8 @@ import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityI
 import { AnimatedCircularProgress } from "react-native-circular-progress"
 import { NavigatorParamList } from "../../navigators"
 import { DrawerScreenProps } from "@react-navigation/drawer"
-// import { watchCurrentLocation } from "../../utils/geolocation"
-// import { useAppDispatch } from "../../store/store"
+import { watchCurrentLocation } from "../../utils/geolocation"
+import { useAppDispatch } from "../../store/store"
 import { selectCords, setLocation } from "../../store/slices"
 import { useSelector } from "react-redux"
 
@@ -28,6 +28,7 @@ const HeaderStyle: ViewStyle = {
   shadowOpacity: 0.34,
   shadowRadius: 6.27,
   elevation: 5,
+
 }
 
 const animationStyle: ViewStyle = {
