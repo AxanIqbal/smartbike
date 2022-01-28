@@ -82,3 +82,12 @@ web-build/
 # Configurations
 app/config/env.*.js
 !env.js
+
+#yarn
+.yarn/*
+/.yarn/cache
+!.yarn/patches
+!.yarn/plugins
+!.yarn/releases
+!.yarn/sdks
+!.yarn/versions
