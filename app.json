@@ -1,4 +1,6 @@
 {
+  "name": "SmartBike",
+  "displayName": "SmartBike",
   "expo": {
     "name": "smartbike",
     "slug": "smartbike",
