@@ -19,8 +19,7 @@
       "**/*"
     ],
     "android": {
-      "googleServicesFile": "./google-services.json",
-      "package": "com.smartbike"
+      "googleServicesFile": "./google-services.json"
     },
     "ios": {
       "supportsTablet": true,
