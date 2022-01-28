@@ -2,8 +2,8 @@
   "name": "SmartBike",
   "displayName": "SmartBike",
   "expo": {
-    "name": "smartbike",
-    "slug": "smartbike",
+    "name": "SmartBike",
+    "slug": "SmartBike",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/images/icon.png",
@@ -15,12 +15,22 @@
     "updates": {
       "fallbackToCacheTimeout": 0
     },
-    "assetBundlePatterns": ["**/*"],
+    "assetBundlePatterns": [
+      "**/*"
+    ],
+    "android": {
+      "googleServicesFile": "./google-services.json"
+    },
     "ios": {
-      "supportsTablet": true
+      "supportsTablet": true,
+      "googleServicesFile": "./GoogleService-Info.plist"
     },
     "web": {
       "favicon": "./assets/images/favicon.png"
-    }
+    },
+    "plugins": [
+      "@react-native-firebase/app",
+      "@react-native-firebase/crashlytics"
+    ]
   }
 }

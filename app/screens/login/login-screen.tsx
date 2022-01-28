@@ -81,11 +81,11 @@ export const LoginScreen: FC<StackScreenProps<AuthParamList, "login">> = ({ navi
   })
 
   const onSubmit = async (data) => {
-    console.log(data)
+    console.tron.log(data)
     try {
       await auth().signInWithEmailAndPassword(data.email, data.password)
     } catch (e) {
-      console.log(e.message)
+      console.tron.error(e.message,e)
       ToastAndroid.show(e.message, ToastAndroid.LONG)
     }
   }
@@ -144,8 +144,6 @@ export const LoginScreen: FC<StackScreenProps<AuthParamList, "login">> = ({ navi
               onBlur={field.onBlur}
               renderErrorMessage={fieldState.isTouched && Boolean(fieldState.error?.message)}
               errorMessage={fieldState.error?.message}
-              autoComplete={"email"}
-              autoCompleteType={""}
               textAlign={undefined}
             />
           )}

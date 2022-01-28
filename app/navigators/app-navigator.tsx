@@ -32,6 +32,7 @@ import { AuthStack } from "./auth/auth-navigator"
  *   https://reactnavigation.org/docs/typescript#type-checking-the-navigator
  */
 export type NavigatorParamList = {
+  Demo: undefined
   drawer: undefined
   welcome: undefined
   MapsScreen: undefined
