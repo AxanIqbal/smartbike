@@ -1,9 +1,8 @@
 import * as React from "react"
 import { StyleProp, TextStyle, View, ViewStyle } from "react-native"
-//import { observer } from "mobx-react-lite"
+import { observer } from "mobx-react-lite"
 import { color, typography } from "../../theme"
-import { Text } from "../"
-import { flatten } from "ramda"
+import { Text } from "../text/text"
 
 const CONTAINER: ViewStyle = {
   justifyContent: "center",
@@ -25,13 +24,13 @@ export interface <%= props.pascalCaseName %>Props {
 /**
  * Describe your component here
  */
-export const <%= props.pascalCaseName %> = function <%= props.pascalCaseName %>(props: <%= props.pascalCaseName %>Props) {
+export const <%= props.pascalCaseName %> = observer(function <%= props.pascalCaseName %>(props: <%= props.pascalCaseName %>Props) {
   const { style } = props
-  const styles = flatten([CONTAINER, style])
+  const styles = Object.assign({}, CONTAINER, style)
 
   return (
     <View style={styles}>
       <Text style={TEXT}>Hello</Text>
     </View>
   )
-}
+})

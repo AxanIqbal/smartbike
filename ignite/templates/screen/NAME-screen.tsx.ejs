@@ -1,4 +1,5 @@
 import React from "react"
+import { observer } from "mobx-react-lite"
 import { ViewStyle } from "react-native"
 import { Screen, Text } from "../../components"
 // import { useNavigation } from "@react-navigation/native"
@@ -10,7 +11,7 @@ const ROOT: ViewStyle = {
   flex: 1,
 }
 
-export const <%= props.pascalCaseName %>Screen = function <%= props.pascalCaseName %>Screen() {
+export const <%= props.pascalCaseName %>Screen = observer(function <%= props.pascalCaseName %>Screen() {
   // Pull in one of our MST stores
   // const { someStore, anotherStore } = useStores()
 
@@ -21,4 +22,4 @@ export const <%= props.pascalCaseName %>Screen = function <%= props.pascalCaseNa
       <Text preset="header" text="<%= props.camelName %>" />
     </Screen>
   )
-}
+})

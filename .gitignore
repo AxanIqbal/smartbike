@@ -28,6 +28,7 @@ build/
 .gradle
 local.properties
 *.iml
+*.hprof
 
 # node.js
 #
@@ -81,4 +82,3 @@ web-build/
 # Configurations
 app/config/env.*.js
 !env.js
-.yarn/cache/
