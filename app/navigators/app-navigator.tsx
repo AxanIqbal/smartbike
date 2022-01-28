@@ -8,7 +8,7 @@ import React from "react"
 import { Dimensions, useColorScheme, View, ViewStyle } from "react-native"
 // import { DarkTheme, DefaultTheme, NavigationContainer } from "@react-navigation/native"
 // import { createNativeStackNavigator } from "@react-navigation/native-stack"
-import { navigationRef } from "./navigation-utilities"
+import { navigationRef, useBackButtonHandler } from "./navigation-utilities"
 // import { createDrawerNavigator } from "@react-navigation/drawer"
 import { DistanceScreen, HomeScreen, MapsScreen, SearchScreen } from "../screens"
 import Icon from "react-native-vector-icons/FontAwesome5"
@@ -17,10 +17,7 @@ import { Button } from "../components"
 import { createNativeStackNavigator } from "@react-navigation/native-stack"
 import { createDrawerNavigator } from "@react-navigation/drawer"
 import { DarkTheme, DefaultTheme, NavigationContainer } from "@react-navigation/native"
-import { useSelector } from "react-redux"
-import { RootState } from "../store/store"
 import { AuthStack } from "./auth/auth-navigator"
-import { isEmpty } from "react-redux-firebase"
 
 /**
  * This type allows TypeScript to know what routes are defined in this navigator
@@ -69,40 +66,14 @@ const MapStackScreen = ({ navigation }) => {
         options={{
           headerTransparent: true,
           title: "",
-          headerLeft: () => (
-            <View
-              style={{
-                flexDirection: "row",
-                alignSelf: "center",
-                width: Dimensions.get("window").width - 60,
-                marginTop: 20,
-              }}
-            >
-              <Button onPress={() => navigation.goBack()} style={buttonStyle}>
-                <Icon name="arrow-left" color={color.appcolor} size={25} />
-              </Button>
-            </View>
-          ),
+          headerLeft: headerLeft,
         }}
       />
       <MapStack.Screen
         options={{
           headerTransparent: true,
           title: "",
-          headerLeft: () => (
-            <View
-              style={{
-                flexDirection: "row",
-                alignSelf: "center",
-                width: Dimensions.get("window").width - 60,
-                marginTop: 20,
-              }}
-            >
-              <Button onPress={() => navigation.goBack()} style={buttonStyle}>
-                <Icon name="arrow-left" color={color.appcolor} size={25} />
-              </Button>
-            </View>
-          ),
+          headerLeft: headerLeft1,
         }}
         name="DistanceScreen"
         component={DistanceScreen}
@@ -114,6 +85,36 @@ const MapStackScreen = ({ navigation }) => {
       />
     </MapStack.Navigator>
   )
+
+  function headerLeft1() {
+    return <View
+      style={{
+        flexDirection: "row",
+        alignSelf: "center",
+        width: Dimensions.get("window").width - 60,
+        marginTop: 20,
+      }}
+    >
+      <Button onPress={() => navigation.goBack()} style={buttonStyle}>
+        <Icon name="arrow-left" color={color.appcolor} size={25} />
+      </Button>
+    </View>
+  }
+
+  function headerLeft() {
+    return <View
+      style={{
+        flexDirection: "row",
+        alignSelf: "center",
+        width: Dimensions.get("window").width - 60,
+        marginTop: 20,
+      }}
+    >
+      <Button onPress={() => navigation.goBack()} style={buttonStyle}>
+        <Icon name="arrow-left" color={color.appcolor} size={25} />
+      </Button>
+    </View>
+  }
 }
 
 const DrawerStack = () => {
@@ -152,16 +153,15 @@ interface NavigationProps extends Partial<React.ComponentProps<typeof Navigation
 
 export const AppNavigator = (props: NavigationProps) => {
   const colorScheme = useColorScheme()
-  const auth = useSelector<RootState>((state) => state.firebase.auth)
-  console.log(auth, "<== auth")
+  useBackButtonHandler(canExit)
   return (
     <NavigationContainer
       ref={navigationRef}
       theme={colorScheme === "dark" ? DarkTheme : DefaultTheme}
       {...props}
     >
-      {isEmpty(auth) ? <AuthStack /> : <AppStack />}
-      {/* <AuthStack /> */}
+      {/* {isEmpty(auth) ? <AuthStack /> : <AppStack />} */}
+       <AuthStack />
     </NavigationContainer>
   )
 }

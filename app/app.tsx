@@ -1,20 +1,17 @@
-import "react-native-gesture-handler"
 import "./i18n"
 import "./utils/ignore-warnings"
 import "@react-native-firebase/auth"
 import "@react-native-firebase/database"
-import firebase from "@react-native-firebase/app"
-import React, { useEffect } from "react"
+import React, { useState, useEffect } from "react"
 import { SafeAreaProvider, initialWindowMetrics } from "react-native-safe-area-context"
 import { initFonts } from "./theme/fonts" // expo
 import * as storage from "./utils/storage"
-import { useBackButtonHandler, AppNavigator, canExit, useNavigationPersistence } from "./navigators"
+import { AppNavigator, useNavigationPersistence } from "./navigators"
 import { ToggleStorybook } from "../storybook/toggle-storybook"
-import { store } from "./store/store"
-import { Provider } from "react-redux"
-import { ReactReduxFirebaseProvider } from "react-redux-firebase"
-import { persistStore } from "redux-persist"
-import { PersistGate } from "redux-persist/integration/react"
+import { RootStore, RootStoreProvider, setupRootStore } from "./models"
+
+import { ErrorBoundary } from "./screens/error/error-boundary"
+
 import { LoadingScreen } from "./screens"
 // This puts screens in a native ViewController or Activity. If you want fully native
 // stack navigation, use `createNativeStackNavigator` in place of `createStackNavigator`:
@@ -26,29 +23,17 @@ export const NAVIGATION_PERSISTENCE_KEY = "NAVIGATION_STATE"
  * This is the root component of our app.
  */
 function App() {
-  useBackButtonHandler(canExit)
+  const [rootStore, setRootStore] = useState<RootStore | undefined>(undefined)
   const {
     initialNavigationState,
     onNavigationStateChange,
     isRestored: isNavigationStateRestored,
   } = useNavigationPersistence(storage, NAVIGATION_PERSISTENCE_KEY)
 
-  const rrfConfig = {
-    userProfile: "users",
-    // useFirestoreForProfile: true, // Firestore for Profile instead of Realtime DB
-  }
-  const rrfProps = {
-    firebase: firebase,
-    config: rrfConfig,
-    dispatch: store.dispatch,
-  }
-
-  const persist = persistStore(store)
-
-  // Kick off initial async loading actions, like loading fonts and RootStore
   useEffect(() => {
     ;(async () => {
       await initFonts() // expo
+      setupRootStore().then(setRootStore)
     })()
   }, [])
 
@@ -67,18 +52,16 @@ function App() {
   // otherwise, we're ready to render the app
   return (
     <ToggleStorybook>
-      <Provider store={store}>
-        <ReactReduxFirebaseProvider {...rrfProps}>
-          <PersistGate loading={null} persistor={persist}>
-          <SafeAreaProvider initialMetrics={initialWindowMetrics}>
+      <RootStoreProvider value={rootStore}>
+        <SafeAreaProvider initialMetrics={initialWindowMetrics}>
+          <ErrorBoundary catchErrors={"always"}>
             <AppNavigator
               initialState={initialNavigationState}
               onStateChange={onNavigationStateChange}
             />
-          </SafeAreaProvider>
-          </PersistGate>
-        </ReactReduxFirebaseProvider>
-      </Provider>
+          </ErrorBoundary>
+        </SafeAreaProvider>
+      </RootStoreProvider>
     </ToggleStorybook>
   )
 }

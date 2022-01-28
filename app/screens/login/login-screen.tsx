@@ -1,13 +1,5 @@
 import React, { FC, useState } from "react"
-import {
-  ToastAndroid,
-  View,
-  ViewStyle,
-  TextStyle,
-  Image,
-  ImageStyle,
-  Dimensions,
-} from "react-native"
+import { Dimensions, Image, ImageStyle, TextStyle, ToastAndroid, View, ViewStyle } from "react-native"
 import { Button, Screen, Text } from "../../components"
 import { color } from "../../theme"
 import { Input } from "react-native-elements"
@@ -35,7 +27,7 @@ const ButtonStyle: ViewStyle = {
 
 const ButtonTextStyle: TextStyle = {
   color: color.palette.white,
-  fontSize: 15
+  fontSize: 15,
 }
 
 const iconStyle: ViewStyle = {
@@ -80,7 +72,7 @@ export const LoginScreen: FC<StackScreenProps<AuthParamList, "login">> = ({ navi
   const {
     control,
     handleSubmit,
-    formState: { errors, isValid, isSubmitted, isSubmitting, submitCount, isValidating },
+    formState: { isSubmitting },
   } = useForm({
     defaultValues: {
       email: "",
@@ -152,6 +144,8 @@ export const LoginScreen: FC<StackScreenProps<AuthParamList, "login">> = ({ navi
               onBlur={field.onBlur}
               renderErrorMessage={fieldState.isTouched && Boolean(fieldState.error?.message)}
               errorMessage={fieldState.error?.message}
+              autoComplete={"email"}
+              autoCompleteType={""}
               textAlign={undefined}
             />
           )}

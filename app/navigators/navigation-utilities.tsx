@@ -57,8 +57,9 @@ export function useBackButtonHandler(canExit: (routeName: string) => boolean) {
 
       // are we allowed to exit?
       if (canExitRef.current(routeName)) {
-        // let the system know we've not handled this event
-        return false
+        // exit and let the system know we've handled the event
+        BackHandler.exitApp()
+        return true
       }
 
       // we can't exit, so let's turn this into a back action
@@ -98,7 +99,7 @@ export function useNavigationPersistence(storage: any, persistenceKey: string) {
 
     if (previousRouteName !== currentRouteName) {
       // track screens.
-      __DEV__ && console.log(currentRouteName)
+      __DEV__ && console.tron.log(currentRouteName)
     }
 
     // Save the current route name for later comparision
