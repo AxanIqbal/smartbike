@@ -2,14 +2,12 @@ import { StackScreenProps } from "@react-navigation/stack"
 import React, { FC, useEffect, useState } from "react"
 import {
   Image,
-  Platform,
   ImageStyle,
   KeyboardAvoidingView,
-  SafeAreaView,
+  Platform,
   TextStyle,
   View,
   ViewStyle,
-  Dimensions,
 } from "react-native"
 import { Header } from "react-native-elements"
 import { GooglePlacesAutocomplete } from "react-native-google-places-autocomplete"
@@ -20,9 +18,7 @@ import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityI
 // import { useStores } from "../../models"
 import Ionicons from "react-native-vector-icons/Ionicons"
 import { color } from "../../theme"
-import { DistanceScreen } from "../distance/distance-screen"
 import MapView, { Marker, PROVIDER_GOOGLE } from "react-native-maps"
-import MapViewDirections from "react-native-maps-directions"
 
 // const ROOT: ViewStyle = {
 //   backgroundColor: color.palette.black,
@@ -161,9 +157,9 @@ const MapStyle: ViewStyle = {
 
 const KeyBoardStyle: ViewStyle = { flex: 1, backgroundColor: "white" }
 
-const origin = { latitude: 24.859142640646972, longitude: 67.03130068682259 }
-const destination = { latitude: 24.89536668796498, longitude: 67.06446083144998 }
-const GOOGLE_MAPS_APIKEY = "AIzaSyDEXI0NflTOvRTBLOpA8w5zG7ZzHww_YtU"
+// const origin = { latitude: 24.859142640646972, longitude: 67.03130068682259 }
+// const destination = { latitude: 24.89536668796498, longitude: 67.06446083144998 }
+// const GOOGLE_MAPS_APIKEY = "AIzaSyDEXI0NflTOvRTBLOpA8w5zG7ZzHww_YtU"
 
 export const SearchScreen: FC<StackScreenProps<NavigatorParamList, "SearchScreen">> = ({
   navigation,

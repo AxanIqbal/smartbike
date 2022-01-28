@@ -1,12 +1,9 @@
 import React from "react"
 import { ViewStyle } from "react-native"
-import { Screen, Text } from "../../components"
+import { Screen } from "../../components"
 // import { useNavigation } from "@react-navigation/native"
 // import { useStores } from "../../models"
 import { color } from "../../theme"
-import { useSelector } from "react-redux"
-import { RootState } from "../../store/store"
-import { useFirebaseConnect } from "react-redux-firebase"
 
 const ROOT: ViewStyle = {
   backgroundColor: color.palette.black,
@@ -15,10 +12,10 @@ const ROOT: ViewStyle = {
 
 export const TestScreen = function TestScreen() {
   // Pull in one of our MST stores
-  useFirebaseConnect([
-    'todos' // { path: '/todos' } // object notation
-  ])
-  const data = useSelector((state: RootState) => state.firebase.ordered.todos)
+  // useFirebaseConnect([
+  //   'todos' // { path: '/todos' } // object notation
+  // ])
+  // const data = useSelector((state: RootState) => state.firebase.ordered.todos)
   // Pull in navigation via hook
   // const navigation = useNavigation()
   return (
@@ -26,7 +23,7 @@ export const TestScreen = function TestScreen() {
       {/* {data.map(d => { */}
       {/*  return <Text key={d.key} preset="header" text={`${d.value()} , ${d.key}`} /> */}
       {/* })} */}
-      <Text text={JSON.stringify(data, null, 2)}/>
+      {/* <Text text={JSON.stringify(data, null, 2)}/> */}
     </Screen>
   )
 }

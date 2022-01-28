@@ -5,11 +5,7 @@ import { color } from "../../theme"
 import { NavigatorParamList } from "../../navigators"
 import { StackScreenProps } from "@react-navigation/stack"
 import MapView, { Marker, PROVIDER_GOOGLE } from "react-native-maps"
-import { useSelector } from "react-redux"
-import { selectCords, setLocation } from "../../store/slices"
 import Ionicons from "react-native-vector-icons/Ionicons"
-import { useAppDispatch } from "../../store/store"
-import Geolocation from "react-native-geolocation-service"
 
 const ROOT: ViewStyle = { width: "100%", height: "100%" }
 // const blankScreen: ViewStyle = {
@@ -45,8 +41,8 @@ const searchStyle: ViewStyle = {
 export const MapsScreen: FC<StackScreenProps<NavigatorParamList, "MapsScreen">> = ({
   navigation,
 }) => {
-  const location = useSelector(selectCords)
-  const dispatch = useAppDispatch()
+  // const location = useSelector(selectCords)
+  // const dispatch = useAppDispatch()
   // watchCurrentLocation().then(r => {
   //   console.log(r)
   // })
@@ -69,9 +65,9 @@ export const MapsScreen: FC<StackScreenProps<NavigatorParamList, "MapsScreen">> 
     marginTop: 28,
     resizeMode: "contain",
     transform: [
-      {
-        rotate: `${location.accuracy}deg`,
-      },
+      // {
+      //   rotate: `${location.accuracy}deg`,
+      // },
     ],
   }
 
@@ -83,21 +79,21 @@ export const MapsScreen: FC<StackScreenProps<NavigatorParamList, "MapsScreen">> 
     // },reason => {
     //   console.warn(reason)
     // })
-    Geolocation.watchPosition(
-      (position) => {
-        console.log(position.coords)
-        dispatch(setLocation(position.coords))
-      },
-      (error) => {
-        console.warn(error)
-      },
-      {
-        enableHighAccuracy: true,
-        distanceFilter: 10,
-        forceRequestLocation: true,
-        showLocationDialog: true,
-      },
-    )
+    // Geolocation.watchPosition(
+    //   (position) => {
+    //     console.log(position.coords)
+    // dispatch(setLocation(position.coords))
+    //   },
+    //   (error) => {
+    //     console.warn(error)
+    //   },
+    //   {
+    //     enableHighAccuracy: true,
+    //     distanceFilter: 10,
+    //     forceRequestLocation: true,
+    //     showLocationDialog: true,
+    //   },
+    // )
   }, [])
 
   return (
@@ -107,8 +103,8 @@ export const MapsScreen: FC<StackScreenProps<NavigatorParamList, "MapsScreen">> 
         provider={PROVIDER_GOOGLE}
         loadingEnabled={true}
         initialRegion={{
-          latitude: location.latitude || 24.942114588644632,
-          longitude: location.longitude || 67.07928649736084,
+          latitude: 24.942114588644632,
+          longitude: 67.07928649736084,
           latitudeDelta: 0.0922,
           longitudeDelta: 0.0421,
         }}
@@ -118,8 +114,8 @@ export const MapsScreen: FC<StackScreenProps<NavigatorParamList, "MapsScreen">> 
         <Marker
           title="Your Location"
           coordinate={{
-            latitude: location.latitude || 24.942114588644632,
-            longitude: location.longitude || 67.07928649736084,
+            latitude: 24.942114588644632,
+            longitude: 67.07928649736084,
           }}
         >
           <Image style={imageStyle} source={require("./BikeMarker.png")} />

@@ -7,10 +7,7 @@ import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityI
 import { AnimatedCircularProgress } from "react-native-circular-progress"
 import { NavigatorParamList } from "../../navigators"
 import { DrawerScreenProps } from "@react-navigation/drawer"
-import { watchCurrentLocation } from "../../utils/geolocation"
-import { useAppDispatch } from "../../store/store"
-import { selectCords, setLocation } from "../../store/slices"
-import { useSelector } from "react-redux"
+
 
 const ROOT: ViewStyle = {
   backgroundColor: color.palette.white,
@@ -82,7 +79,7 @@ const HeadingStyle: TextStyle = {
 export const HomeScreen: FC<DrawerScreenProps<NavigatorParamList, "welcome">> = ({
   navigation,
 }) => {
-  console.log(useSelector(selectCords))
+  // console.log(useSelector(selectCords))
   React.useEffect(() => {
     // getCurrentLocation().then(r => {
     //   console.log(r)
