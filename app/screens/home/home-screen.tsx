@@ -24,7 +24,6 @@ const HeaderStyle: ViewStyle = {
   shadowOpacity: 0.34,
   shadowRadius: 6.27,
   elevation: 5,
-
 }
 
 const animationStyle: ViewStyle = {
@@ -68,11 +67,11 @@ const headerButton: ViewStyle = {
 }
 
 const HeadingStyle: TextStyle = {
-  fontSize:25,
-  textAlign:'center',
+  fontSize: 25,
+  textAlign: "center",
   color: `${color.appcolor}`,
   paddingTop: 5,
-  fontWeight: 'bold',
+  fontWeight: "bold",
 }
 
 export const HomeScreen: FC<DrawerScreenProps<NavigatorParamList, "welcome">> = ({

@@ -1,6 +1,4 @@
 {
-  "name": "SmartBike",
-  "displayName": "SmartBike",
   "expo": {
     "name": "SmartBike",
     "slug": "SmartBike",
@@ -20,12 +18,16 @@
     ],
     "android": {
       "googleServicesFile": "./google-services.json",
-      "package": "com.smartbike"
+      "package": "com.smartbike",
+      "config": {
+        "googleMaps": {
+          "apiKey": "AIzaSyBQsbHq47NyaiWSCpcSuhj3yKiT7HeTsXs"
+        }
+      }
     },
     "ios": {
       "supportsTablet": true,
       "bundleIdentifier": "com.smartbike"
-//      "googleServicesFile": "./GoogleService-Info.plist"
     },
     "web": {
       "favicon": "./assets/images/favicon.png"
