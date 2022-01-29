@@ -4,7 +4,7 @@
  * Generally speaking, it will contain an auth flow (registration, login, forgot password)
  * and a "main" flow which the user will use once logged in.
  */
-import React from "react"
+import React, { useEffect, useState } from "react"
 import { Dimensions, useColorScheme, View, ViewStyle } from "react-native"
 // import { DarkTheme, DefaultTheme, NavigationContainer } from "@react-navigation/native"
 // import { createNativeStackNavigator } from "@react-navigation/native-stack"
@@ -18,6 +18,7 @@ import { createNativeStackNavigator } from "@react-navigation/native-stack"
 import { createDrawerNavigator } from "@react-navigation/drawer"
 import { DarkTheme, DefaultTheme, NavigationContainer } from "@react-navigation/native"
 import { AuthStack } from "./auth/auth-navigator"
+import { firebase } from "@react-native-firebase/auth"
 
 /**
  * This type allows TypeScript to know what routes are defined in this navigator
@@ -153,8 +154,23 @@ const AppStack = () => {
 interface NavigationProps extends Partial<React.ComponentProps<typeof NavigationContainer>> {}
 
 export const AppNavigator = (props: NavigationProps) => {
+  const [isLoggedIn, setIsLoggedIn] = useState(false)
   const colorScheme = useColorScheme()
   useBackButtonHandler(canExit)
+
+  useEffect(() => {
+    const unsubscribe = firebase.auth().onAuthStateChanged((user)=> {
+      if (user) {
+        setIsLoggedIn(true)
+      } else {
+        setIsLoggedIn(false)
+      }
+    })
+    return () => {
+      unsubscribe()
+    }
+  }, [])
+
   return (
     <NavigationContainer
       ref={navigationRef}
@@ -162,7 +178,7 @@ export const AppNavigator = (props: NavigationProps) => {
       {...props}
     >
       {/* {isEmpty(auth) ? <AuthStack /> : <AppStack />} */}
-       <AuthStack />
+       {isLoggedIn ? <AppStack/>  : <AuthStack />}
     </NavigationContainer>
   )
 }
