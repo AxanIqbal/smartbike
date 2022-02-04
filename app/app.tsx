@@ -1,7 +1,5 @@
 import "./i18n"
 import "./utils/ignore-warnings"
-import "@react-native-firebase/auth"
-import "@react-native-firebase/database"
 import React, { useState, useEffect } from "react"
 import { SafeAreaProvider, initialWindowMetrics } from "react-native-safe-area-context"
 import { initFonts } from "./theme/fonts" // expo
@@ -43,11 +41,12 @@ function App() {
   // In iOS: application:didFinishLaunchingWithOptions:
   // In Android: https://stackoverflow.com/a/45838109/204044
   // You can replace with your own loading component if you wish.
-  if (!isNavigationStateRestored) return (
-  <SafeAreaProvider>
-    <LoadingScreen/>
-  </SafeAreaProvider>
-  );
+  if (!isNavigationStateRestored)
+    return (
+      <SafeAreaProvider>
+        <LoadingScreen />
+      </SafeAreaProvider>
+    )
 
   // otherwise, we're ready to render the app
   return (
