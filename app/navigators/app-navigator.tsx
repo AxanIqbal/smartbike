@@ -18,6 +18,9 @@ import { createNativeStackNavigator } from "@react-navigation/native-stack"
 import { createDrawerNavigator } from "@react-navigation/drawer"
 import { DarkTheme, DefaultTheme, NavigationContainer } from "@react-navigation/native"
 import { AuthStack } from "./auth/auth-navigator"
+import { useSelector } from "react-redux"
+import { RootState } from "../store/store"
+import { isEmpty } from "react-redux-firebase"
 
 /**
  * This type allows TypeScript to know what routes are defined in this navigator
@@ -87,33 +90,37 @@ const MapStackScreen = ({ navigation }) => {
   )
 
   function headerLeft1() {
-    return <View
-      style={{
-        flexDirection: "row",
-        alignSelf: "center",
-        width: Dimensions.get("window").width - 60,
-        marginTop: 20,
-      }}
-    >
-      <Button onPress={() => navigation.goBack()} style={buttonStyle}>
-        <Icon name="arrow-left" color={color.appcolor} size={25} />
-      </Button>
-    </View>
+    return (
+      <View
+        style={{
+          flexDirection: "row",
+          alignSelf: "center",
+          width: Dimensions.get("window").width - 60,
+          marginTop: 20,
+        }}
+      >
+        <Button onPress={() => navigation.goBack()} style={buttonStyle}>
+          <Icon name="arrow-left" color={color.appcolor} size={25} />
+        </Button>
+      </View>
+    )
   }
 
   function headerLeft() {
-    return <View
-      style={{
-        flexDirection: "row",
-        alignSelf: "center",
-        width: Dimensions.get("window").width - 60,
-        marginTop: 20,
-      }}
-    >
-      <Button onPress={() => navigation.goBack()} style={buttonStyle}>
-        <Icon name="arrow-left" color={color.appcolor} size={25} />
-      </Button>
-    </View>
+    return (
+      <View
+        style={{
+          flexDirection: "row",
+          alignSelf: "center",
+          width: Dimensions.get("window").width - 60,
+          marginTop: 20,
+        }}
+      >
+        <Button onPress={() => navigation.goBack()} style={buttonStyle}>
+          <Icon name="arrow-left" color={color.appcolor} size={25} />
+        </Button>
+      </View>
+    )
   }
 }
 
@@ -153,6 +160,7 @@ interface NavigationProps extends Partial<React.ComponentProps<typeof Navigation
 
 export const AppNavigator = (props: NavigationProps) => {
   const colorScheme = useColorScheme()
+  const auth = useSelector<RootState>((state) => state.firebase.auth)
   useBackButtonHandler(canExit)
   return (
     <NavigationContainer
@@ -160,8 +168,7 @@ export const AppNavigator = (props: NavigationProps) => {
       theme={colorScheme === "dark" ? DarkTheme : DefaultTheme}
       {...props}
     >
-      {/* {isEmpty(auth) ? <AuthStack /> : <AppStack />} */}
-       <AuthStack />
+      {isEmpty(auth) ? <AuthStack /> : <AppStack />}
     </NavigationContainer>
   )
 }

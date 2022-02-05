@@ -8,7 +8,6 @@ import { AnimatedCircularProgress } from "react-native-circular-progress"
 import { NavigatorParamList } from "../../navigators"
 import { DrawerScreenProps } from "@react-navigation/drawer"
 
-
 const ROOT: ViewStyle = {
   backgroundColor: color.palette.white,
 }
@@ -25,7 +24,6 @@ const HeaderStyle: ViewStyle = {
   shadowOpacity: 0.34,
   shadowRadius: 6.27,
   elevation: 5,
-
 }
 
 const animationStyle: ViewStyle = {
@@ -69,11 +67,11 @@ const headerButton: ViewStyle = {
 }
 
 const HeadingStyle: TextStyle = {
-  fontSize:25,
-  textAlign:'center',
+  fontSize: 25,
+  textAlign: "center",
   color: `${color.appcolor}`,
   paddingTop: 5,
-  fontWeight: 'bold',
+  fontWeight: "bold",
 }
 
 export const HomeScreen: FC<DrawerScreenProps<NavigatorParamList, "welcome">> = ({
@@ -116,7 +114,7 @@ export const HomeScreen: FC<DrawerScreenProps<NavigatorParamList, "welcome">> = 
             size={250}
             width={20}
             fill={75}
-            rotation={180}
+            rotation={0}
             tintColor={color.appcolor}
             onAnimationComplete={() => console.log("onAnimationComplete")}
             backgroundColor={color.palette.offWhite}

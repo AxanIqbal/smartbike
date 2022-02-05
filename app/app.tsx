@@ -1,16 +1,20 @@
 import "./i18n"
 import "./utils/ignore-warnings"
-import React, { useState, useEffect } from "react"
-import { SafeAreaProvider, initialWindowMetrics } from "react-native-safe-area-context"
+import "@react-native-firebase/auth"
+import "@react-native-firebase/database"
+import React, { useEffect } from "react"
+import firebase from "@react-native-firebase/app"
+import { initialWindowMetrics, SafeAreaProvider } from "react-native-safe-area-context"
 import { initFonts } from "./theme/fonts" // expo
 import * as storage from "./utils/storage"
+
 import { AppNavigator, useNavigationPersistence } from "./navigators"
 import { ToggleStorybook } from "../storybook/toggle-storybook"
-import { RootStore, RootStoreProvider, setupRootStore } from "./models"
-
 import { ErrorBoundary } from "./screens/error/error-boundary"
-
 import { LoadingScreen } from "./screens"
+import { store } from "./store/store"
+import { Provider } from "react-redux"
+import { ReactReduxFirebaseProvider } from "react-redux-firebase"
 // This puts screens in a native ViewController or Activity. If you want fully native
 // stack navigation, use `createNativeStackNavigator` in place of `createStackNavigator`:
 // https://github.com/kmagiera/react-native-screens#using-native-stack-navigator
@@ -21,17 +25,26 @@ export const NAVIGATION_PERSISTENCE_KEY = "NAVIGATION_STATE"
  * This is the root component of our app.
  */
 function App() {
-  const [rootStore, setRootStore] = useState<RootStore | undefined>(undefined)
+  // const [rootStore, setRootStore] = useState<RootStore | undefined>(undefined)
   const {
     initialNavigationState,
     onNavigationStateChange,
     isRestored: isNavigationStateRestored,
   } = useNavigationPersistence(storage, NAVIGATION_PERSISTENCE_KEY)
+  const rrfConfig = {
+    userProfile: "users",
+    // useFirestoreForProfile: true, // Firestore for Profile instead of Realtime DB
+  }
+  const rrfProps = {
+    firebase: firebase,
+    config: rrfConfig,
+    dispatch: store.dispatch,
+  }
 
   useEffect(() => {
     ;(async () => {
       await initFonts() // expo
-      setupRootStore().then(setRootStore)
+      // setupRootStore().then(setRootStore)
     })()
   }, [])
 
@@ -51,16 +64,18 @@ function App() {
   // otherwise, we're ready to render the app
   return (
     <ToggleStorybook>
-      <RootStoreProvider value={rootStore}>
-        <SafeAreaProvider initialMetrics={initialWindowMetrics}>
-          <ErrorBoundary catchErrors={"always"}>
-            <AppNavigator
-              initialState={initialNavigationState}
-              onStateChange={onNavigationStateChange}
-            />
-          </ErrorBoundary>
-        </SafeAreaProvider>
-      </RootStoreProvider>
+      <Provider store={store}>
+        <ReactReduxFirebaseProvider {...rrfProps}>
+          <SafeAreaProvider initialMetrics={initialWindowMetrics}>
+            <ErrorBoundary catchErrors={"always"}>
+              <AppNavigator
+                initialState={initialNavigationState}
+                onStateChange={onNavigationStateChange}
+              />
+            </ErrorBoundary>
+          </SafeAreaProvider>
+        </ReactReduxFirebaseProvider>
+      </Provider>
     </ToggleStorybook>
   )
 }
