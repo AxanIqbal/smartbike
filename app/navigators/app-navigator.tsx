@@ -14,7 +14,6 @@ import { DistanceScreen, HomeScreen, MapsScreen, SearchScreen } from "../screens
 import Icon from "react-native-vector-icons/FontAwesome5"
 import { color } from "../theme"
 import { Button } from "../components"
-import { createNativeStackNavigator } from "@react-navigation/native-stack"
 import { createDrawerNavigator } from "@react-navigation/drawer"
 import { DarkTheme, DefaultTheme, NavigationContainer } from "@react-navigation/native"
 import { AuthStack } from "./auth/auth-navigator"
@@ -56,7 +55,7 @@ const buttonStyle: ViewStyle = {
 }
 
 // Documentation: https://reactnavigation.org/docs/stack-navigator/
-const Stack = createNativeStackNavigator<NavigatorParamList>()
+// const Stack = createNativeStackNavigator<NavigatorParamList>()
 const DStack = createDrawerNavigator<NavigatorParamList>()
 const MapStack = createDrawerNavigator<NavigatorParamList>()
 
@@ -143,18 +142,18 @@ const DrawerStack = () => {
   )
 }
 
-const AppStack = () => {
-  return (
-    <Stack.Navigator
-      screenOptions={{
-        headerShown: false,
-      }}
-      initialRouteName="drawer"
-    >
-      <Stack.Screen name="drawer" component={DrawerStack} />
-    </Stack.Navigator>
-  )
-}
+// const AppStack = () => {
+//   return (
+//     <Stack.Navigator
+//       screenOptions={{
+//         headerShown: false,
+//       }}
+//       initialRouteName="drawer"
+//     >
+//       <Stack.Screen name="drawer" component={DrawerStack} />
+//     </Stack.Navigator>
+//   )
+// }
 
 interface NavigationProps extends Partial<React.ComponentProps<typeof NavigationContainer>> {}
 
@@ -168,7 +167,7 @@ export const AppNavigator = (props: NavigationProps) => {
       theme={colorScheme === "dark" ? DarkTheme : DefaultTheme}
       {...props}
     >
-      {isEmpty(auth) ? <AuthStack /> : <AppStack />}
+      {isEmpty(auth) ? <AuthStack /> : <DrawerStack />}
     </NavigationContainer>
   )
 }
