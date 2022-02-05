@@ -101,7 +101,7 @@ export const HomeScreen: FC<DrawerScreenProps<NavigatorParamList, "welcome">> = 
         }
         centerComponent={<Text style={Textstyle}>HOME</Text>}
         rightComponent={
-          <Button style={headerButton} onPress={() => navigation.navigate("Maps")}>
+          <Button style={headerButton} onPress={() => navigation.navigate("MapsScreen")}>
             <MaterialCommunityIcons color="#ffff" name="bike" size={25} />
           </Button>
         }

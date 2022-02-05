@@ -13,13 +13,15 @@ import { navigationRef, useBackButtonHandler } from "./navigation-utilities"
 import { DistanceScreen, HomeScreen, MapsScreen, SearchScreen } from "../screens"
 import Icon from "react-native-vector-icons/FontAwesome5"
 import { color } from "../theme"
-import { Button } from "../components"
-import { createDrawerNavigator } from "@react-navigation/drawer"
+import { Button, Drawer } from "../components"
+import { createDrawerNavigator, useDrawerProgress } from "@react-navigation/drawer"
 import { DarkTheme, DefaultTheme, NavigationContainer } from "@react-navigation/native"
 import { AuthStack } from "./auth/auth-navigator"
 import { useSelector } from "react-redux"
 import { RootState } from "../store/store"
 import { isEmpty } from "react-redux-firebase"
+import { createNativeStackNavigator } from "@react-navigation/native-stack"
+import Animated, { Adaptable } from "react-native-reanimated"
 
 /**
  * This type allows TypeScript to know what routes are defined in this navigator
@@ -34,7 +36,6 @@ import { isEmpty } from "react-redux-firebase"
  *   https://reactnavigation.org/docs/typescript#type-checking-the-navigator
  */
 export type NavigatorParamList = {
-  drawer: undefined
   welcome: undefined
   MapsScreen: undefined
   SearchScreen: undefined
@@ -44,8 +45,8 @@ export type NavigatorParamList = {
     originLat: number
     originLng: number
   }
-  Maps: any
 }
+
 const buttonStyle: ViewStyle = {
   backgroundColor: `${color.palette.white}`,
   height: 50,
@@ -55,55 +56,83 @@ const buttonStyle: ViewStyle = {
 }
 
 // Documentation: https://reactnavigation.org/docs/stack-navigator/
-// const Stack = createNativeStackNavigator<NavigatorParamList>()
-const DStack = createDrawerNavigator<NavigatorParamList>()
-const MapStack = createDrawerNavigator<NavigatorParamList>()
+const Stack = createNativeStackNavigator<NavigatorParamList>()
+const DStack = createDrawerNavigator()
 
-const MapStackScreen = ({ navigation }) => {
+const DrawerStack = () => {
   return (
-    <MapStack.Navigator initialRouteName="MapsScreen">
-      <MapStack.Screen
-        name="MapsScreen"
-        component={MapsScreen}
-        options={{
-          headerTransparent: true,
-          title: "",
-          headerLeft: headerLeft,
-        }}
-      />
-      <MapStack.Screen
-        options={{
-          headerTransparent: true,
-          title: "",
-          headerLeft: headerLeft1,
-        }}
-        name="DistanceScreen"
-        component={DistanceScreen}
-      />
-      <MapStack.Screen
-        options={{ headerShown: false }}
-        name="SearchScreen"
-        component={SearchScreen}
-      />
-    </MapStack.Navigator>
+    <DStack.Navigator
+      initialRouteName="screens"
+      screenOptions={{
+        drawerStyle: {
+          flex: 1,
+          width: "40%",
+          backgroundColor: color.appcolor,
+        },
+        drawerType: "slide",
+        overlayColor: "transparent",
+        sceneContainerStyle: {
+          backgroundColor: color.appcolor,
+        },
+      }}
+      drawerContent={(props) => <Drawer {...props} />}
+    >
+      <DStack.Screen options={{ headerShown: false, title: "Welcome" }} name="screens">
+        {(props) => <AppStack {...props} />}
+      </DStack.Screen>
+    </DStack.Navigator>
   )
+}
 
-  function headerLeft1() {
-    return (
-      <View
-        style={{
-          flexDirection: "row",
-          alignSelf: "center",
-          width: Dimensions.get("window").width - 60,
-          marginTop: 20,
-        }}
-      >
-        <Button onPress={() => navigation.goBack()} style={buttonStyle}>
-          <Icon name="arrow-left" color={color.appcolor} size={25} />
-        </Button>
-      </View>
-    )
+const AppStack = ({ navigation }) => {
+  const progress = useDrawerProgress()
+  const scale = Animated.interpolateNode(progress as Adaptable<number>, {
+    inputRange: [0, 1],
+    outputRange: [1, 0.8],
+  })
+
+  const screenStyle = {
+    transform: [{ scale }],
   }
+  return (
+    <Animated.View style={[{ flex: 1 }, screenStyle]}>
+      <Stack.Navigator
+        screenOptions={{
+          headerShown: false,
+        }}
+        initialRouteName="welcome"
+      >
+        <Stack.Screen
+          options={{ headerShown: false, title: "Welcome" }}
+          name="welcome"
+          component={HomeScreen}
+        />
+        <Stack.Screen
+          name="MapsScreen"
+          component={MapsScreen}
+          options={{
+            headerTransparent: true,
+            title: "",
+            headerLeft: headerLeft,
+          }}
+        />
+        <Stack.Screen
+          options={{
+            headerTransparent: true,
+            title: "",
+            headerLeft: headerLeft,
+          }}
+          name="DistanceScreen"
+          component={DistanceScreen}
+        />
+        <Stack.Screen
+          options={{ headerShown: false }}
+          name="SearchScreen"
+          component={SearchScreen}
+        />
+      </Stack.Navigator>
+    </Animated.View>
+  )
 
   function headerLeft() {
     return (
@@ -122,38 +151,6 @@ const MapStackScreen = ({ navigation }) => {
     )
   }
 }
-
-const DrawerStack = () => {
-  return (
-    <DStack.Navigator initialRouteName="welcome">
-      <DStack.Screen
-        options={{ headerShown: false, title: "Welcome" }}
-        name="welcome"
-        component={HomeScreen}
-      />
-      <DStack.Screen
-        options={{
-          headerShown: false,
-        }}
-        name="Maps"
-        component={MapStackScreen}
-      />
-    </DStack.Navigator>
-  )
-}
-
-// const AppStack = () => {
-//   return (
-//     <Stack.Navigator
-//       screenOptions={{
-//         headerShown: false,
-//       }}
-//       initialRouteName="drawer"
-//     >
-//       <Stack.Screen name="drawer" component={DrawerStack} />
-//     </Stack.Navigator>
-//   )
-// }
 
 interface NavigationProps extends Partial<React.ComponentProps<typeof NavigationContainer>> {}
 
@@ -183,5 +180,5 @@ AppNavigator.displayName = "AppNavigator"
  *
  * `canExit` is used in ./app/app.tsx in the `useBackButtonHandler` hook.
  */
-const exitRoutes = ["drawer", "login"]
+const exitRoutes = ["welcome", "login"]
 export const canExit = (routeName: string) => exitRoutes.includes(routeName)
