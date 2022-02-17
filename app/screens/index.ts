@@ -6,3 +6,5 @@ export * from "./login/login-screen"
 export * from "./distance/distance-screen"
 
 export * from "./loading/loading-screen"
+export * from "./history/history-screen"
+export * from "./user/user-screen"

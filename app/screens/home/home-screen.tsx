@@ -101,7 +101,7 @@ export const HomeScreen: FC<DrawerScreenProps<NavigatorParamList, "welcome">> = 
         }
         centerComponent={<Text style={Textstyle}>HOME</Text>}
         rightComponent={
-          <Button style={headerButton} onPress={() => navigation.navigate("MapsScreen")}>
+          <Button style={headerButton} onPress={() => navigation.navigate("Maps")}>
             <MaterialCommunityIcons color="#ffff" name="bike" size={25} />
           </Button>
         }
@@ -127,10 +127,10 @@ export const HomeScreen: FC<DrawerScreenProps<NavigatorParamList, "welcome">> = 
             <MaterialCommunityIcons size={25} name="history" color={color.appcolor} />
           </Button>
           <Button style={buttonStyle}>
-            <MaterialCommunityIcons size={25} name="map-marker" color={color.appcolor} />
+            <MaterialCommunityIcons onPress={() => navigation.navigate("Maps")} size={25} name="map-marker" color={color.appcolor} />
           </Button>
           <Button style={buttonStyle}>
-            <MaterialCommunityIcons size={25} name="account" color={color.appcolor} />
+            <MaterialCommunityIcons onPress={() => navigation.navigate("HistoryScreen")} size={25} name="account" color={color.appcolor} />
           </Button>
         </View>
         <Text style={HeadingStyle} text="Your TimeLine" />

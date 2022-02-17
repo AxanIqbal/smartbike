@@ -18,16 +18,14 @@ const buttonStyle: ViewStyle = {
   width: "100%",
   bottom: 20,
 }
-// const fieldStyle: ViewStyle = {
-//   width: Dimensions.get("screen").width * 0.9,
-//   marginTop: -10,
-//   borderRadius: 80,
-//   shadowOpacity: 0.34,
-//   backgroundColor: color.palette.white,
-//   shadowRadius: 0.27,
-//   elevation: 2,
-//   height: 50,
-// }
+const buttonStyle1: ViewStyle = {
+  backgroundColor: "transparent",
+  position: "absolute",
+  bottom: 100,
+  alignSelf: 'flex-end',
+  right: 20,
+}
+
 const searchStyle: ViewStyle = {
   backgroundColor: color.palette.white,
   justifyContent: "flex-end",
@@ -37,12 +35,21 @@ const searchStyle: ViewStyle = {
   padding: 20,
   borderRadius: 80,
 }
+const searchStyle1: ViewStyle = {
+  backgroundColor: color.palette.white,
+  justifyContent: "flex-end",
+  shadowRadius: 0.27,
+  elevation: 2,
+  padding: 20,
+  borderRadius: 80,
+}
 
 export const MapsScreen: FC<StackScreenProps<NavigatorParamList, "MapsScreen">> = ({
   navigation,
 }) => {
-  // const location = useSelector(selectCords)
-  // const dispatch = useAppDispatch()
+  const location = useSelector(selectCords)
+  const dispatch = useAppDispatch()
+  const [map, setMap] = useState(null)
   // watchCurrentLocation().then(r => {
   //   console.log(r)
   // })
@@ -108,19 +115,36 @@ export const MapsScreen: FC<StackScreenProps<NavigatorParamList, "MapsScreen">> 
           latitudeDelta: 0.0922,
           longitudeDelta: 0.0421,
         }}
-        // showsUserLocation={true}
-        // followsUserLocation={true}
+        toolbarEnabled={false}
+        ref={(map) => {
+          setMap(map)
+        }}
       >
         <Marker
           title="Your Location"
           coordinate={{
-            latitude: 24.942114588644632,
-            longitude: 67.07928649736084,
+            latitude: location.latitude || 24.942114588644632,
+            longitude: location.longitude || 67.07928649736084,
           }}
         >
           <Image style={imageStyle} source={require("./BikeMarker.png")} />
         </Marker>
       </MapView>
+      <Button
+        onPress={() => {
+          map.animateToRegion({
+            latitude: location.latitude,
+            longitude: location.longitude,
+            latitudeDelta: 0.002,
+            longitudeDelta: 0.001,
+          })
+        }}
+        style={buttonStyle1}
+      >
+        <View style={searchStyle1}>
+          <MaterialIcons color={color.appcolor} size={20} name="my-location" />
+        </View>
+      </Button>
       <Button
         onPress={() => {
           navigation.navigate("SearchScreen")

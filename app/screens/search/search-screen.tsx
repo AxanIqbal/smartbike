@@ -20,10 +20,6 @@ import Ionicons from "react-native-vector-icons/Ionicons"
 import { color } from "../../theme"
 import MapView, { Marker, PROVIDER_GOOGLE } from "react-native-maps"
 
-// const ROOT: ViewStyle = {
-//   backgroundColor: color.palette.black,
-//   flex: 1,
-// }
 
 const container: ViewStyle = {
   marginVertical: 10,

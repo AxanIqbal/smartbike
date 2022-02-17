@@ -1,5 +1,14 @@
 import React, { FC, useState } from "react"
-import { Dimensions, Image, ImageStyle, TextStyle, ToastAndroid, View, ViewStyle } from "react-native"
+import {
+  ToastAndroid,
+  View,
+  ViewStyle,
+  TextStyle,
+  Image,
+  ImageStyle,
+  Dimensions,
+  ActivityIndicator,
+} from "react-native"
 import { Button, Screen, Text } from "../../components"
 import { color } from "../../theme"
 import { Input } from "react-native-elements"
@@ -80,13 +89,17 @@ export const LoginScreen: FC<StackScreenProps<AuthParamList, "login">> = ({ navi
     },
   })
 
+  const [loading, setLoading] = useState(false)
+
   const onSubmit = async (data) => {
-    console.log(data)
+    setLoading(true)
     try {
       await auth().signInWithEmailAndPassword(data.email, data.password)
+      setLoading(false)
     } catch (e) {
       console.log(e.message)
       ToastAndroid.show(e.message, ToastAndroid.LONG)
+      setLoading(false)
     }
   }
 
@@ -185,7 +198,7 @@ export const LoginScreen: FC<StackScreenProps<AuthParamList, "login">> = ({ navi
           disabled={isSubmitting}
           onPress={handleSubmit(onSubmit, onError)}
         >
-          <Text style={ButtonTextStyle} text="Login" />
+          {loading ? <ActivityIndicator animating={true} size="small" color={color.palette.white}/> : <Text style={ButtonTextStyle} text="Login" />}
         </Button>
         <View style={{ alignSelf: "center", marginVertical: 15 }}>
           <Text style={{ textAlign: "center" }}>OR</Text>
