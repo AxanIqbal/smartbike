@@ -48,8 +48,8 @@ export const HistoryScreen: FC<DrawerScreenProps<NavigatorParamList, "HistoryScr
     <>
       <Header
         leftComponent={
-          <Button style={headerButton} onPress={() => navigation.openDrawer()}>
-            <MaterialCommunityIcons color="#ffff" name="format-align-left" size={25} />
+          <Button style={headerButton} onPress={() => navigation.goBack()}>
+            <MaterialCommunityIcons color="#ffff" name="arrow-left" size={25} />
           </Button>
         }
         centerComponent={<Text style={Textstyle}>TIMELINE</Text>}

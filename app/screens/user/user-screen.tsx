@@ -1,6 +1,6 @@
 import React, { FC } from "react"
-import { ViewStyle, TextStyle, View } from "react-native"
-import { Button, Screen, Text, TimeLine } from "../../components"
+import { TextStyle, ViewStyle } from "react-native"
+import { Button, Screen, Text } from "../../components"
 import { NavigatorParamList } from "../../navigators"
 import { color } from "../../theme"
 import { Header } from "react-native-elements"
@@ -29,24 +29,22 @@ const HeaderStyle: ViewStyle = {
   elevation: 5,
 }
 
-
 export const UserScreen: FC<DrawerScreenProps<NavigatorParamList, "UserScreen">> = ({
   navigation,
 }) => {
-  
   return (
     <>
       <Header
         leftComponent={
-          <Button style={headerButton} onPress={() => navigation.openDrawer()}>
-            <MaterialCommunityIcons color="#ffff" name="format-align-left" size={25} />
+          <Button style={headerButton} onPress={() => navigation.goBack()}>
+            <MaterialCommunityIcons color="#ffff" name="arrow-left" size={25} />
           </Button>
         }
         centerComponent={<Text style={Textstyle}>PROFILE</Text>}
         containerStyle={HeaderStyle}
         backgroundColor={color.appcolor}
       />
-      <Screen unsafe={true} preset={"scroll"} style={ROOT}></Screen>
+      <Screen unsafe={true} preset={"scroll"} style={ROOT} />
     </>
   )
 }

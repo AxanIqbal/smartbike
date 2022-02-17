@@ -10,7 +10,14 @@ import { Dimensions, useColorScheme, View, ViewStyle } from "react-native"
 // import { createNativeStackNavigator } from "@react-navigation/native-stack"
 import { navigationRef, useBackButtonHandler } from "./navigation-utilities"
 // import { createDrawerNavigator } from "@react-navigation/drawer"
-import { DistanceScreen, HomeScreen, MapsScreen, SearchScreen } from "../screens"
+import {
+  DistanceScreen,
+  HistoryScreen,
+  HomeScreen,
+  MapsScreen,
+  SearchScreen,
+  UserScreen,
+} from "../screens"
 import Icon from "react-native-vector-icons/FontAwesome5"
 import { color } from "../theme"
 import { Button, Drawer } from "../components"
@@ -39,6 +46,8 @@ export type NavigatorParamList = {
   welcome: undefined
   MapsScreen: undefined
   SearchScreen: undefined
+  UserScreen: undefined
+  HistoryScreen: undefined
   DistanceScreen: {
     destinationLat: number
     destinationLng: number
@@ -116,6 +125,8 @@ const AppStack = ({ navigation }) => {
             headerLeft: headerLeft,
           }}
         />
+        <Stack.Screen name={"UserScreen"} component={UserScreen} />
+        <Stack.Screen name={"HistoryScreen"} component={HistoryScreen} />
         <Stack.Screen
           options={{
             headerTransparent: true,
@@ -156,6 +167,7 @@ interface NavigationProps extends Partial<React.ComponentProps<typeof Navigation
 
 export const AppNavigator = (props: NavigationProps) => {
   const colorScheme = useColorScheme()
+  // @ts-ignore
   const auth = useSelector<RootState>((state) => state.firebase.auth)
   useBackButtonHandler(canExit)
   return (

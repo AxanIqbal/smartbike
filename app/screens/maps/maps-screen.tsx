@@ -1,4 +1,4 @@
-import React, { FC } from "react"
+import React, { FC, useState } from "react"
 import { Image, ImageStyle, View, ViewStyle } from "react-native"
 import { Button, Text } from "../../components"
 import { color } from "../../theme"
@@ -6,6 +6,9 @@ import { NavigatorParamList } from "../../navigators"
 import { StackScreenProps } from "@react-navigation/stack"
 import MapView, { Marker, PROVIDER_GOOGLE } from "react-native-maps"
 import Ionicons from "react-native-vector-icons/Ionicons"
+import { useSelector } from "react-redux"
+import { selectCords } from "../../store/slices"
+import MaterialIcons from "react-native-vector-icons/MaterialCommunityIcons"
 
 const ROOT: ViewStyle = { width: "100%", height: "100%" }
 // const blankScreen: ViewStyle = {
@@ -22,7 +25,7 @@ const buttonStyle1: ViewStyle = {
   backgroundColor: "transparent",
   position: "absolute",
   bottom: 100,
-  alignSelf: 'flex-end',
+  alignSelf: "flex-end",
   right: 20,
 }
 
@@ -48,7 +51,7 @@ export const MapsScreen: FC<StackScreenProps<NavigatorParamList, "MapsScreen">> 
   navigation,
 }) => {
   const location = useSelector(selectCords)
-  const dispatch = useAppDispatch()
+  // const dispatch = useAppDispatch()
   const [map, setMap] = useState(null)
   // watchCurrentLocation().then(r => {
   //   console.log(r)
