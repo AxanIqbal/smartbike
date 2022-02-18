@@ -8,6 +8,7 @@ import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityI
 import { DrawerScreenProps } from "@react-navigation/drawer"
 import { populate, useFirebaseConnect } from "react-redux-firebase"
 import { useAppSelector } from "../../store/store"
+import { UserProfile } from "../../store/slices/firebase.types"
 
 const ROOT: ViewStyle = {
   backgroundColor: color.palette.white,
@@ -35,12 +36,12 @@ export const UserScreen: FC<DrawerScreenProps<NavigatorParamList, "UserScreen">>
   navigation,
 }) => {
   const firebase = useAppSelector((state) => state.firebase)
-  const listner = firebase.profile?.bikes?.map((bike) => ({ path: `bikes/${bike}` }))
-  useFirebaseConnect(listner)
-  const populatedProfile = populate(firebase, "profile", [
+  const listener = firebase.profile.bikes?.map((bike) => ({ path: `bikes/${bike}` }))
+  useFirebaseConnect(listener)
+  const populatedProfile: UserProfile = populate(firebase, "profile", [
     { child: "bikes", root: "bikes", keyProp: "id" },
   ])
-  console.log(populatedProfile)
+  // console.log(populatedProfile.bikes[0].lat)
   return (
     <>
       <Header
@@ -60,7 +61,7 @@ export const UserScreen: FC<DrawerScreenProps<NavigatorParamList, "UserScreen">>
         </View>
         <Button
           text={"push"}
-          onPress={async (event) => {
+          onPress={async () => {
             // await firebase.updateProfile({
             //   bikes: ["a"],
             // })
