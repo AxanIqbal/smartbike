@@ -1,5 +1,5 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit"
-import { RootState } from "../store"
+import { RootStateAlter } from "../store"
 
 // interface LocationState {
 //   latitude: number,
@@ -30,6 +30,6 @@ const locationSlice = createSlice({
 
 export const { setLocation } = locationSlice.actions
 // Other code such as selectors can use the imported `RootState` type
-export const selectCords = (state: RootState) => state.location
+export const selectCords = (state: RootStateAlter) => state.location
 
 export default locationSlice.reducer

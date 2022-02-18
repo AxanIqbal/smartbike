@@ -1,26 +1,19 @@
-import { combineReducers, configureStore } from "@reduxjs/toolkit"
-import { actionTypes as rrfActionTypes, firebaseReducer, getFirebase } from "react-redux-firebase"
-import { useDispatch } from "react-redux"
+import { configureStore } from "@reduxjs/toolkit"
+import {
+  actionTypes as rrfActionTypes,
+  FirebaseReducer,
+  firebaseReducer,
+  getFirebase,
+} from "react-redux-firebase"
+import { TypedUseSelectorHook, useDispatch, useSelector } from "react-redux"
 import LocationState from "./slices/location_slices"
-// import { FLUSH, PAUSE, PERSIST, persistReducer, PURGE, REGISTER, REHYDRATE } from "redux-persist"
-// import AsyncStorage from "@react-native-async-storage/async-storage"
-// import { Reactotron } from "../services/reactotron"
-
-const reducer = combineReducers({
-  firebase: firebaseReducer,
-  location: LocationState,
-})
-
-// const persistConfig = {
-//   key: "root",
-//   storage: AsyncStorage,
-//   whitelist: ["location"],
-// }
-
-// const persistedReducer = persistReducer(persistConfig, reducer)
+import { DBSchema, UserProfile } from "./slices/firebase.types"
 
 export const store = configureStore({
-  reducer,
+  reducer: {
+    firebase: firebaseReducer,
+    location: LocationState,
+  },
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware({
       serializableCheck: {
@@ -46,9 +39,15 @@ export const store = configureStore({
 //   location: typeof LocationState
 // }
 
+export interface RootStateAlter {
+  firebase: FirebaseReducer.Reducer<UserProfile, DBSchema>
+  location: ReturnType<typeof LocationState>
+}
 // Infer the `RootState` and `AppDispatch` types from the store itself
 export type RootState = ReturnType<typeof store.getState>
 
 // Inferred type: {firebase: firebaseState }
 export type AppDispatch = typeof store.dispatch
+
 export const useAppDispatch = () => useDispatch<AppDispatch>()
+export const useAppSelector: TypedUseSelectorHook<RootStateAlter> = useSelector

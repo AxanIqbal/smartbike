@@ -24,8 +24,7 @@ import { Button, Drawer } from "../components"
 import { createDrawerNavigator, useDrawerProgress } from "@react-navigation/drawer"
 import { DarkTheme, DefaultTheme, NavigationContainer } from "@react-navigation/native"
 import { AuthStack } from "./auth/auth-navigator"
-import { useSelector } from "react-redux"
-import { RootState } from "../store/store"
+import { useAppSelector } from "../store/store"
 import { isEmpty } from "react-redux-firebase"
 import { createNativeStackNavigator } from "@react-navigation/native-stack"
 import Animated, { Adaptable } from "react-native-reanimated"
@@ -167,8 +166,7 @@ interface NavigationProps extends Partial<React.ComponentProps<typeof Navigation
 
 export const AppNavigator = (props: NavigationProps) => {
   const colorScheme = useColorScheme()
-  // @ts-ignore
-  const auth = useSelector<RootState>((state) => state.firebase.auth)
+  const auth = useAppSelector((state) => state.firebase.auth)
   useBackButtonHandler(canExit)
   return (
     <NavigationContainer

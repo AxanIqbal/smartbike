@@ -1,11 +1,13 @@
 import React, { FC } from "react"
-import { TextStyle, ViewStyle } from "react-native"
+import { TextStyle, View, ViewStyle } from "react-native"
 import { Button, Screen, Text } from "../../components"
 import { NavigatorParamList } from "../../navigators"
 import { color } from "../../theme"
 import { Header } from "react-native-elements"
 import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons"
 import { DrawerScreenProps } from "@react-navigation/drawer"
+import { populate, useFirebaseConnect } from "react-redux-firebase"
+import { useAppSelector } from "../../store/store"
 
 const ROOT: ViewStyle = {
   backgroundColor: color.palette.white,
@@ -32,6 +34,13 @@ const HeaderStyle: ViewStyle = {
 export const UserScreen: FC<DrawerScreenProps<NavigatorParamList, "UserScreen">> = ({
   navigation,
 }) => {
+  const firebase = useAppSelector((state) => state.firebase)
+  const listner = firebase.profile?.bikes?.map((bike) => ({ path: `bikes/${bike}` }))
+  useFirebaseConnect(listner)
+  const populatedProfile = populate(firebase, "profile", [
+    { child: "bikes", root: "bikes", keyProp: "id" },
+  ])
+  console.log(populatedProfile)
   return (
     <>
       <Header
@@ -44,7 +53,25 @@ export const UserScreen: FC<DrawerScreenProps<NavigatorParamList, "UserScreen">>
         containerStyle={HeaderStyle}
         backgroundColor={color.appcolor}
       />
-      <Screen unsafe={true} preset={"scroll"} style={ROOT} />
+      <Screen unsafe={true} preset={"scroll"} style={ROOT}>
+        <View>
+          <Text>{JSON.stringify(firebase.auth, null, 2)}</Text>
+          <Text>{JSON.stringify(populatedProfile, null, 2)}</Text>
+        </View>
+        <Button
+          text={"push"}
+          onPress={async (event) => {
+            // await firebase.updateProfile({
+            //   bikes: ["a"],
+            // })
+          }}
+        />
+      </Screen>
     </>
   )
 }
+
+// connect(({ firebase }) => ({
+//   profile: firebase.profile,
+//   populatedProfile: populate(firebase, "profile", ["bikes:bikes"]),
+// }))(UserScreen)

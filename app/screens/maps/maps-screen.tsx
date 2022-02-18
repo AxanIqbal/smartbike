@@ -6,9 +6,9 @@ import { NavigatorParamList } from "../../navigators"
 import { StackScreenProps } from "@react-navigation/stack"
 import MapView, { Marker, PROVIDER_GOOGLE } from "react-native-maps"
 import Ionicons from "react-native-vector-icons/Ionicons"
-import { useSelector } from "react-redux"
 import { selectCords } from "../../store/slices"
 import MaterialIcons from "react-native-vector-icons/MaterialCommunityIcons"
+import { useAppSelector } from "../../store/store"
 
 const ROOT: ViewStyle = { width: "100%", height: "100%" }
 // const blankScreen: ViewStyle = {
@@ -50,7 +50,7 @@ const searchStyle1: ViewStyle = {
 export const MapsScreen: FC<StackScreenProps<NavigatorParamList, "MapsScreen">> = ({
   navigation,
 }) => {
-  const location = useSelector(selectCords)
+  const location = useAppSelector(selectCords)
   // const dispatch = useAppDispatch()
   const [map, setMap] = useState(null)
   // watchCurrentLocation().then(r => {
