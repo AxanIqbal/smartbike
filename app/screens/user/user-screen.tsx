@@ -5,12 +5,11 @@ import { NavigatorParamList } from "../../navigators"
 import { color } from "../../theme"
 import { Header } from "react-native-elements"
 import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons"
-import { DrawerScreenProps } from "@react-navigation/drawer"
-import { populate, useFirebaseConnect } from "react-redux-firebase"
+import { populate } from "react-redux-firebase"
 import { useAppSelector } from "../../store/store"
 import { UserProfile } from "../../store/slices/firebase.types"
 import { AnimatedCircularProgress } from "react-native-circular-progress"
-
+import { StackScreenProps } from "@react-navigation/stack"
 
 const ROOT: ViewStyle = {
   backgroundColor: color.palette.white,
@@ -61,16 +60,13 @@ const imageStyle: ImageStyle = {
   alignItems: "center",
 }
 
-export const UserScreen: FC<DrawerScreenProps<NavigatorParamList, "UserScreen">> = ({
-                                                                                      navigation,
-                                                                                    }) => {
+export const UserScreen: FC<StackScreenProps<NavigatorParamList, "UserScreen">> = ({
+  navigation,
+}) => {
   const firebase = useAppSelector((state) => state.firebase)
-  const listener = firebase.profile.bikes?.map((bike) => ({ path: `bikes/${bike}` }))
-  useFirebaseConnect(listener)
   const populatedProfile: UserProfile = populate(firebase, "profile", [
     { child: "bikes", root: "bikes", keyProp: "id" },
   ])
-  console.log(populatedProfile.bikes[0].lat)
   return (
     <>
       <Header
@@ -94,7 +90,7 @@ export const UserScreen: FC<DrawerScreenProps<NavigatorParamList, "UserScreen">>
             onAnimationComplete={() => console.log("onAnimationComplete")}
             backgroundColor={color.palette.offWhite}
           >
-            {(fill) => <Image source={require("../home/ChargingAnimation.png")} style={imageStyle} />}
+            {() => <Image source={require("../home/ChargingAnimation.png")} style={imageStyle} />}
           </AnimatedCircularProgress>
         </View>
         <View>
@@ -115,14 +111,14 @@ export const UserScreen: FC<DrawerScreenProps<NavigatorParamList, "UserScreen">>
             <Text>{firebase.auth.email}</Text>
           </View>
         </View>
-        {/*<Button*/}
-        {/*  text={"push"}*/}
-        {/*  onPress={async () => {*/}
-        {/*    // await firebase.updateProfile({*/}
-        {/*    //   bikes: ["a"],*/}
-        {/*    // })*/}
-        {/*  }}*/}
-        {/*/>*/}
+        {/* <Button */}
+        {/*  text={"push"} */}
+        {/*  onPress={async () => { */}
+        {/*    // await firebase.updateProfile({ */}
+        {/*    //   bikes: ["a"], */}
+        {/*    // }) */}
+        {/*  }} */}
+        {/* /> */}
       </Screen>
     </>
   )

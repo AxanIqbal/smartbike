@@ -3,12 +3,12 @@ import { Image, ImageStyle, View, ViewStyle } from "react-native"
 import { Button, Text } from "../../components"
 import { color } from "../../theme"
 import { NavigatorParamList } from "../../navigators"
-import { StackScreenProps } from "@react-navigation/stack"
 import MapView, { Marker, PROVIDER_GOOGLE } from "react-native-maps"
 import Ionicons from "react-native-vector-icons/Ionicons"
 import { selectCords } from "../../store/slices"
 import MaterialIcons from "react-native-vector-icons/MaterialCommunityIcons"
 import { useAppSelector } from "../../store/store"
+import { StackScreenProps } from "@react-navigation/stack"
 
 const ROOT: ViewStyle = { width: "100%", height: "100%" }
 // const blankScreen: ViewStyle = {

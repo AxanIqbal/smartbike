@@ -1,11 +1,11 @@
 import React, { FC } from "react"
-import { ViewStyle, TextStyle, View } from "react-native"
+import { TextStyle, View, ViewStyle } from "react-native"
 import { Button, Screen, Text, TimeLine } from "../../components"
 import { NavigatorParamList } from "../../navigators"
 import { color } from "../../theme"
 import { Header } from "react-native-elements"
 import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons"
-import { DrawerScreenProps } from "@react-navigation/drawer"
+import { StackScreenProps } from "@react-navigation/stack"
 
 const ROOT: ViewStyle = {
   backgroundColor: color.palette.white,
@@ -36,7 +36,7 @@ const timeLIneStyle: ViewStyle = {
   height: "100%",
 }
 
-export const HistoryScreen: FC<DrawerScreenProps<NavigatorParamList, "HistoryScreen">> = ({
+export const HistoryScreen: FC<StackScreenProps<NavigatorParamList, "HistoryScreen">> = ({
   navigation,
 }) => {
   // Pull in one of our MST stores

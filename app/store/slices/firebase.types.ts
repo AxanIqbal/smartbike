@@ -1,9 +1,10 @@
 export interface UserProfile {
   name: string
-  bikes: Bike[] | string[]
+  bikes: string[] & Bike[]
 }
 
 export interface Bike {
+  id?: string
   model: string
   lat: number
   lng: number
