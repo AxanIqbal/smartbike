@@ -4,7 +4,7 @@ export interface UserProfile {
 }
 
 export interface Bike {
-  id?: string
+  id: string | undefined
   model: string
   lat: number
   lng: number

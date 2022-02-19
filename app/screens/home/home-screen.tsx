@@ -117,7 +117,7 @@ export const HomeScreen: FC<StackScreenProps<NavigatorParamList, "welcome">> = (
             onAnimationComplete={() => console.log("onAnimationComplete")}
             backgroundColor={color.palette.offWhite}
           >
-            {(fill) => <Image source={require("./ChargingAnimation.png")} style={imageStyle} />}
+            {() => <Image source={require("./ChargingAnimation.png")} style={imageStyle} />}
           </AnimatedCircularProgress>
         </View>
         <View style={buttonView}>
