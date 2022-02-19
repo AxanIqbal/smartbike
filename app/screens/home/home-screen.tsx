@@ -7,6 +7,9 @@ import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityI
 import { AnimatedCircularProgress } from "react-native-circular-progress"
 import { NavigatorParamList } from "../../navigators"
 import { StackScreenProps } from "@react-navigation/stack"
+import { useAppSelector } from "../../store/store"
+import { isLoaded, populate, useFirebaseConnect } from "react-redux-firebase"
+import { UserProfile } from "../../store/slices/firebase.types"
 
 const ROOT: ViewStyle = {
   backgroundColor: color.palette.white,
@@ -75,6 +78,14 @@ const HeadingStyle: TextStyle = {
 }
 
 export const HomeScreen: FC<StackScreenProps<NavigatorParamList, "welcome">> = ({ navigation }) => {
+  const firebase = useAppSelector((state) => state.firebase)
+  const listener = firebase.profile.bikes?.map((bike) => ({ path: `bikes/${bike}` }))
+  useFirebaseConnect(listener)
+  const populatedProfile: UserProfile = populate(firebase, "profile", [
+    { child: "bikes", root: "bikes", keyProp: "id" },
+  ])
+  console.log(populatedProfile)
+
   React.useEffect(() => {
     // getCurrentLocation().then(r => {
     //   console.log(r)
@@ -105,7 +116,7 @@ export const HomeScreen: FC<StackScreenProps<NavigatorParamList, "welcome">> = (
           <AnimatedCircularProgress
             size={250}
             width={20}
-            fill={75}
+            fill={isLoaded(populatedProfile) ? populatedProfile?.bikes[0].battery : 0}
             rotation={0}
             tintColor={color.appcolor}
             onAnimationComplete={() => console.log("onAnimationComplete")}

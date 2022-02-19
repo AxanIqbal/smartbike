@@ -1,6 +1,8 @@
 export interface UserProfile {
   name: string
   bikes: string[] & Bike[]
+  isEmpty: boolean
+  isLoaded: boolean
 }
 
 export interface Bike {
@@ -8,6 +10,7 @@ export interface Bike {
   model: string
   lat: number
   lng: number
+  battery: number
 }
 
 export interface DBSchema {
