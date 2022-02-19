@@ -70,8 +70,7 @@ const UserScreen: FC<StackScreenProps<NavigatorParamList, "UserScreen"> & UserSc
   populatedProfile,
 }) => {
   const firebase = useAppSelector((state) => state.firebase)
-  const listener = firebase.profile.bikes?.map((bike) => ({ path: `bikes/${bike}` }))
-  useFirebaseConnect(listener)
+  useFirebaseConnect([{ path: "bikes" }])
   // const populatedProfile: UserProfile = populate(firebase, "profile", [
   //   { child: "bikes", root: "bikes", keyProp: "id" },
   // ])

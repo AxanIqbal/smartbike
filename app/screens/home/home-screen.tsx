@@ -79,8 +79,7 @@ const HeadingStyle: TextStyle = {
 
 export const HomeScreen: FC<StackScreenProps<NavigatorParamList, "welcome">> = ({ navigation }) => {
   const firebase = useAppSelector((state) => state.firebase)
-  const listener = firebase.profile.bikes?.map((bike) => ({ path: `bikes/${bike}` }))
-  useFirebaseConnect(listener)
+  useFirebaseConnect([{ path: "bikes" }])
   const populatedProfile: UserProfile = populate(firebase, "profile", [
     { child: "bikes", root: "bikes", keyProp: "id" },
   ])
@@ -126,7 +125,7 @@ export const HomeScreen: FC<StackScreenProps<NavigatorParamList, "welcome">> = (
               isLoaded(populatedProfile) && (
                 <Battery
                   style={imageStyle}
-                  isCharging
+                  isCharging={populatedProfile.bikes[0].isCharging}
                   percentage={populatedProfile.bikes[0].battery}
                 />
               )
