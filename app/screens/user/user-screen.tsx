@@ -1,5 +1,5 @@
 import React, { FC } from "react"
-import { TextStyle, View, ViewStyle } from "react-native"
+import { Dimensions, TextStyle, View, ViewStyle } from "react-native"
 import { Button, Screen, Text } from "../../components"
 import { NavigatorParamList } from "../../navigators"
 import { color } from "../../theme"
@@ -32,16 +32,31 @@ const HeaderStyle: ViewStyle = {
   elevation: 5,
 }
 
+const innerContainer: ViewStyle = {
+  flexDirection: 'row',
+  backgroundColor: 'rgba(247,140,42,0.36)',
+  padding: 10,
+  margin: 10,
+  borderRadius: 10,
+}
+
+const heading: TextStyle = {
+  width: Dimensions.get('screen').width * 0.15,
+  textAlign: 'center',
+  fontSize: 15,
+  fontWeight: '500'
+}
+
 export const UserScreen: FC<DrawerScreenProps<NavigatorParamList, "UserScreen">> = ({
-  navigation,
-}) => {
+                                                                                      navigation,
+                                                                                    }) => {
   const firebase = useAppSelector((state) => state.firebase)
   const listener = firebase.profile.bikes?.map((bike) => ({ path: `bikes/${bike}` }))
   useFirebaseConnect(listener)
   const populatedProfile: UserProfile = populate(firebase, "profile", [
     { child: "bikes", root: "bikes", keyProp: "id" },
   ])
-  // console.log(populatedProfile.bikes[0].lat)
+  console.log(populatedProfile.bikes[0].lat)
   return (
     <>
       <Header
@@ -56,8 +71,24 @@ export const UserScreen: FC<DrawerScreenProps<NavigatorParamList, "UserScreen">>
       />
       <Screen unsafe={true} preset={"scroll"} style={ROOT}>
         <View>
-          <Text>{JSON.stringify(firebase.auth, null, 2)}</Text>
-          <Text>{JSON.stringify(populatedProfile, null, 2)}</Text>
+          <View style={innerContainer}>
+            <Text style={heading}>Bike Id:</Text>
+            <Text>{populatedProfile.bikes[0].id}</Text>
+          </View>
+          <View style={innerContainer}>
+            <Text>Bike Model:</Text>
+            <Text>{populatedProfile.bikes[0].model}</Text>
+          </View>
+          <View style={innerContainer}>
+            <Text>User name:</Text>
+            <Text>{populatedProfile.name}</Text>
+          </View>
+          <View style={innerContainer}>
+            <Text>User Email:</Text>
+            <Text>{firebase.auth.email}</Text>
+          </View>
+          {/*<Text>{JSON.stringify(firebase.auth, null, 2)}</Text>*/}
+          {/*<Text>{JSON.stringify(populatedProfile, null, 2)}</Text>*/}
         </View>
         <Button
           text={"push"}
