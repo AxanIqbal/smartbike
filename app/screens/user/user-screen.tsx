@@ -11,6 +11,7 @@ import { useAppSelector } from "../../store/store"
 import { UserProfile } from "../../store/slices/firebase.types"
 import { AnimatedCircularProgress } from "react-native-circular-progress"
 
+
 const ROOT: ViewStyle = {
   backgroundColor: color.palette.white,
 }
@@ -35,7 +36,7 @@ const HeaderStyle: ViewStyle = {
 
 const animationStyle: ViewStyle = {
   alignItems: "center",
-  paddingTop: 20,
+  paddingVertical: 20,
 }
 
 const innerContainer: ViewStyle = {
@@ -47,10 +48,10 @@ const innerContainer: ViewStyle = {
 }
 
 const heading: TextStyle = {
-  width: Dimensions.get("screen").width * 0.15,
-  textAlign: "center",
+  width: Dimensions.get("screen").width * 0.25,
+  paddingLeft: 10,
   fontSize: 15,
-  fontWeight: "500",
+  fontWeight: "700",
 }
 
 const imageStyle: ImageStyle = {
@@ -69,6 +70,7 @@ export const UserScreen: FC<DrawerScreenProps<NavigatorParamList, "UserScreen">>
   const populatedProfile: UserProfile = populate(firebase, "profile", [
     { child: "bikes", root: "bikes", keyProp: "id" },
   ])
+  console.log(populatedProfile.bikes[0].lat)
   return (
     <>
       <Header
@@ -101,26 +103,26 @@ export const UserScreen: FC<DrawerScreenProps<NavigatorParamList, "UserScreen">>
             <Text>{populatedProfile.bikes[0].id}</Text>
           </View>
           <View style={innerContainer}>
-            <Text>Bike Model:</Text>
+            <Text style={heading}>Bike Model:</Text>
             <Text>{populatedProfile.bikes[0].model}</Text>
           </View>
           <View style={innerContainer}>
-            <Text>User name:</Text>
+            <Text style={heading}>User name:</Text>
             <Text>{populatedProfile.name}</Text>
           </View>
           <View style={innerContainer}>
-            <Text>User Email:</Text>
+            <Text style={heading}>User Email:</Text>
             <Text>{firebase.auth.email}</Text>
           </View>
         </View>
-        <Button
-          text={"push"}
-          onPress={async () => {
-            // await firebase.updateProfile({
-            //   bikes: ["a"],
-            // })
-          }}
-        />
+        {/*<Button*/}
+        {/*  text={"push"}*/}
+        {/*  onPress={async () => {*/}
+        {/*    // await firebase.updateProfile({*/}
+        {/*    //   bikes: ["a"],*/}
+        {/*    // })*/}
+        {/*  }}*/}
+        {/*/>*/}
       </Screen>
     </>
   )
