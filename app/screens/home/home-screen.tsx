@@ -6,8 +6,6 @@ import { Header } from "react-native-elements"
 import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons"
 import { AnimatedCircularProgress } from "react-native-circular-progress"
 import { NavigatorParamList } from "../../navigators"
-import { useAppSelector } from "../../store/store"
-import { useFirebaseConnect } from "react-redux-firebase"
 import { StackScreenProps } from "@react-navigation/stack"
 
 const ROOT: ViewStyle = {
@@ -77,10 +75,6 @@ const HeadingStyle: TextStyle = {
 }
 
 export const HomeScreen: FC<StackScreenProps<NavigatorParamList, "welcome">> = ({ navigation }) => {
-  const { profile } = useAppSelector((state) => state.firebase)
-  const listener = profile.bikes?.map((bike) => ({ path: `bikes/${bike}` }))
-  useFirebaseConnect(listener)
-
   React.useEffect(() => {
     // getCurrentLocation().then(r => {
     //   console.log(r)

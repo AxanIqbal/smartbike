@@ -5,7 +5,7 @@ import { NavigatorParamList } from "../../navigators"
 import { color } from "../../theme"
 import { Header } from "react-native-elements"
 import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons"
-import { populate } from "react-redux-firebase"
+import { populate, useFirebaseConnect } from "react-redux-firebase"
 import { useAppSelector } from "../../store/store"
 import { UserProfile } from "../../store/slices/firebase.types"
 import { AnimatedCircularProgress } from "react-native-circular-progress"
@@ -64,6 +64,8 @@ export const UserScreen: FC<StackScreenProps<NavigatorParamList, "UserScreen">> 
   navigation,
 }) => {
   const firebase = useAppSelector((state) => state.firebase)
+  const listener = firebase.profile.bikes?.map((bike) => ({ path: `bikes/${bike}` }))
+  useFirebaseConnect(listener)
   const populatedProfile: UserProfile = populate(firebase, "profile", [
     { child: "bikes", root: "bikes", keyProp: "id" },
   ])

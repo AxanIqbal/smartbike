@@ -5,10 +5,11 @@ import { color } from "../../theme"
 import { NavigatorParamList } from "../../navigators"
 import MapView, { Marker, PROVIDER_GOOGLE } from "react-native-maps"
 import Ionicons from "react-native-vector-icons/Ionicons"
-import { selectCords } from "../../store/slices"
 import MaterialIcons from "react-native-vector-icons/MaterialCommunityIcons"
 import { useAppSelector } from "../../store/store"
 import { StackScreenProps } from "@react-navigation/stack"
+import { UserProfile } from "../../store/slices/firebase.types"
+import { populate, useFirebaseConnect } from "react-redux-firebase"
 
 const ROOT: ViewStyle = { width: "100%", height: "100%" }
 // const blankScreen: ViewStyle = {
@@ -50,7 +51,14 @@ const searchStyle1: ViewStyle = {
 export const MapsScreen: FC<StackScreenProps<NavigatorParamList, "MapsScreen">> = ({
   navigation,
 }) => {
-  const location = useAppSelector(selectCords)
+  const firebase = useAppSelector((state) => state.firebase)
+  const listener = firebase.profile.bikes?.map((bike) => ({ path: `bikes/${bike}` }))
+  useFirebaseConnect(listener)
+  const populatedProfile: UserProfile = populate(firebase, "profile", [
+    { child: "bikes", root: "bikes", keyProp: "id" },
+  ])
+  const bikes = populatedProfile.bikes
+  console.log(bikes[0])
   // const dispatch = useAppDispatch()
   const [map, setMap] = useState(null)
   // watchCurrentLocation().then(r => {
@@ -126,8 +134,8 @@ export const MapsScreen: FC<StackScreenProps<NavigatorParamList, "MapsScreen">> 
         <Marker
           title="Your Location"
           coordinate={{
-            latitude: location.latitude || 24.942114588644632,
-            longitude: location.longitude || 67.07928649736084,
+            latitude: bikes[0].lat || 24.942114588644632,
+            longitude: bikes[0].lng || 67.07928649736084,
           }}
         >
           <Image style={imageStyle} source={require("./BikeMarker.png")} />
@@ -136,8 +144,8 @@ export const MapsScreen: FC<StackScreenProps<NavigatorParamList, "MapsScreen">> 
       <Button
         onPress={() => {
           map.animateToRegion({
-            latitude: location.latitude,
-            longitude: location.longitude,
+            latitude: bikes[0].lat,
+            longitude: bikes[0].lng,
             latitudeDelta: 0.002,
             longitudeDelta: 0.001,
           })
