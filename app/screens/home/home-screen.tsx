@@ -1,6 +1,6 @@
 import React, { FC } from "react"
-import { Image, ImageStyle, TextStyle, View, ViewStyle } from "react-native"
-import { Button, Screen, Text, TimeLine } from "../../components"
+import { ImageStyle, TextStyle, View, ViewStyle } from "react-native"
+import { Battery, Button, Screen, Text, TimeLine } from "../../components"
 import { color } from "../../theme"
 import { Header } from "react-native-elements"
 import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons"
@@ -122,7 +122,15 @@ export const HomeScreen: FC<StackScreenProps<NavigatorParamList, "welcome">> = (
             onAnimationComplete={() => console.log("onAnimationComplete")}
             backgroundColor={color.palette.offWhite}
           >
-            {() => <Image source={require("./ChargingAnimation.png")} style={imageStyle} />}
+            {() =>
+              isLoaded(populatedProfile) && (
+                <Battery
+                  style={imageStyle}
+                  isCharging
+                  percentage={populatedProfile.bikes[0].battery}
+                />
+              )
+            }
           </AnimatedCircularProgress>
         </View>
         <View style={buttonView}>

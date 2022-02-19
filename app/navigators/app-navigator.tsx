@@ -10,18 +10,12 @@ import { useColorScheme } from "react-native"
 // import { createNativeStackNavigator } from "@react-navigation/native-stack"
 import { navigationRef, useBackButtonHandler } from "./navigation-utilities"
 // import { createDrawerNavigator } from "@react-navigation/drawer"
-import {
-  DistanceScreen,
-  HistoryScreen,
-  HomeScreen,
-  MapsScreen,
-  SearchScreen,
-  UserScreen,
-} from "../screens"
+import { DistanceScreen, HistoryScreen, HomeScreen, MapsScreen, SearchScreen } from "../screens"
 import { DarkTheme, DefaultTheme, NavigationContainer } from "@react-navigation/native"
 import { AuthStack } from "./auth/auth-navigator"
 import { useAppSelector } from "../store/store"
 import { createNativeStackNavigator } from "@react-navigation/native-stack"
+import UserScreen from "../screens/user/user-screen"
 
 /**
  * This type allows TypeScript to know what routes are defined in this navigator

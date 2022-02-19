@@ -10,6 +10,7 @@ import { useAppSelector } from "../../store/store"
 import { UserProfile } from "../../store/slices/firebase.types"
 import { AnimatedCircularProgress } from "react-native-circular-progress"
 import { StackScreenProps } from "@react-navigation/stack"
+import { connect } from "react-redux"
 
 const ROOT: ViewStyle = {
   backgroundColor: color.palette.white,
@@ -60,15 +61,21 @@ const imageStyle: ImageStyle = {
   alignItems: "center",
 }
 
-export const UserScreen: FC<StackScreenProps<NavigatorParamList, "UserScreen">> = ({
+interface UserScreenProps {
+  populatedProfile: UserProfile
+}
+
+const UserScreen: FC<StackScreenProps<NavigatorParamList, "UserScreen"> & UserScreenProps> = ({
   navigation,
+  populatedProfile,
 }) => {
   const firebase = useAppSelector((state) => state.firebase)
   const listener = firebase.profile.bikes?.map((bike) => ({ path: `bikes/${bike}` }))
   useFirebaseConnect(listener)
-  const populatedProfile: UserProfile = populate(firebase, "profile", [
-    { child: "bikes", root: "bikes", keyProp: "id" },
-  ])
+  // const populatedProfile: UserProfile = populate(firebase, "profile", [
+  //   { child: "bikes", root: "bikes", keyProp: "id" },
+  // ])
+
   return (
     <>
       <Header
@@ -126,7 +133,9 @@ export const UserScreen: FC<StackScreenProps<NavigatorParamList, "UserScreen">> 
   )
 }
 
-// connect(({ firebase }) => ({
-//   profile: firebase.profile,
-//   populatedProfile: populate(firebase, "profile", ["bikes:bikes"]),
-// }))(UserScreen)
+export default connect(({ firebase }) => ({
+  profile: firebase.profile,
+  populatedProfile: populate(firebase, "profile", [
+    { child: "bikes", root: "bikes", keyProp: "id" },
+  ]),
+}))(UserScreen)

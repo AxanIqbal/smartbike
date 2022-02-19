@@ -11,6 +11,7 @@ export interface Bike {
   lat: number
   lng: number
   battery: number
+  isCharging: boolean
 }
 
 export interface DBSchema {
