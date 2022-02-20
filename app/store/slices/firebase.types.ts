@@ -2,10 +2,11 @@ export interface UserProfile {
   id: string | undefined
   battery: number
   isCharging: boolean
-  lat: number
-  lng: number
+  latitude: number
+  longitude: number
   model: string
   speed: number
+  heading: number
 }
 
 export interface DBSchema {}

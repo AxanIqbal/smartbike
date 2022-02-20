@@ -7,12 +7,10 @@ import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityI
 import { AnimatedCircularProgress } from "react-native-circular-progress"
 import { NavigatorParamList } from "../../navigators"
 import { StackScreenProps } from "@react-navigation/stack"
-import { useAppDispatch, useAppSelector } from "../../store/store"
-import { isLoaded, useFirebase } from "react-redux-firebase"
+import { useAppSelector } from "../../store/store"
+import { isLoaded } from "react-redux-firebase"
 import * as Location from "expo-location"
-import { LocationAccuracy } from "expo-location"
 import { useKeepAwake } from "expo-keep-awake"
-import { setLocation } from "../../store/slices"
 
 const ROOT: ViewStyle = {
   backgroundColor: color.palette.white,
@@ -83,34 +81,14 @@ const headerButton: ViewStyle = {
 export const HomeScreen: FC<StackScreenProps<NavigatorParamList, "welcome">> = ({ navigation }) => {
   useKeepAwake()
   const { profile } = useAppSelector((state) => state.firebase)
-  const firebase = useFirebase()
-  const dispatch = useAppDispatch()
 
   React.useEffect(() => {
-    let subsLoc: Location.LocationSubscription
     ;(async () => {
       const { status } = await Location.requestForegroundPermissionsAsync()
       if (status !== "granted") {
         Alert.alert("Permission Error", "Permission to access location was denied")
-        return
       }
-      subsLoc = await Location.watchPositionAsync(
-        {
-          accuracy: LocationAccuracy.Balanced,
-        },
-        (location) => {
-          console.log(location)
-          dispatch(setLocation(location.coords))
-          firebase.updateProfile({
-            ...location.coords,
-          })
-        },
-      )
     })()
-
-    return () => {
-      subsLoc.remove()
-    }
   }, [])
 
   return (
