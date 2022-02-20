@@ -56,8 +56,8 @@ const searchStyle1: ViewStyle = {
 }
 
 export const MapsScreen: FC<StackScreenProps<NavigatorParamList, "MapsScreen">> = ({
-                                                                                     navigation,
-                                                                                   }) => {
+  navigation,
+}) => {
   const firebase = useAppSelector((state) => state.firebase)
   useFirebaseConnect([{ path: "bikes" }])
   const populatedProfile: UserProfile = populate(firebase, "profile", [
@@ -140,8 +140,8 @@ export const MapsScreen: FC<StackScreenProps<NavigatorParamList, "MapsScreen">> 
         <Marker
           title="Your Location"
           coordinate={{
-            latitude: bikes[0].lat || 24.942114588644632,
-            longitude: bikes[0].lng || 67.07928649736084,
+            latitude: bikes[0].latitude || 24.942114588644632,
+            longitude: bikes[0].longitude || 67.07928649736084,
           }}
         >
           <Image style={imageStyle} source={require("./BikeMarker.png")} />
@@ -160,8 +160,8 @@ export const MapsScreen: FC<StackScreenProps<NavigatorParamList, "MapsScreen">> 
       <Button
         onPress={() => {
           map.animateToRegion({
-            latitude: bikes[0].lat,
-            longitude: bikes[0].lng,
+            latitude: bikes[0].latitude,
+            longitude: bikes[0].longitude,
             latitudeDelta: 0.002,
             longitudeDelta: 0.001,
           })

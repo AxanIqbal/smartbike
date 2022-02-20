@@ -7,11 +7,13 @@ export interface UserProfile {
 
 export interface Bike {
   id: string | undefined
-  model: string
-  lat: number
-  lng: number
   battery: number
   isCharging: boolean
+  latitude: number
+  longitude: number
+  model: string
+  speed: number
+  heading: number
 }
 
 export interface DBSchema {
