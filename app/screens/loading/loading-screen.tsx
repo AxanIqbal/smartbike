@@ -18,7 +18,7 @@ export const LoadingScreen = function LoadingScreen() {
   // const navigation = useNavigation()
   return (
     <Screen style={ROOT} preset="scroll">
-      <Text preset="header" text="asdasd" />
+      <Text preset="header" text="Lading..." />
     </Screen>
   )
 }
