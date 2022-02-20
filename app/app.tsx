@@ -44,7 +44,7 @@ function App() {
   useEffect(() => {
     ;(async () => {
       await initFonts() // expo
-      await firebase.auth().signInWithEmailAndPassword("asd15654@bike.com ", "asdasdasd")
+      await firebase.auth().signInWithEmailAndPassword("asd15654@bike.com", "asdasdasd")
       // setupRootStore().then(setRootStore)
     })()
   }, [])

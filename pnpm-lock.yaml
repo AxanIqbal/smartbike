@@ -71,6 +71,7 @@ specifiers:
   react-native-gesture-handler: ~2.1.0
   react-native-google-places-autocomplete: ^2.4.1
   react-native-keychain: 6.2.0
+  react-native-lock-task: ^1.2.0
   react-native-maps: 0.29.4
   react-native-maps-directions: ^1.8.0
   react-native-reanimated: ^2.3.1
@@ -121,6 +122,7 @@ dependencies:
   react-native-gesture-handler: 2.1.2
   react-native-google-places-autocomplete: 2.4.1_react-native@0.67.2
   react-native-keychain: 6.2.0
+  react-native-lock-task: 1.2.0
   react-native-maps: 0.29.4_ca3cebccbb04575e8781cef7a42d21cb
   react-native-maps-directions: 1.8.0_00ed0ce40db17312ae0fb3079fed1936
   react-native-reanimated: 2.4.1_1cb0bb7d0bceb2580c8766b9a04ab5db
@@ -12524,6 +12526,10 @@ packages:
 
   /react-native-keychain/6.2.0:
     resolution: {integrity: sha512-U6fnOQRJPq+c0Abl+FoYy9v0H3kQU587tMamU/o+MoBSUScFLE3DQpkyT1PW4NF5IObgiGuqQdmjC2KgtBpjGA==}
+    dev: false
+
+  /react-native-lock-task/1.2.0:
+    resolution: {integrity: sha512-Uz3iD1n0oUGXKlmxqilfJXwzZam2vMuyzcI10t+LZfHD91WnG2axqBX1KV+4VofMomhBFo/MM5foN1/pwTOD8g==}
     dev: false
 
   /react-native-maps-directions/1.8.0_00ed0ce40db17312ae0fb3079fed1936:
