@@ -1,11 +1,11 @@
 import React, { FC, useState } from "react"
-import { Image, ImageStyle, View, ViewStyle } from "react-native"
+import { Dimensions, Image, ImageStyle, View, ViewStyle } from "react-native"
 import { Button, Text } from "../../components"
 import { color } from "../../theme"
 import { NavigatorParamList } from "../../navigators"
 import MapView, { Marker, PROVIDER_GOOGLE } from "react-native-maps"
 import Ionicons from "react-native-vector-icons/Ionicons"
-import MaterialIcons from "react-native-vector-icons/MaterialCommunityIcons"
+import MaterialIcons from "react-native-vector-icons/MaterialIcons"
 import { useAppSelector } from "../../store/store"
 import { StackScreenProps } from "@react-navigation/stack"
 import { UserProfile } from "../../store/slices/firebase.types"
@@ -30,6 +30,13 @@ const buttonStyle1: ViewStyle = {
   right: 20,
 }
 
+const buttonStyle2: ViewStyle = {
+  position: "relative",
+  backgroundColor: "transparent",
+  alignSelf: "flex-start",
+  bottom: Dimensions.get("screen").height * 0.87,
+}
+
 const searchStyle: ViewStyle = {
   backgroundColor: color.palette.white,
   justifyContent: "flex-end",
@@ -49,8 +56,8 @@ const searchStyle1: ViewStyle = {
 }
 
 export const MapsScreen: FC<StackScreenProps<NavigatorParamList, "MapsScreen">> = ({
-  navigation,
-}) => {
+                                                                                     navigation,
+                                                                                   }) => {
   const firebase = useAppSelector((state) => state.firebase)
   useFirebaseConnect([{ path: "bikes" }])
   const populatedProfile: UserProfile = populate(firebase, "profile", [
@@ -140,6 +147,16 @@ export const MapsScreen: FC<StackScreenProps<NavigatorParamList, "MapsScreen">> 
           <Image style={imageStyle} source={require("./BikeMarker.png")} />
         </Marker>
       </MapView>
+      <Button
+        onPress={() => {
+          navigation.goBack()
+        }}
+        style={buttonStyle2}
+      >
+        <View style={[searchStyle1, { padding: 10, borderRadius: 10 }]}>
+          <MaterialIcons color={color.appcolor} size={30} name="arrow-back" />
+        </View>
+      </Button>
       <Button
         onPress={() => {
           map.animateToRegion({
