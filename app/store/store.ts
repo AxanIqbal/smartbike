@@ -39,10 +39,10 @@ export const store = configureStore({
 //   location: typeof LocationState
 // }
 
-export interface RootStateAlter {
+export interface RootStateAlter extends ReturnType<typeof store.getState> {
   firebase: FirebaseReducer.Reducer<UserProfile, DBSchema>
-  location: ReturnType<typeof LocationState>
 }
+
 // Infer the `RootState` and `AppDispatch` types from the store itself
 export type RootState = ReturnType<typeof store.getState>
 
