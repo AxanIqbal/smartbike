@@ -12,8 +12,6 @@ import { navigationRef, useBackButtonHandler } from "./navigation-utilities"
 // import { createDrawerNavigator } from "@react-navigation/drawer"
 import { DistanceScreen, HistoryScreen, HomeScreen, MapsScreen, SearchScreen } from "../screens"
 import { DarkTheme, DefaultTheme, NavigationContainer } from "@react-navigation/native"
-import { AuthStack } from "./auth/auth-navigator"
-import { useAppSelector } from "../store/store"
 import { createNativeStackNavigator } from "@react-navigation/native-stack"
 import UserScreen from "../screens/user/user-screen"
 
@@ -86,7 +84,6 @@ interface NavigationProps extends Partial<React.ComponentProps<typeof Navigation
 
 export const AppNavigator = (props: NavigationProps) => {
   const colorScheme = useColorScheme()
-  const auth = useAppSelector((state) => state.firebase.auth)
   useBackButtonHandler(canExit)
   return (
     <NavigationContainer
@@ -94,7 +91,7 @@ export const AppNavigator = (props: NavigationProps) => {
       theme={colorScheme === "dark" ? DarkTheme : DefaultTheme}
       {...props}
     >
-      {auth.isEmpty ? <AuthStack /> : <AppStack />}
+      <AppStack />
     </NavigationContainer>
   )
 }
@@ -110,5 +107,5 @@ AppNavigator.displayName = "AppNavigator"
  *
  * `canExit` is used in ./app/app.tsx in the `useBackButtonHandler` hook.
  */
-const exitRoutes = ["welcome", "login"]
+const exitRoutes = ["welcome"]
 export const canExit = (routeName: string) => exitRoutes.includes(routeName)
