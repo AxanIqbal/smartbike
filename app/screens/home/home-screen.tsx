@@ -1,5 +1,5 @@
 import React, { FC } from "react"
-import { ImageStyle, TextStyle, View, ViewStyle } from "react-native"
+import { Alert, ImageStyle, TextStyle, View, ViewStyle } from "react-native"
 import { Battery, Button, Screen, Text, TimeLine } from "../../components"
 import { color } from "../../theme"
 import { Header } from "react-native-elements"
@@ -10,6 +10,7 @@ import { StackScreenProps } from "@react-navigation/stack"
 import { useAppSelector } from "../../store/store"
 import { isLoaded, populate, useFirebaseConnect } from "react-redux-firebase"
 import { UserProfile } from "../../store/slices/firebase.types"
+import * as Location from 'expo-location';
 
 const ROOT: ViewStyle = {
   backgroundColor: color.palette.white,
@@ -86,17 +87,15 @@ export const HomeScreen: FC<StackScreenProps<NavigatorParamList, "welcome">> = (
   console.log(populatedProfile)
 
   React.useEffect(() => {
-    // getCurrentLocation().then(r => {
-    //   console.log(r)
-    //   dispatch(setLocation(r.coords))
-    // }, reason => {
-    //   console.log(reason)
-    // })
-
-    return () => {
-      // stopObserving()
-    }
-  }, [])
+    (async () => {
+      const { status } = await Location.requestForegroundPermissionsAsync();
+      if (status !== 'granted') {
+        Alert.alert('Permission Error','Permission to access location was denied');
+        return;
+      }
+     // await Location.watchPositionAsync()
+    })();
+  }, []);
 
   return (
     <>
