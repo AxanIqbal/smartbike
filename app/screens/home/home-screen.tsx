@@ -1,16 +1,18 @@
 import React, { FC } from "react"
 import { Alert, ImageStyle, TextStyle, View, ViewStyle } from "react-native"
-import { Battery, Button, Screen, Text, TimeLine } from "../../components"
+import { Battery, Button, Screen, Text } from "../../components"
 import { color } from "../../theme"
 import { Header } from "react-native-elements"
 import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons"
 import { AnimatedCircularProgress } from "react-native-circular-progress"
 import { NavigatorParamList } from "../../navigators"
 import { StackScreenProps } from "@react-navigation/stack"
-import { useAppSelector } from "../../store/store"
-import { isLoaded, populate, useFirebaseConnect } from "react-redux-firebase"
-import { UserProfile } from "../../store/slices/firebase.types"
-import * as Location from 'expo-location';
+import { useAppDispatch, useAppSelector } from "../../store/store"
+import { isLoaded, useFirebase } from "react-redux-firebase"
+import * as Location from "expo-location"
+import { LocationAccuracy } from "expo-location"
+import { useKeepAwake } from "expo-keep-awake"
+import { setLocation } from "../../store/slices"
 
 const ROOT: ViewStyle = {
   backgroundColor: color.palette.white,
@@ -59,43 +61,57 @@ const buttonView: ViewStyle = {
   alignSelf: "center",
 }
 
-const timeLIneStyle: ViewStyle = {
-  padding: 20,
-  paddingTop: 45,
-  backgroundColor: "white",
-  height: "100%",
-}
+// const timeLIneStyle: ViewStyle = {
+//   padding: 20,
+//   paddingTop: 45,
+//   backgroundColor: "white",
+//   height: "100%",
+// }
 
 const headerButton: ViewStyle = {
   backgroundColor: "transparent",
 }
 
-const HeadingStyle: TextStyle = {
-  fontSize: 25,
-  textAlign: "center",
-  color: `${color.appcolor}`,
-  paddingTop: 5,
-  fontWeight: "bold",
-}
+// const HeadingStyle: TextStyle = {
+//   fontSize: 25,
+//   textAlign: "center",
+//   color: `${color.appcolor}`,
+//   paddingTop: 5,
+//   fontWeight: "bold",
+// }
 
 export const HomeScreen: FC<StackScreenProps<NavigatorParamList, "welcome">> = ({ navigation }) => {
-  const firebase = useAppSelector((state) => state.firebase)
-  useFirebaseConnect([{ path: "bikes" }])
-  const populatedProfile: UserProfile = populate(firebase, "profile", [
-    { child: "bikes", root: "bikes", keyProp: "id" },
-  ])
-  console.log(populatedProfile)
+  useKeepAwake()
+  const { profile } = useAppSelector((state) => state.firebase)
+  const firebase = useFirebase()
+  const dispatch = useAppDispatch()
 
   React.useEffect(() => {
-    (async () => {
-      const { status } = await Location.requestForegroundPermissionsAsync();
-      if (status !== 'granted') {
-        Alert.alert('Permission Error','Permission to access location was denied');
-        return;
+    let subsLoc: Location.LocationSubscription
+    ;(async () => {
+      const { status } = await Location.requestForegroundPermissionsAsync()
+      if (status !== "granted") {
+        Alert.alert("Permission Error", "Permission to access location was denied")
+        return
       }
-     // await Location.watchPositionAsync()
-    })();
-  }, []);
+      subsLoc = await Location.watchPositionAsync(
+        {
+          accuracy: LocationAccuracy.Balanced,
+        },
+        (location) => {
+          console.log(location)
+          dispatch(setLocation(location.coords))
+          firebase.updateProfile({
+            ...location.coords,
+          })
+        },
+      )
+    })()
+
+    return () => {
+      subsLoc.remove()
+    }
+  }, [])
 
   return (
     <>
@@ -114,18 +130,18 @@ export const HomeScreen: FC<StackScreenProps<NavigatorParamList, "welcome">> = (
           <AnimatedCircularProgress
             size={250}
             width={20}
-            fill={isLoaded(populatedProfile) ? populatedProfile?.bikes[0].battery : 0}
+            fill={isLoaded(profile) ? profile.battery : 0}
             rotation={0}
             tintColor={color.appcolor}
             onAnimationComplete={() => console.log("onAnimationComplete")}
             backgroundColor={color.palette.offWhite}
           >
             {() =>
-              isLoaded(populatedProfile) && (
+              isLoaded(profile) && (
                 <Battery
                   style={imageStyle}
-                  isCharging={populatedProfile.bikes[0].isCharging}
-                  percentage={populatedProfile.bikes[0].battery}
+                  isCharging={profile.isCharging}
+                  percentage={profile.battery}
                 />
               )
             }
@@ -156,10 +172,6 @@ export const HomeScreen: FC<StackScreenProps<NavigatorParamList, "welcome">> = (
               color={color.appcolor}
             />
           </Button>
-        </View>
-        <Text style={HeadingStyle} text="Your TimeLine" />
-        <View style={timeLIneStyle}>
-          <TimeLine />
         </View>
       </Screen>
     </>

@@ -1,15 +1,17 @@
 import React, { FC, useState } from "react"
-import { Dimensions, Image, ImageStyle, View, ViewStyle } from "react-native"
+import { Alert, Dimensions, Image, ImageStyle, View, ViewStyle } from "react-native"
 import { Button, Text } from "../../components"
 import { color } from "../../theme"
 import { NavigatorParamList } from "../../navigators"
 import MapView, { Marker, PROVIDER_GOOGLE } from "react-native-maps"
 import Ionicons from "react-native-vector-icons/Ionicons"
 import MaterialIcons from "react-native-vector-icons/MaterialIcons"
-import { useAppSelector } from "../../store/store"
+import { useAppDispatch, useAppSelector } from "../../store/store"
 import { StackScreenProps } from "@react-navigation/stack"
-import { UserProfile } from "../../store/slices/firebase.types"
-import { populate, useFirebaseConnect } from "react-redux-firebase"
+import * as Location from "expo-location"
+import { LocationAccuracy } from "expo-location"
+import { useFirebase } from "react-redux-firebase"
+import { setLocation } from "../../store/slices"
 
 const ROOT: ViewStyle = { width: "100%", height: "100%" }
 // const blankScreen: ViewStyle = {
@@ -56,17 +58,12 @@ const searchStyle1: ViewStyle = {
 }
 
 export const MapsScreen: FC<StackScreenProps<NavigatorParamList, "MapsScreen">> = ({
-                                                                                     navigation,
-                                                                                   }) => {
-  const firebase = useAppSelector((state) => state.firebase)
-  useFirebaseConnect([{ path: "bikes" }])
-  const populatedProfile: UserProfile = populate(firebase, "profile", [
-    { child: "bikes", root: "bikes", keyProp: "id" },
-  ])
-  const bikes = populatedProfile.bikes
-  console.log(bikes[0])
-  // const dispatch = useAppDispatch()
+  navigation,
+}) => {
+  const firebase = useFirebase()
+  const dispatch = useAppDispatch()
   const [map, setMap] = useState(null)
+  const location = useAppSelector((state) => state.location)
   // watchCurrentLocation().then(r => {
   //   console.log(r)
   // })
@@ -96,28 +93,30 @@ export const MapsScreen: FC<StackScreenProps<NavigatorParamList, "MapsScreen">> 
   }
 
   React.useEffect(() => {
-    console.log("sub")
-    // watchCurrentLocation().then(position => {
-    //   console.log(position)
-    //   dispatch(setLocation(position.coords))
-    // },reason => {
-    //   console.warn(reason)
-    // })
-    // Geolocation.watchPosition(
-    //   (position) => {
-    //     console.log(position.coords)
-    // dispatch(setLocation(position.coords))
-    //   },
-    //   (error) => {
-    //     console.warn(error)
-    //   },
-    //   {
-    //     enableHighAccuracy: true,
-    //     distanceFilter: 10,
-    //     forceRequestLocation: true,
-    //     showLocationDialog: true,
-    //   },
-    // )
+    let subsLoc: Location.LocationSubscription
+    ;(async () => {
+      const { status } = await Location.requestForegroundPermissionsAsync()
+      if (status !== "granted") {
+        Alert.alert("Permission Error", "Permission to access location was denied")
+        return
+      }
+      subsLoc = await Location.watchPositionAsync(
+        {
+          accuracy: LocationAccuracy.Highest,
+        },
+        (location) => {
+          console.log(location)
+          dispatch(setLocation(location.coords))
+          firebase.updateProfile({
+            ...location.coords,
+          })
+        },
+      )
+    })()
+
+    return () => {
+      subsLoc.remove()
+    }
   }, [])
 
   return (
@@ -140,8 +139,8 @@ export const MapsScreen: FC<StackScreenProps<NavigatorParamList, "MapsScreen">> 
         <Marker
           title="Your Location"
           coordinate={{
-            latitude: bikes[0].lat || 24.942114588644632,
-            longitude: bikes[0].lng || 67.07928649736084,
+            latitude: location.latitude || 24.942114588644632,
+            longitude: location.longitude || 67.07928649736084,
           }}
         >
           <Image style={imageStyle} source={require("./BikeMarker.png")} />
@@ -160,8 +159,8 @@ export const MapsScreen: FC<StackScreenProps<NavigatorParamList, "MapsScreen">> 
       <Button
         onPress={() => {
           map.animateToRegion({
-            latitude: bikes[0].lat,
-            longitude: bikes[0].lng,
+            latitude: location.latitude,
+            longitude: location.longitude,
             latitudeDelta: 0.002,
             longitudeDelta: 0.001,
           })

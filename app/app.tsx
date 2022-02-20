@@ -32,8 +32,7 @@ function App() {
     isRestored: isNavigationStateRestored,
   } = useNavigationPersistence(storage, NAVIGATION_PERSISTENCE_KEY)
   const rrfConfig = {
-    userProfile: "users",
-    profileParamsToPopulate: ["bikes:bikes"],
+    userProfile: "bikes",
     // useFirestoreForProfile: true, // Firestore for Profile instead of Realtime DB
   }
   const rrfProps = {
