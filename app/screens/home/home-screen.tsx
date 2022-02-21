@@ -11,7 +11,6 @@ import { useAppSelector } from "../../store/store"
 import { isLoaded } from "react-redux-firebase"
 import * as Location from "expo-location"
 import { useKeepAwake } from "expo-keep-awake"
-import RNLockTask from "react-native-lock-task"
 
 const ROOT: ViewStyle = {
   backgroundColor: color.palette.white,
@@ -85,7 +84,6 @@ export const HomeScreen: FC<StackScreenProps<NavigatorParamList, "welcome">> = (
 
   React.useEffect(() => {
     ;(async () => {
-      RNLockTask.startLockTask()
       const { status } = await Location.requestForegroundPermissionsAsync()
       if (status !== "granted") {
         Alert.alert("Permission Error", "Permission to access location was denied")
