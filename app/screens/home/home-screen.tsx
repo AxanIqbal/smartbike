@@ -1,8 +1,7 @@
 import React, { FC } from "react"
-import { Alert, ImageStyle, TextStyle, View, ViewStyle } from "react-native"
+import { Alert, ImageStyle, StatusBar, TextStyle, View, ViewStyle } from "react-native"
 import { Battery, Button, Screen, Text } from "../../components"
 import { color } from "../../theme"
-import { Header } from "react-native-elements"
 import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons"
 import { AnimatedCircularProgress } from "react-native-circular-progress"
 import { NavigatorParamList } from "../../navigators"
@@ -14,24 +13,27 @@ import { useKeepAwake } from "expo-keep-awake"
 
 const ROOT: ViewStyle = {
   backgroundColor: color.palette.white,
+  top: 50,
 }
 
-const Textstyle: TextStyle = {
+const kmStyle1: TextStyle = {
   fontSize: 20,
   marginTop: 10,
-  color: `${color.palette.white}`,
+  color: `${color.appcolor}`,
 }
 
-const HeaderStyle: ViewStyle = {
-  backgroundColor: color.appcolor,
-  justifyContent: "space-around",
-  shadowOpacity: 0.34,
-  shadowRadius: 6.27,
-  elevation: 5,
-}
+// const HeaderStyle: ViewStyle = {
+//   backgroundColor: color.appcolor,
+//   justifyContent: "space-around",
+//   shadowOpacity: 0.34,
+//   shadowRadius: 6.27,
+//   elevation: 5,
+// }
 
 const animationStyle: ViewStyle = {
   alignItems: "center",
+  justifyContent: "space-evenly",
+  flexDirection: "row",
   paddingTop: 20,
 }
 
@@ -47,8 +49,6 @@ const buttonStyle: ViewStyle = {
 }
 
 const imageStyle: ImageStyle = {
-  width: 100,
-  height: 220,
   marginTop: -50,
   alignItems: "center",
 }
@@ -66,23 +66,24 @@ const buttonView: ViewStyle = {
 //   height: "100%",
 // }
 
-const headerButton: ViewStyle = {
-  backgroundColor: "transparent",
-}
-
-// const HeadingStyle: TextStyle = {
-//   fontSize: 25,
-//   textAlign: "center",
-//   color: `${color.appcolor}`,
-//   paddingTop: 5,
-//   fontWeight: "bold",
+// const headerButton: ViewStyle = {
+//   backgroundColor: "transparent",
 // }
+
+const kmStyle: TextStyle = {
+  fontSize: 40,
+  textAlign: "center",
+  color: `${color.appcolor}`,
+  paddingTop: 5,
+  fontWeight: "bold",
+}
 
 export const HomeScreen: FC<StackScreenProps<NavigatorParamList, "welcome">> = ({ navigation }) => {
   useKeepAwake()
   const { profile } = useAppSelector((state) => state.firebase)
 
   React.useEffect(() => {
+    StatusBar.setHidden(true)
     ;(async () => {
       const { status } = await Location.requestForegroundPermissionsAsync()
       if (status !== "granted") {
@@ -93,20 +94,26 @@ export const HomeScreen: FC<StackScreenProps<NavigatorParamList, "welcome">> = (
 
   return (
     <>
-      <Header
-        centerComponent={<Text style={Textstyle}>HOME</Text>}
-        rightComponent={
-          <Button style={headerButton} onPress={() => navigation.navigate("MapsScreen")}>
-            <MaterialCommunityIcons color="#ffff" name="bike" size={25} />
-          </Button>
-        }
-        containerStyle={HeaderStyle}
-        backgroundColor={color.appcolor}
-      />
       <Screen unsafe={true} preset={"scroll"} style={ROOT}>
         <View style={animationStyle}>
           <AnimatedCircularProgress
-            size={250}
+            size={200}
+            width={20}
+            fill={profile.speed}
+            rotation={225}
+            arcSweepAngle={270}
+            tintColor={color.appcolor}
+            backgroundColor="#eeee">
+            {
+              (fill) => (
+                <Text style={kmStyle}>
+                  {profile.speed}<Text style={kmStyle1}>m/s</Text>
+                </Text>
+              )
+            }
+          </AnimatedCircularProgress>
+          <AnimatedCircularProgress
+            size={200}
             width={20}
             fill={isLoaded(profile) ? profile.battery : 0}
             rotation={0}
@@ -120,20 +127,14 @@ export const HomeScreen: FC<StackScreenProps<NavigatorParamList, "welcome">> = (
                   style={imageStyle}
                   isCharging={profile.isCharging}
                   percentage={profile.battery}
+                  height={200}
+                  width={90}
                 />
               )
             }
           </AnimatedCircularProgress>
         </View>
         <View style={buttonView}>
-          <Button style={buttonStyle}>
-            <MaterialCommunityIcons
-              onPress={() => navigation.navigate("HistoryScreen")}
-              size={25}
-              name="history"
-              color={color.appcolor}
-            />
-          </Button>
           <Button style={buttonStyle}>
             <MaterialCommunityIcons
               onPress={() => navigation.navigate("MapsScreen")}

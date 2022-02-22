@@ -47,6 +47,7 @@ specifiers:
   expo-modules-autolinking: ^0.5.5
   expo-modules-core: ~0.6.4
   fbjs-scripts: 3.0.0
+  geolib: ^3.3.3
   i18n-js: 3.8.0
   jest: ^26.6.3
   jest-circus: '26'
@@ -110,6 +111,7 @@ dependencies:
   expo-localization: 12.0.1_expo@44.0.6
   expo-location: 14.0.2_expo@44.0.6
   expo-modules-core: 0.6.5
+  geolib: 3.3.3
   i18n-js: 3.8.0
   mobx: 6.3.13
   mobx-react-lite: 3.2.3_74d2c7fdfc2d414316f4c5abf5c21950
@@ -7776,6 +7778,10 @@ packages:
   /gensync/1.0.0-beta.2:
     resolution: {integrity: sha512-3hN7NaskYvMDLQY55gnW3NQ+mesEAepTqlg+VEbj7zzqEMBVNhzcGYYeqFo/TlYz6eQiFcp1HcsCZO+nGgS8zg==}
     engines: {node: '>=6.9.0'}
+
+  /geolib/3.3.3:
+    resolution: {integrity: sha512-YO704pzdB/8QQekQuDmFD5uv5RAwAf4rOUPdcMhdEOz+HoPWD0sC7Qqdwb+LAvwIjXVRawx0QgZlocKYh8PFOQ==}
+    dev: false
 
   /get-caller-file/2.0.5:
     resolution: {integrity: sha512-DyFP3BM/3YHTQOCUL/w0OZHR0lpKeGrxotcHWcqNEdnltqFwXVfhEBQ94eIo34AfQpo0rGki4cyIiftY06h2Fg==}

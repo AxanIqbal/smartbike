@@ -1,6 +1,7 @@
 import { StackScreenProps } from "@react-navigation/stack"
 import React, { FC, useEffect, useState } from "react"
 import {
+  Dimensions,
   Image,
   ImageStyle,
   KeyboardAvoidingView,
@@ -63,6 +64,7 @@ const headerButton: ViewStyle = {
 const listViewStyle: ViewStyle = {
   position: "absolute",
   top: 113,
+  height: Dimensions.get("screen").height * 0.3,
 }
 
 const seperatorStyle: ViewStyle = {
@@ -117,7 +119,7 @@ const searchStyle: ViewStyle = {
   alignSelf: "center",
   borderColor: color.appcolor,
   borderWidth: 1,
-  bottom: -50,
+  // top: 150
 }
 
 const ROOT: ViewStyle = {
@@ -140,14 +142,14 @@ const imageStyle: ImageStyle = {
 
 const MapStyle: ViewStyle = {
   zIndex: -1,
-  height: "85%",
+  height: "70%",
   width: "95%",
   margin: 10,
   borderWidth: 1,
   borderColor: color.palette.white,
   borderRadius: 20,
   overflow: "hidden",
-  bottom: -150,
+  bottom: -100,
   position: "absolute",
 }
 
@@ -158,8 +160,8 @@ const KeyBoardStyle: ViewStyle = { flex: 1, backgroundColor: "white" }
 // const GOOGLE_MAPS_APIKEY = "AIzaSyDEXI0NflTOvRTBLOpA8w5zG7ZzHww_YtU"
 
 export const SearchScreen: FC<StackScreenProps<NavigatorParamList, "SearchScreen">> = ({
-  navigation,
-}) => {
+                                                                                         navigation,
+                                                                                       }) => {
   // Pull in one of our MST stores
   // const { someStore, anotherStore } = useStores()
   const [originPlace, setOriginPlace] = useState(null)
@@ -167,7 +169,7 @@ export const SearchScreen: FC<StackScreenProps<NavigatorParamList, "SearchScreen
   const [map, setMap] = useState(null)
   const [disabled, setDisabled] = useState(true)
 
-  console.log(originPlace?.details, "==> origin", destinationPlace, "==>destination")
+  // console.log(originPlace?.details, "==> origin", destinationPlace, "==>destination")
 
   useEffect(() => {
     if (originPlace && destinationPlace) {
@@ -218,7 +220,7 @@ export const SearchScreen: FC<StackScreenProps<NavigatorParamList, "SearchScreen
             enablePoweredByContainer={false}
             fetchDetails
             query={{
-              key: "AIzaSyDEXI0NflTOvRTBLOpA8w5zG7ZzHww_YtU",
+              key: "AIzaSyBoPTw9FBO7ZadMxWNHpf84JSMXEw2dsps",
               language: "en",
             }}
             renderRow={(data) => <PlaceRow data={data} />}
@@ -248,9 +250,11 @@ export const SearchScreen: FC<StackScreenProps<NavigatorParamList, "SearchScreen
             fetchDetails
             enablePoweredByContainer={false}
             query={{
-              key: "AIzaSyDEXI0NflTOvRTBLOpA8w5zG7ZzHww_YtU",
+              key: "AIzaSyBoPTw9FBO7ZadMxWNHpf84JSMXEw2dsps",
               language: "en",
             }}
+            // currentLocation={true}
+            // currentLocationLabel="Current location"
             renderRow={(data) => <PlaceRow data={data} />}
           />
           {/* Circle design uber maps */}

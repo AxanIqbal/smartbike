@@ -14,6 +14,8 @@ import { DistanceScreen, HistoryScreen, HomeScreen, MapsScreen, SearchScreen } f
 import { DarkTheme, DefaultTheme, NavigationContainer } from "@react-navigation/native"
 import { createNativeStackNavigator } from "@react-navigation/native-stack"
 import UserScreen from "../screens/user/user-screen"
+import { useAppSelector } from "../store/store"
+import { AuthStack } from "./auth/auth-navigator"
 
 /**
  * This type allows TypeScript to know what routes are defined in this navigator
@@ -84,6 +86,7 @@ interface NavigationProps extends Partial<React.ComponentProps<typeof Navigation
 
 export const AppNavigator = (props: NavigationProps) => {
   const colorScheme = useColorScheme()
+  const {auth} = useAppSelector(state => state.firebase)
   useBackButtonHandler(canExit)
   return (
     <NavigationContainer
@@ -91,7 +94,7 @@ export const AppNavigator = (props: NavigationProps) => {
       theme={colorScheme === "dark" ? DarkTheme : DefaultTheme}
       {...props}
     >
-      <AppStack />
+      {auth.isEmpty ? <AuthStack/> : <AppStack/> }
     </NavigationContainer>
   )
 }

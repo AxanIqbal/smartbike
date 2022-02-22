@@ -6,12 +6,10 @@ import React, { useEffect } from "react"
 import firebase from "@react-native-firebase/app"
 import { initialWindowMetrics, SafeAreaProvider } from "react-native-safe-area-context"
 import { initFonts } from "./theme/fonts" // expo
-import * as storage from "./utils/storage"
 
-import { AppNavigator, useNavigationPersistence } from "./navigators"
+import { AppNavigator } from "./navigators"
 import { ToggleStorybook } from "../storybook/toggle-storybook"
 import { ErrorBoundary } from "./screens/error/error-boundary"
-import { LoadingScreen } from "./screens"
 import { store } from "./store/store"
 import { Provider } from "react-redux"
 import { ReactReduxFirebaseProvider } from "react-redux-firebase"
@@ -26,11 +24,11 @@ export const NAVIGATION_PERSISTENCE_KEY = "NAVIGATION_STATE"
  */
 function App() {
   // const [rootStore, setRootStore] = useState<RootStore | undefined>(undefined)
-  const {
-    initialNavigationState,
-    onNavigationStateChange,
-    isRestored: isNavigationStateRestored,
-  } = useNavigationPersistence(storage, NAVIGATION_PERSISTENCE_KEY)
+  // const {
+  //   initialNavigationState,
+  //   onNavigationStateChange,
+  //   isRestored: isNavigationStateRestored,
+  // } = useNavigationPersistence(storage, NAVIGATION_PERSISTENCE_KEY)
   const rrfConfig = {
     userProfile: "bikes",
     // useFirestoreForProfile: true, // Firestore for Profile instead of Realtime DB
@@ -55,12 +53,12 @@ function App() {
   // In iOS: application:didFinishLaunchingWithOptions:
   // In Android: https://stackoverflow.com/a/45838109/204044
   // You can replace with your own loading component if you wish.
-  if (!isNavigationStateRestored)
-    return (
-      <SafeAreaProvider>
-        <LoadingScreen />
-      </SafeAreaProvider>
-    )
+  // if (!isNavigationStateRestored)
+  //   return (
+  //     <SafeAreaProvider>
+  //       <LoadingScreen />
+  //     </SafeAreaProvider>
+  //   )
 
   // otherwise, we're ready to render the app
   return (
@@ -70,8 +68,8 @@ function App() {
           <SafeAreaProvider initialMetrics={initialWindowMetrics}>
             <ErrorBoundary catchErrors={"always"}>
               <AppNavigator
-                initialState={initialNavigationState}
-                onStateChange={onNavigationStateChange}
+                // initialState={initialNavigationState}
+                // onStateChange={onNavigationStateChange}
               />
             </ErrorBoundary>
           </SafeAreaProvider>

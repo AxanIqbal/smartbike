@@ -1,5 +1,5 @@
 import React, { FC, useState } from "react"
-import { Alert, Dimensions, Image, ImageStyle, View, ViewStyle } from "react-native"
+import { Dimensions, Image, ImageStyle, View, ViewStyle } from "react-native"
 import { Button, Text } from "../../components"
 import { color } from "../../theme"
 import { NavigatorParamList } from "../../navigators"
@@ -36,7 +36,7 @@ const buttonStyle2: ViewStyle = {
   position: "relative",
   backgroundColor: "transparent",
   alignSelf: "flex-start",
-  bottom: Dimensions.get("screen").height * 0.87,
+  bottom: Dimensions.get("screen").height * 0.9,
 }
 
 const searchStyle: ViewStyle = {
@@ -58,8 +58,8 @@ const searchStyle1: ViewStyle = {
 }
 
 export const MapsScreen: FC<StackScreenProps<NavigatorParamList, "MapsScreen">> = ({
-  navigation,
-}) => {
+                                                                                     navigation,
+                                                                                   }) => {
   const firebase = useFirebase()
   const dispatch = useAppDispatch()
   const [map, setMap] = useState(null)
@@ -95,17 +95,12 @@ export const MapsScreen: FC<StackScreenProps<NavigatorParamList, "MapsScreen">> 
   React.useEffect(() => {
     let subsLoc: Location.LocationSubscription
     ;(async () => {
-      const { status } = await Location.requestForegroundPermissionsAsync()
-      if (status !== "granted") {
-        Alert.alert("Permission Error", "Permission to access location was denied")
-        return
-      }
       subsLoc = await Location.watchPositionAsync(
         {
           accuracy: LocationAccuracy.Highest,
         },
         (location) => {
-          console.log(location)
+          // console.log(location)
           dispatch(setLocation(location.coords))
           firebase.updateProfile({
             ...location.coords,

@@ -6,6 +6,9 @@
     "slug": "smartbike",
     "version": "1.0.0",
     "orientation": "portrait",
+    "androidNavigationBar": {
+      "visible": "immersive"
+    },
     "icon": "./assets/images/icon.png",
     "splash": {
       "image": "./assets/images/splash.png",
