@@ -86,7 +86,7 @@ export const HomeScreen: FC<StackScreenProps<NavigatorParamList, "welcome">> = (
   React.useEffect(() => {
     StatusBar.setHidden(true)
     const test = new MyWebsocket()
-    test.setup("asd")
+    test.setup("ws://192.168.2.110/ws")
     ;(async () => {
       const { status } = await Location.requestForegroundPermissionsAsync()
       if (status !== "granted") {
