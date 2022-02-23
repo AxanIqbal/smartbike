@@ -10,6 +10,7 @@ import { useAppSelector } from "../../store/store"
 import { isLoaded } from "react-redux-firebase"
 import * as Location from "expo-location"
 import { useKeepAwake } from "expo-keep-awake"
+import { MyWebsocket } from "../../services/websocket"
 
 const ROOT: ViewStyle = {
   backgroundColor: color.palette.white,
@@ -84,6 +85,8 @@ export const HomeScreen: FC<StackScreenProps<NavigatorParamList, "welcome">> = (
 
   React.useEffect(() => {
     StatusBar.setHidden(true)
+    const test = new MyWebsocket()
+    test.setup("asd")
     ;(async () => {
       const { status } = await Location.requestForegroundPermissionsAsync()
       if (status !== "granted") {
@@ -103,14 +106,14 @@ export const HomeScreen: FC<StackScreenProps<NavigatorParamList, "welcome">> = (
             rotation={225}
             arcSweepAngle={270}
             tintColor={color.appcolor}
-            backgroundColor="#eeee">
-            {
-              (fill) => (
-                <Text style={kmStyle}>
-                  {profile.speed}<Text style={kmStyle1}>m/s</Text>
-                </Text>
-              )
-            }
+            backgroundColor="#eeee"
+          >
+            {() => (
+              <Text style={kmStyle}>
+                {profile.speed}
+                <Text style={kmStyle1}>m/s</Text>
+              </Text>
+            )}
           </AnimatedCircularProgress>
           <AnimatedCircularProgress
             size={200}
