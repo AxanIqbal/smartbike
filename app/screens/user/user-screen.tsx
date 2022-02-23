@@ -1,11 +1,11 @@
 import React, { FC } from "react"
-import { Dimensions, Image, ImageStyle, TextStyle, View, ViewStyle } from "react-native"
-import { Button, Screen, Text } from "../../components"
+import { Dimensions, ImageStyle, TextStyle, View, ViewStyle } from "react-native"
+import { Battery, Button, Screen, Text } from "../../components"
 import { NavigatorParamList } from "../../navigators"
 import { color } from "../../theme"
 import { Header } from "react-native-elements"
 import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons"
-import { populate, useFirebaseConnect } from "react-redux-firebase"
+import { isLoaded, populate, useFirebaseConnect } from "react-redux-firebase"
 import { useAppSelector } from "../../store/store"
 import { UserProfile } from "../../store/slices/firebase.types"
 import { AnimatedCircularProgress } from "react-native-circular-progress"
@@ -52,24 +52,38 @@ const heading: TextStyle = {
   paddingLeft: 10,
   fontSize: 15,
   fontWeight: "700",
+  color: "rgba(82,82,82,0.76)",
 }
 
-const imageStyle: ImageStyle = {
-  width: 100,
-  height: 220,
-  marginTop: -50,
-  alignItems: "center",
+const content: TextStyle = {
+  color: "rgba(82,82,82,0.76)",
 }
 
 interface UserScreenProps {
   populatedProfile: UserProfile
 }
 
+const imageStyle1: ImageStyle = {
+  marginTop: -60,
+  alignItems: "center",
+}
+
+const ButtonStyle: ViewStyle = {
+  marginHorizontal: 10,
+  height: 50,
+  borderRadius: 10,
+  backgroundColor: color.palette.white,
+  borderWidth: 1,
+  borderColor: color.appcolor,
+  marginVertical: 20,
+}
+
 const UserScreen: FC<StackScreenProps<NavigatorParamList, "UserScreen"> & UserScreenProps> = ({
-  navigation,
-  populatedProfile,
-}) => {
+                                                                                                navigation,
+                                                                                                populatedProfile,
+                                                                                              }) => {
   const firebase = useAppSelector((state) => state.firebase)
+  const { profile } = useAppSelector((state) => state.firebase)
   useFirebaseConnect([{ path: "bikes" }])
   // const populatedProfile: UserProfile = populate(firebase, "profile", [
   //   { child: "bikes", root: "bikes", keyProp: "id" },
@@ -98,35 +112,47 @@ const UserScreen: FC<StackScreenProps<NavigatorParamList, "UserScreen"> & UserSc
             onAnimationComplete={() => console.log("onAnimationComplete")}
             backgroundColor={color.palette.offWhite}
           >
-            {() => <Image source={require("../home/ChargingAnimation.png")} style={imageStyle} />}
+            {() => (
+              isLoaded(profile) && (
+                <Battery
+                  style={imageStyle1}
+                  isCharging={profile.isCharging}
+                  percentage={profile.battery}
+                  height={250}
+                  width={110}
+                />
+              )
+            )}
           </AnimatedCircularProgress>
         </View>
         <View>
           <View style={innerContainer}>
             <Text style={heading}>Bike Id:</Text>
-            <Text>{populatedProfile.bikes[0].id}</Text>
+            <Text style={content}>uaidnca899q3ne328</Text>
           </View>
           <View style={innerContainer}>
             <Text style={heading}>Bike Model:</Text>
-            <Text>{populatedProfile.bikes[0].model}</Text>
+            <Text style={content}>i8wqind832dj82jqo</Text>
           </View>
           <View style={innerContainer}>
             <Text style={heading}>User name:</Text>
-            <Text>{populatedProfile.name}</Text>
+            <Text style={content}>uacuicnaiuc9320</Text>
           </View>
           <View style={innerContainer}>
             <Text style={heading}>User Email:</Text>
-            <Text>{firebase.auth.email}</Text>
+            <Text style={content}>aciuniuaciw8d9</Text>
           </View>
         </View>
-        {/* <Button */}
-        {/*  text={"push"} */}
-        {/*  onPress={async () => { */}
-        {/*    // await firebase.updateProfile({ */}
-        {/*    //   bikes: ["a"], */}
-        {/*    // }) */}
-        {/*  }} */}
-        {/* /> */}
+        <Button
+          style={ButtonStyle}
+          onPress={async () => {
+            // await firebase.updateProfile({
+            //   bikes: ["a"],
+            // })
+          }}
+        >
+          <Text style={{color: color.appcolor, fontSize: 17}}>Logout</Text>
+        </Button>
       </Screen>
     </>
   )

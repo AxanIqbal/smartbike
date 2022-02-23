@@ -107,7 +107,7 @@ export const HomeScreen: FC<StackScreenProps<NavigatorParamList, "welcome">> = (
             {
               (fill) => (
                 <Text style={kmStyle}>
-                  {profile.speed}<Text style={kmStyle1}>m/s</Text>
+                  {Math.round(profile.speed)}<Text style={kmStyle1}>m/s</Text>
                 </Text>
               )
             }
@@ -146,6 +146,14 @@ export const HomeScreen: FC<StackScreenProps<NavigatorParamList, "welcome">> = (
           <Button style={buttonStyle}>
             <MaterialCommunityIcons
               onPress={() => navigation.navigate("UserScreen")}
+              size={25}
+              name="account"
+              color={color.appcolor}
+            />
+          </Button>
+          <Button style={buttonStyle}>
+            <MaterialCommunityIcons
+              onPress={() => navigation.navigate("Signup")}
               size={25}
               name="account"
               color={color.appcolor}

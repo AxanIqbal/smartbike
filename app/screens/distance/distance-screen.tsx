@@ -159,7 +159,7 @@ export const DistanceScreen: FC<StackScreenProps<NavigatorParamList, "DistanceSc
         <View style={innerContainer}>
           <MaterialCommunityIcons style={{ alignSelf: "center" }} name="speedometer-slow" size={50}
                                   color={color.appcolor} />
-          <Text style={{ textAlign: "center", fontSize: 20 }}>{profile.speed}m/s</Text>
+          <Text style={{ textAlign: "center", fontSize: 20 }}>{Math.round(profile.speed)}m/s</Text>
         </View>
         <View style={innerContainer}>
           <MaterialCommunityIcons style={{ alignSelf: "center" }} name="motorbike" size={50} color={color.appcolor} />

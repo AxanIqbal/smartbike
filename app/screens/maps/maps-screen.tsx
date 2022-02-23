@@ -36,7 +36,7 @@ const buttonStyle2: ViewStyle = {
   position: "relative",
   backgroundColor: "transparent",
   alignSelf: "flex-start",
-  bottom: Dimensions.get("screen").height * 0.9,
+  bottom: Dimensions.get("screen").height * 0.95,
 }
 
 const searchStyle: ViewStyle = {
