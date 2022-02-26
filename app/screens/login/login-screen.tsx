@@ -198,11 +198,15 @@ export const LoginScreen: FC<StackScreenProps<AuthParamList, "login">> = ({ navi
           disabled={isSubmitting}
           onPress={handleSubmit(onSubmit, onError)}
         >
-          {loading ? <ActivityIndicator animating={true} size="small" color={color.palette.white}/> : <Text style={ButtonTextStyle} text="Login" />}
+          {loading ? (
+            <ActivityIndicator animating={true} size="small" color={color.palette.white} />
+          ) : (
+            <Text style={ButtonTextStyle} text="Login" />
+          )}
         </Button>
         <View style={{ alignSelf: "center", marginVertical: 15 }}>
           <Text style={{ textAlign: "center" }}>OR</Text>
-          <Text style={{ textAlign: "center" }}>Sign In With</Text>
+          <Text style={{ textAlign: "center" }}>Sign Up With</Text>
         </View>
       </View>
       <View style={signUpStyle}>
@@ -212,7 +216,7 @@ export const LoginScreen: FC<StackScreenProps<AuthParamList, "login">> = ({ navi
         <Button style={iconStyles}>
           <MaterialIcons style={icons} size={25} color="white" name="google" />
         </Button>
-        <Button style={iconStyles}>
+        <Button style={iconStyles} onPress={() => navigation.push("signUp")}>
           <MaterialIcons style={icons} size={25} color="white" name="email-open" />
         </Button>
       </View>

@@ -8,7 +8,7 @@ import { AnimatedCircularProgress } from "react-native-circular-progress"
 import { NavigatorParamList } from "../../navigators"
 import { StackScreenProps } from "@react-navigation/stack"
 import { useAppSelector } from "../../store/store"
-import { isLoaded, populate, useFirebaseConnect } from "react-redux-firebase"
+import { isEmpty, isLoaded, populate, useFirebaseConnect } from "react-redux-firebase"
 import { UserProfile } from "../../store/slices/firebase.types"
 
 const ROOT: ViewStyle = {
@@ -115,14 +115,19 @@ export const HomeScreen: FC<StackScreenProps<NavigatorParamList, "welcome">> = (
           <AnimatedCircularProgress
             size={250}
             width={20}
-            fill={isLoaded(populatedProfile) ? populatedProfile?.bikes[0].battery : 0}
+            fill={
+              isLoaded(populatedProfile) && !isEmpty(populatedProfile)
+                ? populatedProfile?.bikes[0].battery
+                : 0
+            }
             rotation={0}
             tintColor={color.appcolor}
             onAnimationComplete={() => console.log("onAnimationComplete")}
             backgroundColor={color.palette.offWhite}
           >
             {() =>
-              isLoaded(populatedProfile) && (
+              isLoaded(populatedProfile) &&
+              !isEmpty(populatedProfile) && (
                 <Battery
                   style={imageStyle}
                   isCharging={populatedProfile.bikes[0].isCharging}

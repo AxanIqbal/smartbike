@@ -14,6 +14,7 @@ export interface Bike {
   model: string
   speed: number
   heading: number
+  owner: string
 }
 
 export interface DBSchema {

@@ -5,7 +5,7 @@ import { NavigatorParamList } from "../../navigators"
 import { color } from "../../theme"
 import { Header } from "react-native-elements"
 import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons"
-import { populate, useFirebaseConnect } from "react-redux-firebase"
+import { populate, useFirebase, useFirebaseConnect } from "react-redux-firebase"
 import { useAppSelector } from "../../store/store"
 import { UserProfile } from "../../store/slices/firebase.types"
 import { AnimatedCircularProgress } from "react-native-circular-progress"
@@ -69,11 +69,9 @@ const UserScreen: FC<StackScreenProps<NavigatorParamList, "UserScreen"> & UserSc
   navigation,
   populatedProfile,
 }) => {
-  const firebase = useAppSelector((state) => state.firebase)
+  const { auth } = useAppSelector((state) => state.firebase)
   useFirebaseConnect([{ path: "bikes" }])
-  // const populatedProfile: UserProfile = populate(firebase, "profile", [
-  //   { child: "bikes", root: "bikes", keyProp: "id" },
-  // ])
+  const firebase = useFirebase()
 
   return (
     <>
@@ -116,17 +114,20 @@ const UserScreen: FC<StackScreenProps<NavigatorParamList, "UserScreen"> & UserSc
           </View>
           <View style={innerContainer}>
             <Text style={heading}>User Email:</Text>
-            <Text>{firebase.auth.email}</Text>
+            <Text>{auth.email}</Text>
           </View>
         </View>
-        {/* <Button */}
-        {/*  text={"push"} */}
-        {/*  onPress={async () => { */}
-        {/*    // await firebase.updateProfile({ */}
-        {/*    //   bikes: ["a"], */}
-        {/*    // }) */}
-        {/*  }} */}
-        {/* /> */}
+        <Button
+          style={{
+            marginHorizontal: 20,
+            height: 50,
+            borderRadius: 5,
+            backgroundColor: color.error,
+          }}
+          onPress={() => firebase.logout()}
+        >
+          <Text style={{ color: color.palette.white, fontSize: 17 }}>LogOut</Text>
+        </Button>
       </Screen>
     </>
   )
