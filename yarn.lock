@@ -10120,12 +10120,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"expo-linear-gradient@npm:~11.0.1":
-  version: 11.0.2
-  resolution: "expo-linear-gradient@npm:11.0.2"
+"expo-linear-gradient@npm:~11.0.3":
+  version: 11.0.3
+  resolution: "expo-linear-gradient@npm:11.0.3"
   peerDependencies:
     expo: "*"
-  checksum: 942f9072b0b21a1d2a17a09bb9b84923bb1e209bcb6d5ac771ca882a0e2e382f0553d53e450180daa10116b7cb8719d3677d3ed4b7e2d6e2c61e120416b5cc9c
+  checksum: 0728a0ef16210f0998b0fd309880e411f873542ca8878f069adfb8356f9e6bc808a00fef2aec8094be1bbdb094a359c9a281abd0894cd601991c3e82925704de
   languageName: node
   linkType: hard
 
@@ -19356,7 +19356,7 @@ resolve@^2.0.0-next.3:
     eslint-plugin-react: 7.28.0
     eslint-plugin-react-native: 3.11.0
     expo: ~44.0.6
-    expo-linear-gradient: ~11.0.1
+    expo-linear-gradient: ~11.0.3
     expo-localization: ~12.0.0
     expo-modules-autolinking: ^0.5.5
     expo-modules-core: ~0.6.4
