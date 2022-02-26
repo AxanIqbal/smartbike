@@ -2,11 +2,15 @@
   "name": "SmartBike",
   "displayName": "SmartBike",
   "expo": {
-    "name": "smartbike",
+    "name": "Smart Bike",
     "slug": "smartbike",
     "version": "1.0.0",
     "orientation": "portrait",
-    "icon": "./assets/images/icon.png",
+    "icon": "./assets/images/splash.png",
+    "plugins": [
+      "@notifee/react-native",
+      "@react-native-firebase/app"
+    ],
     "splash": {
       "image": "./assets/images/splash.png",
       "resizeMode": "contain",
@@ -15,12 +19,23 @@
     "updates": {
       "fallbackToCacheTimeout": 0
     },
-    "assetBundlePatterns": ["**/*"],
+    "assetBundlePatterns": [
+      "**/*"
+    ],
     "ios": {
       "supportsTablet": true
     },
     "web": {
       "favicon": "./assets/images/favicon.png"
+    },
+    "android": {
+      "package": "com.smartbike",
+      "googleServicesFile": "./google-services.json",
+      "config": {
+        "googleMaps": {
+          "apiKey": "AIzaSyBoPTw9FBO7ZadMxWNHpf84JSMXEw2dsps"
+        }
+      }
     }
   }
 }
