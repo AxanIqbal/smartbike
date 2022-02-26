@@ -11,7 +11,11 @@ import {
   ViewStyle,
 } from "react-native"
 import { Header } from "react-native-elements"
-import { GooglePlacesAutocomplete } from "react-native-google-places-autocomplete"
+import {
+  GooglePlaceData,
+  GooglePlaceDetail,
+  GooglePlacesAutocomplete,
+} from "react-native-google-places-autocomplete"
 import { Button, PlaceRow, Text } from "../../components"
 import { NavigatorParamList } from "../../navigators"
 import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons"
@@ -20,7 +24,8 @@ import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityI
 import Ionicons from "react-native-vector-icons/Ionicons"
 import { color } from "../../theme"
 import MapView, { Marker, PROVIDER_GOOGLE } from "react-native-maps"
-
+import { useFirebase } from "react-redux-firebase"
+import { useAppSelector } from "../../store/store"
 
 const container: ViewStyle = {
   marginVertical: 10,
@@ -160,12 +165,14 @@ const KeyBoardStyle: ViewStyle = { flex: 1, backgroundColor: "white" }
 // const GOOGLE_MAPS_APIKEY = "AIzaSyDEXI0NflTOvRTBLOpA8w5zG7ZzHww_YtU"
 
 export const SearchScreen: FC<StackScreenProps<NavigatorParamList, "SearchScreen">> = ({
-                                                                                         navigation,
-                                                                                       }) => {
+  navigation,
+}) => {
   // Pull in one of our MST stores
-  // const { someStore, anotherStore } = useStores()
+  const firebase = useFirebase()
+  const { auth } = useAppSelector((state) => state.firebase)
   const [originPlace, setOriginPlace] = useState(null)
-  const [destinationPlace, setDestinationPlace] = useState(null)
+  const [destinationPlace, setDestinationPlace] =
+    useState<{ data: GooglePlaceData; details?: GooglePlaceDetail }>(null)
   const [map, setMap] = useState(null)
   const [disabled, setDisabled] = useState(true)
 
@@ -307,7 +314,11 @@ export const SearchScreen: FC<StackScreenProps<NavigatorParamList, "SearchScreen
         </View>
       </View>
       <Button
-        onPress={() => {
+        onPress={async () => {
+          await firebase.push(`${auth.uid}/history`, {
+            address: destinationPlace.details.adr_address,
+            timeStamp: Date.now(),
+          })
           navigation.navigate("DistanceScreen", {
             destinationLat: destinationPlace.details?.geometry.location.lat,
             destinationLng: destinationPlace.details?.geometry.location.lng,

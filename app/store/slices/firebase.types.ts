@@ -7,6 +7,12 @@ export interface UserProfile {
   model: string
   speed: number
   heading: number
+  history: history[]
+}
+
+interface history {
+  address: string
+  timeStamp: Date
 }
 
 export interface DBSchema {}

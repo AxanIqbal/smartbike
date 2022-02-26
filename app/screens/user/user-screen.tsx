@@ -5,12 +5,10 @@ import { NavigatorParamList } from "../../navigators"
 import { color } from "../../theme"
 import { Header } from "react-native-elements"
 import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons"
-import { isLoaded, populate, useFirebaseConnect } from "react-redux-firebase"
+import { isLoaded } from "react-redux-firebase"
 import { useAppSelector } from "../../store/store"
-import { UserProfile } from "../../store/slices/firebase.types"
 import { AnimatedCircularProgress } from "react-native-circular-progress"
 import { StackScreenProps } from "@react-navigation/stack"
-import { connect } from "react-redux"
 
 const ROOT: ViewStyle = {
   backgroundColor: color.palette.white,
@@ -59,10 +57,6 @@ const content: TextStyle = {
   color: "rgba(82,82,82,0.76)",
 }
 
-interface UserScreenProps {
-  populatedProfile: UserProfile
-}
-
 const imageStyle1: ImageStyle = {
   marginTop: -60,
   alignItems: "center",
@@ -78,16 +72,8 @@ const ButtonStyle: ViewStyle = {
   marginVertical: 20,
 }
 
-const UserScreen: FC<StackScreenProps<NavigatorParamList, "UserScreen"> & UserScreenProps> = ({
-                                                                                                navigation,
-                                                                                                populatedProfile,
-                                                                                              }) => {
-  const firebase = useAppSelector((state) => state.firebase)
+const UserScreen: FC<StackScreenProps<NavigatorParamList, "UserScreen">> = ({ navigation }) => {
   const { profile } = useAppSelector((state) => state.firebase)
-  useFirebaseConnect([{ path: "bikes" }])
-  // const populatedProfile: UserProfile = populate(firebase, "profile", [
-  //   { child: "bikes", root: "bikes", keyProp: "id" },
-  // ])
 
   return (
     <>
@@ -112,7 +98,7 @@ const UserScreen: FC<StackScreenProps<NavigatorParamList, "UserScreen"> & UserSc
             onAnimationComplete={() => console.log("onAnimationComplete")}
             backgroundColor={color.palette.offWhite}
           >
-            {() => (
+            {() =>
               isLoaded(profile) && (
                 <Battery
                   style={imageStyle1}
@@ -122,7 +108,7 @@ const UserScreen: FC<StackScreenProps<NavigatorParamList, "UserScreen"> & UserSc
                   width={110}
                 />
               )
-            )}
+            }
           </AnimatedCircularProgress>
         </View>
         <View>
@@ -151,16 +137,11 @@ const UserScreen: FC<StackScreenProps<NavigatorParamList, "UserScreen"> & UserSc
             // })
           }}
         >
-          <Text style={{color: color.appcolor, fontSize: 17}}>Logout</Text>
+          <Text style={{ color: color.appcolor, fontSize: 17 }}>Logout</Text>
         </Button>
       </Screen>
     </>
   )
 }
 
-export default connect(({ firebase }) => ({
-  profile: firebase.profile,
-  populatedProfile: populate(firebase, "profile", [
-    { child: "bikes", root: "bikes", keyProp: "id" },
-  ]),
-}))(UserScreen)
+export default UserScreen
