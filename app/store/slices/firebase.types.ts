@@ -1,6 +1,7 @@
 export interface UserProfile {
   name: string
   bikes: string[] & Bike[]
+  token: string
   isEmpty: boolean
   isLoaded: boolean
 }
@@ -15,6 +16,12 @@ export interface Bike {
   speed: number
   heading: number
   owner: string
+  history: LocationHistory[]
+}
+
+export interface LocationHistory {
+  description: string
+  time: Date | string
 }
 
 export interface DBSchema {

@@ -1,13 +1,13 @@
 import React, { FC, useState } from "react"
 import {
+  ActivityIndicator,
+  Dimensions,
+  Image,
+  ImageStyle,
+  TextStyle,
   ToastAndroid,
   View,
   ViewStyle,
-  TextStyle,
-  Image,
-  ImageStyle,
-  Dimensions,
-  ActivityIndicator,
 } from "react-native"
 import { Button, Screen, Text } from "../../components"
 import { color } from "../../theme"

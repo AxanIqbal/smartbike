@@ -11,6 +11,7 @@ import { UserProfile } from "../../store/slices/firebase.types"
 import { AnimatedCircularProgress } from "react-native-circular-progress"
 import { StackScreenProps } from "@react-navigation/stack"
 import { connect } from "react-redux"
+import messaging from "@react-native-firebase/messaging"
 
 const ROOT: ViewStyle = {
   backgroundColor: color.palette.white,
@@ -124,7 +125,17 @@ const UserScreen: FC<StackScreenProps<NavigatorParamList, "UserScreen"> & UserSc
             borderRadius: 5,
             backgroundColor: color.error,
           }}
-          onPress={() => firebase.logout()}
+          onPress={async () => {
+            try {
+              await messaging().deleteToken()
+              await firebase.updateProfile({
+                token: null,
+              })
+              await firebase.logout()
+            } catch (e) {
+              console.log(e)
+            }
+          }}
         >
           <Text style={{ color: color.palette.white, fontSize: 17 }}>LogOut</Text>
         </Button>

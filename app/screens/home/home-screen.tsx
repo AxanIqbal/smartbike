@@ -8,8 +8,10 @@ import { AnimatedCircularProgress } from "react-native-circular-progress"
 import { NavigatorParamList } from "../../navigators"
 import { StackScreenProps } from "@react-navigation/stack"
 import { useAppSelector } from "../../store/store"
-import { isEmpty, isLoaded, populate, useFirebaseConnect } from "react-redux-firebase"
+import { isEmpty, isLoaded, populate, useFirebase, useFirebaseConnect } from "react-redux-firebase"
 import { UserProfile } from "../../store/slices/firebase.types"
+import messaging from "@react-native-firebase/messaging"
+import { saveTokenToDatabase } from "../../services/firebasetokens"
 
 const ROOT: ViewStyle = {
   backgroundColor: color.palette.white,
@@ -83,19 +85,18 @@ export const HomeScreen: FC<StackScreenProps<NavigatorParamList, "welcome">> = (
   const populatedProfile: UserProfile = populate(firebase, "profile", [
     { child: "bikes", root: "bikes", keyProp: "id" },
   ])
-  console.log(populatedProfile)
+  const Firebase = useFirebase()
 
   React.useEffect(() => {
-    // getCurrentLocation().then(r => {
-    //   console.log(r)
-    //   dispatch(setLocation(r.coords))
-    // }, reason => {
-    //   console.log(reason)
-    // })
+    messaging()
+      .getToken()
+      .then((token) => {
+        return saveTokenToDatabase(token, Firebase.updateProfile)
+      })
 
-    return () => {
-      // stopObserving()
-    }
+    return messaging().onTokenRefresh(async (token) => {
+      await saveTokenToDatabase(token, Firebase.updateProfile)
+    })
   }, [])
 
   return (
@@ -165,7 +166,13 @@ export const HomeScreen: FC<StackScreenProps<NavigatorParamList, "welcome">> = (
         </View>
         <Text style={HeadingStyle} text="Your TimeLine" />
         <View style={timeLIneStyle}>
-          <TimeLine />
+          <TimeLine
+            history={
+              isLoaded(populatedProfile) &&
+              !isEmpty(populatedProfile) &&
+              populatedProfile.bikes[0].history
+            }
+          />
         </View>
       </Screen>
     </>

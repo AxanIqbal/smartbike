@@ -3519,6 +3519,15 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@notifee/react-native@npm:^4.1.0":
+  version: 4.1.0
+  resolution: "@notifee/react-native@npm:4.1.0"
+  peerDependencies:
+    react-native: "*"
+  checksum: 0653a61f67b2ae9067064c2c3b13c6e47b8e380d64522e8ebb322ec5b67ced8185e5495e0a2ec0ec57efd4a866f3448180da39ab0061221afb32837950c8ef96
+  languageName: node
+  linkType: hard
+
 "@npmcli/fs@npm:^1.0.0":
   version: 1.0.0
   resolution: "@npmcli/fs@npm:1.0.0"
@@ -3753,6 +3762,15 @@ __metadata:
   peerDependencies:
     "@react-native-firebase/app": 14.5.0
   checksum: e6dd17eb8fe3583f0a917a93a537769ca1d070eaf43dc59d70a104cded028fc3aa46f6f82ada904f75efa8257ad6b9201255bf220520d99a5b148a292800f107
+  languageName: node
+  linkType: hard
+
+"@react-native-firebase/messaging@npm:^14.5.0":
+  version: 14.5.0
+  resolution: "@react-native-firebase/messaging@npm:14.5.0"
+  peerDependencies:
+    "@react-native-firebase/app": 14.5.0
+  checksum: c6cb30e0c385a3d35bd8403bfbb5683bdaab24faa44920a85290dc910f37dd41b9c9898080ab59eb0fa7fab760ff2eee9e2a50e014eb8cadfe712ef5efff1949
   languageName: node
   linkType: hard
 
@@ -19240,11 +19258,13 @@ resolve@^2.0.0-next.3:
     "@babel/plugin-proposal-decorators": 7.12.1
     "@babel/plugin-proposal-optional-catch-binding": 7.12.1
     "@babel/runtime": ^7.12.5
+    "@notifee/react-native": ^4.1.0
     "@react-native-async-storage/async-storage": ~1.15.0
     "@react-native-community/cli-platform-ios": ^6.2.0
     "@react-native-firebase/app": ^14.5.0
     "@react-native-firebase/auth": ^14.5.0
     "@react-native-firebase/database": ^14.5.0
+    "@react-native-firebase/messaging": ^14.5.0
     "@react-navigation/drawer": ^6.3.0
     "@react-navigation/native": ~6.0.8
     "@react-navigation/native-stack": ^6.4.1
