@@ -315,6 +315,7 @@ export const SearchScreen: FC<StackScreenProps<NavigatorParamList, "SearchScreen
       </View>
       <Button
         onPress={async () => {
+          // @ts-ignore
           await firebase.push(`${auth.uid}/history`, {
             address: destinationPlace.details.adr_address,
             timeStamp: Date.now(),
