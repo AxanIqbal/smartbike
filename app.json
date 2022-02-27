@@ -29,7 +29,9 @@
     "android": {
       "package": "com.smartbike",
       "googleServicesFile": "./google-services.json",
-
+      "androidNavigationBar": {
+        "visible": "immersive"
+      },
       "config": {
         "googleMaps": {
           "apiKey": "AIzaSyBoPTw9FBO7ZadMxWNHpf84JSMXEw2dsps"
