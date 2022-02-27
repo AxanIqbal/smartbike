@@ -8,6 +8,7 @@ import { initialWindowMetrics, SafeAreaProvider } from "react-native-safe-area-c
 import { initFonts } from "./theme/fonts" // expo
 import * as storage from "./utils/storage"
 
+import messaging from "@react-native-firebase/messaging"
 import { AppNavigator, useNavigationPersistence } from "./navigators"
 import { ToggleStorybook } from "../storybook/toggle-storybook"
 import { ErrorBoundary } from "./screens/error/error-boundary"
@@ -15,6 +16,8 @@ import { LoadingScreen } from "./screens"
 import { store } from "./store/store"
 import { Provider } from "react-redux"
 import { ReactReduxFirebaseProvider } from "react-redux-firebase"
+import { onMessageReceived } from "./services/firebasetokens"
+import notifee, { AndroidImportance } from "@notifee/react-native"
 // This puts screens in a native ViewController or Activity. If you want fully native
 // stack navigation, use `createNativeStackNavigator` in place of `createStackNavigator`:
 // https://github.com/kmagiera/react-native-screens#using-native-stack-navigator
@@ -46,7 +49,19 @@ function App() {
     ;(async () => {
       await initFonts() // expo
       // setupRootStore().then(setRootStore)
+      await notifee.createChannel({
+        id: "sos",
+        name: "SOS Channel",
+        vibration: true,
+        importance: AndroidImportance.HIGH,
+      })
     })()
+  }, [])
+
+  useEffect(() => {
+    const unsubscribe = messaging().onMessage(onMessageReceived)
+    messaging().setBackgroundMessageHandler(onMessageReceived)
+    return unsubscribe
   }, [])
 
   // Before we show the app, we have to wait for our state to be ready.
