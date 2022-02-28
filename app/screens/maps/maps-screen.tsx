@@ -119,7 +119,7 @@ export const MapsScreen: FC<StackScreenProps<NavigatorParamList, "MapsScreen">> 
       <MapView
         style={ROOT}
         provider={PROVIDER_GOOGLE}
-        loadingEnabled={true}
+        // loadingEnabled={true}
         initialRegion={{
           latitude: 24.942114588644632,
           longitude: 67.07928649736084,

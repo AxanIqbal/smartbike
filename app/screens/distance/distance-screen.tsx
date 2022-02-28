@@ -102,7 +102,7 @@ export const DistanceScreen: FC<StackScreenProps<NavigatorParamList, "DistanceSc
         <MapView
           style={ROOT}
           provider={PROVIDER_GOOGLE}
-          loadingEnabled={true}
+          // loadingEnabled={true}
           initialRegion={{
             latitude: origin.latitude,
             longitude: origin.longitude,
