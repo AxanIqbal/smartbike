@@ -15,13 +15,17 @@ const ROOT: ViewStyle = { width: "100%", height: "100%" }
 // const blankScreen: ViewStyle = {
 //   backgroundColor: color.palette.white,
 //   zIndex: 10,
+// const buttonStyle: ViewStyle = {
+//   position: 'absolute',
+//   backgroundColor: 'transparent',
+//   width: '100%',
+//   bottom: 20,
 // }
-const buttonStyle: ViewStyle = {
-  backgroundColor: "transparent",
-  position: "absolute",
-  width: "100%",
-  bottom: 20,
-}
+//   // backgroundColor: "transparent",
+//   position: "absolute",
+//   width: "100%",
+//   bottom: 20,
+// }
 const buttonStyle1: ViewStyle = {
   backgroundColor: "transparent",
   position: "absolute",
@@ -176,7 +180,12 @@ export const MapsScreen: FC<StackScreenProps<NavigatorParamList, "MapsScreen">> 
         onPress={() => {
           navigation.navigate("SearchScreen")
         }}
-        style={buttonStyle}
+        style={{
+          position: 'absolute',
+          backgroundColor: 'transparent',
+          width: '100%',
+          bottom: 20,
+        }}
       >
         <View style={searchStyle}>
           <View style={{ flexDirection: "row" }}>

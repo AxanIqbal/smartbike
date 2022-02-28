@@ -10,7 +10,7 @@ import { StackScreenProps } from "@react-navigation/stack"
 import { useAppSelector } from "../../store/store"
 import { isEmpty, isLoaded, populate, useFirebase, useFirebaseConnect } from "react-redux-firebase"
 import { UserProfile } from "../../store/slices/firebase.types"
-import messaging from "@react-native-firebase/messaging"
+// import messaging from "@react-native-firebase/messaging"
 import { saveTokenToDatabase } from "../../services/firebasetokens"
 
 const ROOT: ViewStyle = {
@@ -47,9 +47,9 @@ const buttonStyle: ViewStyle = {
   elevation: 5,
 }
 
-const imageStyle: ImageStyle = {
-  width: 100,
-  height: 220,
+const imageStyle: ViewStyle = {
+  // width: 100,
+  // height: 220,
   marginTop: -50,
   alignItems: "center",
 }
@@ -85,19 +85,19 @@ export const HomeScreen: FC<StackScreenProps<NavigatorParamList, "welcome">> = (
   const populatedProfile: UserProfile = populate(firebase, "profile", [
     { child: "bikes", root: "bikes", keyProp: "id" },
   ])
-  const Firebase = useFirebase()
+  // const Firebase = useFirebase()
 
-  React.useEffect(() => {
-    messaging()
-      .getToken()
-      .then((token) => {
-        return saveTokenToDatabase(token, Firebase.updateProfile)
-      })
-
-    return messaging().onTokenRefresh(async (token) => {
-      await saveTokenToDatabase(token, Firebase.updateProfile)
-    })
-  }, [])
+  // React.useEffect(() => {
+  //   messaging()
+  //     .getToken()
+  //     .then((token) => {
+  //       return saveTokenToDatabase(token, Firebase.updateProfile)
+  //     })
+  //
+  //   return messaging().onTokenRefresh(async (token) => {
+  //     await saveTokenToDatabase(token, Firebase.updateProfile)
+  //   })
+  // }, [])
 
   return (
     <>
@@ -129,11 +129,15 @@ export const HomeScreen: FC<StackScreenProps<NavigatorParamList, "welcome">> = (
             {() =>
               isLoaded(populatedProfile) &&
               !isEmpty(populatedProfile) && (
+                <View style={imageStyle}>
                 <Battery
-                  style={imageStyle}
+                  // style={imageStyle}
                   isCharging={populatedProfile.bikes[0].isCharging}
                   percentage={populatedProfile.bikes[0].battery}
+                  width={200}
+                  height={150}
                 />
+                </View>
               )
             }
           </AnimatedCircularProgress>

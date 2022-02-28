@@ -3797,15 +3797,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@react-native-firebase/messaging@npm:^14.5.0":
-  version: 14.5.0
-  resolution: "@react-native-firebase/messaging@npm:14.5.0"
-  peerDependencies:
-    "@react-native-firebase/app": 14.5.0
-  checksum: c6cb30e0c385a3d35bd8403bfbb5683bdaab24faa44920a85290dc910f37dd41b9c9898080ab59eb0fa7fab760ff2eee9e2a50e014eb8cadfe712ef5efff1949
-  languageName: node
-  linkType: hard
-
 "@react-native/assets@npm:1.0.0":
   version: 1.0.0
   resolution: "@react-native/assets@npm:1.0.0"
@@ -11089,6 +11080,13 @@ fsevents@^1.2.7:
   languageName: node
   linkType: hard
 
+"geolib@npm:^3.3.3":
+  version: 3.3.3
+  resolution: "geolib@npm:3.3.3"
+  checksum: c951a7d3503e51f5b9278ec59287c7a650590e15b43533c2361eec1d19d5424e91eae7b0dab42796f84c676bd30e052887419efea20bf29d55967f84de36426e
+  languageName: node
+  linkType: hard
+
 "get-caller-file@npm:^2.0.1, get-caller-file@npm:^2.0.5":
   version: 2.0.5
   resolution: "get-caller-file@npm:2.0.5"
@@ -13834,6 +13832,13 @@ fsevents@^1.2.7:
   languageName: node
   linkType: hard
 
+"loadash@npm:^1.0.0":
+  version: 1.0.0
+  resolution: "loadash@npm:1.0.0"
+  checksum: 05a105fa9773a7c15963ea783507daa4d488a7a5b782ba77d84dbfaa40b01eb6a3a6cb1a160e67c4af339c7aa9209f9bfb8ef35eefffe98838930f05752ea550
+  languageName: node
+  linkType: hard
+
 "loader-runner@npm:^2.4.0":
   version: 2.4.0
   resolution: "loader-runner@npm:2.4.0"
@@ -15045,7 +15050,7 @@ fsevents@^1.2.7:
   languageName: node
   linkType: hard
 
-"moment@npm:^2.19.3":
+"moment@npm:^2.19.3, moment@npm:^2.29.1":
   version: 2.29.1
   resolution: "moment@npm:2.29.1"
   checksum: 1e14d5f422a2687996be11dd2d50c8de3bd577c4a4ca79ba5d02c397242a933e5b941655de6c8cb90ac18f01cc4127e55b4a12ae3c527a6c0a274e455979345e
@@ -19324,7 +19329,6 @@ resolve@^2.0.0-next.3:
     "@react-native-firebase/app": ^14.5.0
     "@react-native-firebase/auth": ^14.5.0
     "@react-native-firebase/database": ^14.5.0
-    "@react-native-firebase/messaging": ^14.5.0
     "@react-navigation/drawer": ^6.3.0
     "@react-navigation/native": ~6.0.8
     "@react-navigation/native-stack": ^6.4.1
@@ -19363,14 +19367,17 @@ resolve@^2.0.0-next.3:
     expo-splash-screen: ~0.14.1
     expo-status-bar: ~1.2.0
     fbjs-scripts: 3.0.0
+    geolib: ^3.3.3
     i18n-js: 3.8.0
     jest: ^26.6.3
     jest-circus: 26
     jest-expo: ^44.0.0
     jetifier: 1.6.6
+    loadash: ^1.0.0
     mobx: 6.3.13
     mobx-react-lite: 3.2.3
     mobx-state-tree: 5.1.0
+    moment: ^2.29.1
     npm-run-all: 4.1.5
     patch-package: 6.2.2
     postinstall-prepare: 1.0.1
