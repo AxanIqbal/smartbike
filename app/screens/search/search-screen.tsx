@@ -1,14 +1,6 @@
 import { StackScreenProps } from "@react-navigation/stack"
 import React, { FC, useEffect, useState } from "react"
-import {
-  Image,
-  ImageStyle,
-  KeyboardAvoidingView,
-  Platform,
-  TextStyle,
-  View,
-  ViewStyle,
-} from "react-native"
+import { Dimensions, Image, ImageStyle, KeyboardAvoidingView, Platform, TextStyle, View, ViewStyle } from "react-native"
 import { Header } from "react-native-elements"
 import { GooglePlacesAutocomplete } from "react-native-google-places-autocomplete"
 import { Button, PlaceRow, Text } from "../../components"
@@ -62,6 +54,7 @@ const headerButton: ViewStyle = {
 
 const listViewStyle: ViewStyle = {
   position: "absolute",
+  height: Dimensions.get("screen").height * 0.5,
   top: 113,
 }
 
@@ -158,8 +151,8 @@ const KeyBoardStyle: ViewStyle = { flex: 1, backgroundColor: "white" }
 // const GOOGLE_MAPS_APIKEY = "AIzaSyDEXI0NflTOvRTBLOpA8w5zG7ZzHww_YtU"
 
 export const SearchScreen: FC<StackScreenProps<NavigatorParamList, "SearchScreen">> = ({
-  navigation,
-}) => {
+                                                                                         navigation,
+                                                                                       }) => {
   // Pull in one of our MST stores
   // const { someStore, anotherStore } = useStores()
   const [originPlace, setOriginPlace] = useState(null)
@@ -218,7 +211,7 @@ export const SearchScreen: FC<StackScreenProps<NavigatorParamList, "SearchScreen
             enablePoweredByContainer={false}
             fetchDetails
             query={{
-              key: "AIzaSyDEXI0NflTOvRTBLOpA8w5zG7ZzHww_YtU",
+              key: "AIzaSyBoPTw9FBO7ZadMxWNHpf84JSMXEw2dsps",
               language: "en",
             }}
             renderRow={(data) => <PlaceRow data={data} />}
@@ -243,12 +236,15 @@ export const SearchScreen: FC<StackScreenProps<NavigatorParamList, "SearchScreen
                 top: 55,
               },
               separator: seperatorStyle,
+              listView: {
+                height: Dimensions.get("screen").height * 0.4,
+              },
             }}
             numberOfLines={1}
             fetchDetails
             enablePoweredByContainer={false}
             query={{
-              key: "AIzaSyDEXI0NflTOvRTBLOpA8w5zG7ZzHww_YtU",
+              key: "AIzaSyBoPTw9FBO7ZadMxWNHpf84JSMXEw2dsps",
               language: "en",
             }}
             renderRow={(data) => <PlaceRow data={data} />}

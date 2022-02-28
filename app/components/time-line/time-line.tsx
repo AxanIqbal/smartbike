@@ -1,8 +1,12 @@
 import * as React from "react"
+import { useEffect, useState } from "react"
 import { StyleProp, TextStyle, View, ViewStyle } from "react-native"
 import { color } from "../../theme"
 import Timeline from "react-native-timeline-flatlist"
 import { LocationHistory } from "../../store/slices/firebase.types"
+import _ from "lodash"
+import moment from "moment"
+
 
 const CONTAINER: ViewStyle = {
   height: "100%",
@@ -41,12 +45,24 @@ export interface TimeLineProps {
  */
 export const TimeLine = function TimeLine(props: TimeLineProps) {
   const { history } = props
+  const [timeValues, setTimeValues] = useState([])
+  // let historyFormat
+  useEffect(() => {
+    if (history) {
+      const historyFormat = []
+      _.map(history, (values) => {
+        historyFormat.push({ time: String(moment(values.timeStamp).format("hh:mm a")), title: "", description: values.address })
+      })
+      setTimeValues(historyFormat)
+      console.log(historyFormat)
+    }
+  }, [history])
 
   return (
     <View style={CONTAINER}>
       <Timeline
         style={ListStyle}
-        data={history}
+        data={timeValues}
         circleSize={20}
         circleColor={color.appcolor}
         lineColor={color.appcolor}

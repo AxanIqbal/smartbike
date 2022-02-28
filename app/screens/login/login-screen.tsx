@@ -41,8 +41,6 @@ const ButtonTextStyle: TextStyle = {
 
 const iconStyle: ViewStyle = {
   backgroundColor: "transparent",
-  borderBottomColor: "black",
-  borderBottomWidth: 1,
 }
 
 const imageStyle: ImageStyle = {
@@ -210,12 +208,6 @@ export const LoginScreen: FC<StackScreenProps<AuthParamList, "login">> = ({ navi
         </View>
       </View>
       <View style={signUpStyle}>
-        <Button style={iconStyles}>
-          <MaterialIcons style={icons} size={25} color="white" name="facebook" />
-        </Button>
-        <Button style={iconStyles}>
-          <MaterialIcons style={icons} size={25} color="white" name="google" />
-        </Button>
         <Button style={iconStyles} onPress={() => navigation.push("signUp")}>
           <MaterialIcons style={icons} size={25} color="white" name="email-open" />
         </Button>

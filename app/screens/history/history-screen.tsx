@@ -6,6 +6,9 @@ import { color } from "../../theme"
 import { Header } from "react-native-elements"
 import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons"
 import { StackScreenProps } from "@react-navigation/stack"
+import { useAppSelector } from "../../store/store"
+import { isEmpty, isLoaded, populate, useFirebaseConnect } from "react-redux-firebase"
+import { UserProfile } from "../../store/slices/firebase.types"
 
 const ROOT: ViewStyle = {
   backgroundColor: color.palette.white,
@@ -39,11 +42,11 @@ const timeLIneStyle: ViewStyle = {
 export const HistoryScreen: FC<StackScreenProps<NavigatorParamList, "HistoryScreen">> = ({
   navigation,
 }) => {
-  // Pull in one of our MST stores
-  // const { someStore, anotherStore } = useStores()
-
-  // Pull in navigation via hook
-  // const navigation = useNavigation()
+  const firebase = useAppSelector((state) => state.firebase)
+  useFirebaseConnect([{ path: "bikes" }])
+  const populatedProfile: UserProfile = populate(firebase, "profile", [
+    { child: "bikes", root: "bikes", keyProp: "id" },
+  ])
   return (
     <>
       <Header
@@ -58,7 +61,13 @@ export const HistoryScreen: FC<StackScreenProps<NavigatorParamList, "HistoryScre
       />
       <Screen unsafe={true} preset={"scroll"} style={ROOT}>
         <View style={timeLIneStyle}>
-          <TimeLine />
+          <TimeLine
+            history={
+              isLoaded(populatedProfile) &&
+              !isEmpty(populatedProfile) &&
+              populatedProfile.bikes[0].history
+            }
+          />
         </View>
       </Screen>
     </>

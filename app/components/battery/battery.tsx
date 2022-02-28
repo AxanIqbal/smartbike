@@ -16,9 +16,11 @@ export interface BatteryProps {
   /**
    * An optional style override useful for padding & margin.
    */
-  style: StyleProp<ImageStyle>
+  style?: StyleProp<ImageStyle>
   isCharging: boolean
   percentage: number
+  width: number
+  height: number
 }
 
 // const CONTAINER: ViewStyle = {
@@ -33,45 +35,52 @@ const Charge: ImageStyle = {
   height: 50,
 }
 
-const BAR1: ImageStyle = {
-  position: "absolute",
-  bottom: 15,
-  left: 13,
-  width: 75,
-  height: 19,
-}
-
-const BAR2: ImageStyle = {
-  ...BAR1,
-  bottom: 36,
-}
-
-const BAR3: ImageStyle = {
-  ...BAR1,
-  bottom: 57,
-}
-
-const BAR4: ImageStyle = {
-  ...BAR1,
-  bottom: 78,
-}
-
-const BAR5: ImageStyle = {
-  ...BAR1,
-  bottom: 99,
-}
-
-const BAR6: ImageStyle = {
-  ...BAR1,
-  bottom: 119,
-}
 
 /**
  * Describe your component here
  */
 export function Battery(props: BatteryProps) {
-  const { style, isCharging, percentage } = props
+  const { isCharging, percentage,width,height, style } = props
   const blink = useSharedValue(0)
+  const imageStyle: ImageStyle = {
+    width,
+    height,
+    alignItems: "center",
+  }
+  const styles = Object.assign({}, imageStyle, style)
+
+  const BAR1: ImageStyle = {
+    position: "absolute",
+    bottom: height * 0.06,
+    left: width * 0.3,
+    width: width * 0.4,
+    height: height * 0.09,
+  }
+
+  const BAR2: ImageStyle = {
+    ...BAR1,
+    bottom: height * 0.155,
+  }
+
+  const BAR3: ImageStyle = {
+    ...BAR1,
+    bottom: height * 0.25,
+  }
+
+  const BAR4: ImageStyle = {
+    ...BAR1,
+    bottom: height * 0.346,
+  }
+
+  const BAR5: ImageStyle = {
+    ...BAR1,
+    bottom: height * 0.44,
+  }
+
+  const BAR6: ImageStyle = {
+    ...BAR1,
+    bottom: height * 0.54,
+  }
 
   if (isCharging) {
     blink.value = withRepeat(withTiming(1, { duration: 500, easing: Easing.ease }), -1, true)
@@ -88,7 +97,7 @@ export function Battery(props: BatteryProps) {
 
   return (
     <View>
-      <Image source={require("./battery.png")} style={style} />
+      <Image source={require("./battery.png")} style={styles} />
       {/* {isCharging ? ( */}
       {/*   <Animated.Image */}
       {/*     source={require("./bar_red_1.png")} */}

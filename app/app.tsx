@@ -6,17 +6,14 @@ import React, { useEffect } from "react"
 import firebase from "@react-native-firebase/app"
 import { initialWindowMetrics, SafeAreaProvider } from "react-native-safe-area-context"
 import { initFonts } from "./theme/fonts" // expo
-import * as storage from "./utils/storage"
 
-import messaging from "@react-native-firebase/messaging"
-import { AppNavigator, useNavigationPersistence } from "./navigators"
+// import messaging from "@react-native-firebase/messaging"
+import { AppNavigator } from "./navigators"
 import { ToggleStorybook } from "../storybook/toggle-storybook"
 import { ErrorBoundary } from "./screens/error/error-boundary"
-import { LoadingScreen } from "./screens"
 import { store } from "./store/store"
 import { Provider } from "react-redux"
 import { ReactReduxFirebaseProvider } from "react-redux-firebase"
-import { onMessageReceived } from "./services/firebasetokens"
 import notifee, { AndroidImportance } from "@notifee/react-native"
 // This puts screens in a native ViewController or Activity. If you want fully native
 // stack navigation, use `createNativeStackNavigator` in place of `createStackNavigator`:
@@ -29,11 +26,11 @@ export const NAVIGATION_PERSISTENCE_KEY = "NAVIGATION_STATE"
  */
 function App() {
   // const [rootStore, setRootStore] = useState<RootStore | undefined>(undefined)
-  const {
-    initialNavigationState,
-    onNavigationStateChange,
-    isRestored: isNavigationStateRestored,
-  } = useNavigationPersistence(storage, NAVIGATION_PERSISTENCE_KEY)
+  // const {
+  //   initialNavigationState,
+  //   onNavigationStateChange,
+  //   isRestored: isNavigationStateRestored,
+  // } = useNavigationPersistence(storage, NAVIGATION_PERSISTENCE_KEY)
   const rrfConfig = {
     userProfile: "users",
     profileParamsToPopulate: ["bikes:bikes"],
@@ -58,11 +55,11 @@ function App() {
     })()
   }, [])
 
-  useEffect(() => {
-    const unsubscribe = messaging().onMessage(onMessageReceived)
-    messaging().setBackgroundMessageHandler(onMessageReceived)
-    return unsubscribe
-  }, [])
+  // useEffect(() => {
+  //   const unsubscribe = messaging().onMessage(onMessageReceived)
+  //   messaging().setBackgroundMessageHandler(onMessageReceived)
+  //   return unsubscribe
+  // }, [])
 
   // Before we show the app, we have to wait for our state to be ready.
   // In the meantime, don't render anything. This will be the background
@@ -70,12 +67,12 @@ function App() {
   // In iOS: application:didFinishLaunchingWithOptions:
   // In Android: https://stackoverflow.com/a/45838109/204044
   // You can replace with your own loading component if you wish.
-  if (!isNavigationStateRestored)
-    return (
-      <SafeAreaProvider>
-        <LoadingScreen />
-      </SafeAreaProvider>
-    )
+  // if (!isNavigationStateRestored)
+  //   return (
+  //     <SafeAreaProvider>
+  //       <LoadingScreen />
+  //     </SafeAreaProvider>
+  //   )
 
   // otherwise, we're ready to render the app
   return (
@@ -85,8 +82,8 @@ function App() {
           <SafeAreaProvider initialMetrics={initialWindowMetrics}>
             <ErrorBoundary catchErrors={"always"}>
               <AppNavigator
-                initialState={initialNavigationState}
-                onStateChange={onNavigationStateChange}
+                // initialState={initialNavigationState}
+                // onStateChange={onNavigationStateChange}
               />
             </ErrorBoundary>
           </SafeAreaProvider>
