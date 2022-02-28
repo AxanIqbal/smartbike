@@ -1,8 +1,8 @@
 import React, { FC, useCallback } from "react"
-import { Dimensions, Image, ImageStyle, TextStyle, View, ViewStyle } from "react-native"
+import { Dimensions, Image, ImageStyle, ScrollView, TextStyle, View, ViewStyle } from "react-native"
 import { StackScreenProps } from "@react-navigation/stack"
 import { AuthParamList } from "../../navigators"
-import { Button, Screen, Text } from "../../components"
+import { Button, Text } from "../../components"
 import { color } from "../../theme"
 import * as Yup from "yup"
 import { Controller, useForm } from "react-hook-form"
@@ -13,7 +13,6 @@ import { Bike } from "../../store/slices/firebase.types"
 
 const ROOT: ViewStyle = {
   backgroundColor: color.palette.white,
-  flex: 1,
 }
 
 const imageStyle: ImageStyle = {
@@ -68,7 +67,7 @@ const LogInSchema = Yup.object().shape({
     .oneOf([Yup.ref("password")], "Passwords do not match"),
   bikeId: Yup.string()
     .required("Bike id is required")
-    .test("bike_async_validation", "Bike Validation Error", function (value) {
+    .test("bike_async_validation", "Bike Validation Error", function(value) {
       return database()
         .ref("/bikes")
         .once("value")
@@ -92,7 +91,7 @@ interface LogInTypes {
   bikeId: string
 }
 
-export const SignupScreen: FC<StackScreenProps<AuthParamList, "signUp">> = () => {
+export const SignupScreen: FC<StackScreenProps<AuthParamList, "signUp">> = ({ navigation }) => {
   const resolver = useYupValidationResolver(LogInSchema)
   const {
     handleSubmit,
@@ -114,7 +113,7 @@ export const SignupScreen: FC<StackScreenProps<AuthParamList, "signUp">> = () =>
   }
 
   return (
-    <Screen style={ROOT} preset="scroll">
+    <ScrollView style={ROOT}>
       <Image source={require("../maps/BikeMarker.png")} style={imageStyle} />
       <Text style={headingStyle}>Smart Electric Bike</Text>
 
@@ -259,6 +258,7 @@ export const SignupScreen: FC<StackScreenProps<AuthParamList, "signUp">> = () =>
       <Button
         style={{
           marginHorizontal: 20,
+          marginBottom: 20,
           height: 50,
           borderRadius: 5,
         }}
@@ -267,6 +267,23 @@ export const SignupScreen: FC<StackScreenProps<AuthParamList, "signUp">> = () =>
       >
         <Text style={{ color: color.palette.white, fontSize: 17 }}>Sign Up</Text>
       </Button>
-    </Screen>
+      <Button
+        style={{
+          marginHorizontal: 20,
+          marginBottom: 20,
+          height: 50,
+          borderRadius: 5,
+          backgroundColor: color.palette.white,
+          borderColor: color.appcolor,
+          borderWidth: 1,
+        }}
+        onPress={() => {
+          navigation.goBack()
+        }}
+        disabled={isSubmitting}
+      >
+        <Text style={{ color: color.palette.black, fontSize: 17 }}>Back</Text>
+      </Button>
+    </ScrollView>
   )
 }

@@ -11,7 +11,7 @@ import { UserProfile } from "../../store/slices/firebase.types"
 import { AnimatedCircularProgress } from "react-native-circular-progress"
 import { StackScreenProps } from "@react-navigation/stack"
 import { connect } from "react-redux"
-import messaging from "@react-native-firebase/messaging"
+// import messaging from "@react-native-firebase/messaging"
 
 const ROOT: ViewStyle = {
   backgroundColor: color.palette.white,
@@ -127,7 +127,7 @@ const UserScreen: FC<StackScreenProps<NavigatorParamList, "UserScreen"> & UserSc
           }}
           onPress={async () => {
             try {
-              await messaging().deleteToken()
+              // await messaging().deleteToken()
               await firebase.updateProfile({
                 token: null,
               })
