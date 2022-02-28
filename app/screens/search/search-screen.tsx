@@ -11,11 +11,7 @@ import {
   ViewStyle,
 } from "react-native"
 import { Header } from "react-native-elements"
-import {
-  GooglePlaceData,
-  GooglePlaceDetail,
-  GooglePlacesAutocomplete,
-} from "react-native-google-places-autocomplete"
+import { GooglePlaceData, GooglePlaceDetail, GooglePlacesAutocomplete } from "react-native-google-places-autocomplete"
 import { Button, PlaceRow, Text } from "../../components"
 import { NavigatorParamList } from "../../navigators"
 import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons"
@@ -69,6 +65,10 @@ const headerButton: ViewStyle = {
 const listViewStyle: ViewStyle = {
   position: "absolute",
   top: 113,
+  height: Dimensions.get("screen").height * 0.3,
+}
+
+const listViewStyle1: ViewStyle = {
   height: Dimensions.get("screen").height * 0.3,
 }
 
@@ -165,8 +165,8 @@ const KeyBoardStyle: ViewStyle = { flex: 1, backgroundColor: "white" }
 // const GOOGLE_MAPS_APIKEY = "AIzaSyDEXI0NflTOvRTBLOpA8w5zG7ZzHww_YtU"
 
 export const SearchScreen: FC<StackScreenProps<NavigatorParamList, "SearchScreen">> = ({
-  navigation,
-}) => {
+                                                                                         navigation,
+                                                                                       }) => {
   // Pull in one of our MST stores
   const firebase = useFirebase()
   const { auth } = useAppSelector((state) => state.firebase)
@@ -236,6 +236,7 @@ export const SearchScreen: FC<StackScreenProps<NavigatorParamList, "SearchScreen
             placeholder="Where to?"
             onPress={(data, details = null) => {
               setDestinationPlace({ data, details })
+              console.log(data, "====>ansia")
               map.animateToRegion({
                 latitude: details.geometry.location.lat,
                 longitude: details.geometry.location.lng,
@@ -251,6 +252,7 @@ export const SearchScreen: FC<StackScreenProps<NavigatorParamList, "SearchScreen
                 ...googleContainer,
                 top: 55,
               },
+              listView: listViewStyle1,
               separator: seperatorStyle,
             }}
             numberOfLines={1}
@@ -260,8 +262,6 @@ export const SearchScreen: FC<StackScreenProps<NavigatorParamList, "SearchScreen
               key: "AIzaSyBoPTw9FBO7ZadMxWNHpf84JSMXEw2dsps",
               language: "en",
             }}
-            // currentLocation={true}
-            // currentLocationLabel="Current location"
             renderRow={(data) => <PlaceRow data={data} />}
           />
           {/* Circle design uber maps */}
@@ -316,8 +316,8 @@ export const SearchScreen: FC<StackScreenProps<NavigatorParamList, "SearchScreen
       <Button
         onPress={async () => {
           // @ts-ignore
-          await firebase.push(`${auth.uid}/history`, {
-            address: destinationPlace.details.adr_address,
+          await firebase.push(`bikes/${auth.uid}/history`, {
+            address: destinationPlace.data.description,
             timeStamp: Date.now(),
           })
           navigation.navigate("DistanceScreen", {

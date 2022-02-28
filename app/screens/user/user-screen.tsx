@@ -62,15 +62,15 @@ const imageStyle1: ImageStyle = {
   alignItems: "center",
 }
 
-const ButtonStyle: ViewStyle = {
-  marginHorizontal: 10,
-  height: 50,
-  borderRadius: 10,
-  backgroundColor: color.palette.white,
-  borderWidth: 1,
-  borderColor: color.appcolor,
-  marginVertical: 20,
-}
+// const ButtonStyle: ViewStyle = {
+//   marginHorizontal: 10,
+//   height: 50,
+//   borderRadius: 10,
+//   backgroundColor: color.palette.white,
+//   borderWidth: 1,
+//   borderColor: color.appcolor,
+//   marginVertical: 20,
+// }
 
 const UserScreen: FC<StackScreenProps<NavigatorParamList, "UserScreen">> = ({ navigation }) => {
   const { profile } = useAppSelector((state) => state.firebase)
@@ -129,16 +129,16 @@ const UserScreen: FC<StackScreenProps<NavigatorParamList, "UserScreen">> = ({ na
             <Text style={content}>aciuniuaciw8d9</Text>
           </View>
         </View>
-        <Button
-          style={ButtonStyle}
-          onPress={async () => {
-            // await firebase.updateProfile({
-            //   bikes: ["a"],
-            // })
-          }}
-        >
-          <Text style={{ color: color.appcolor, fontSize: 17 }}>Logout</Text>
-        </Button>
+        {/* <Button */}
+        {/*  style={ButtonStyle} */}
+        {/*  onPress={async () => { */}
+        {/*    // await firebase.updateProfile({ */}
+        {/*    //   bikes: ["a"], */}
+        {/*    // }) */}
+        {/*  }} */}
+        {/* > */}
+        {/*  <Text style={{ color: color.appcolor, fontSize: 17 }}>Logout</Text> */}
+        {/* </Button> */}
       </Screen>
     </>
   )

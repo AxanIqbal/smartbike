@@ -10,7 +10,7 @@ import { useColorScheme } from "react-native"
 // import { createNativeStackNavigator } from "@react-navigation/native-stack"
 import { navigationRef, useBackButtonHandler } from "./navigation-utilities"
 // import { createDrawerNavigator } from "@react-navigation/drawer"
-import { DistanceScreen, HistoryScreen, HomeScreen, MapsScreen, SearchScreen, SignupScreen } from "../screens"
+import { DistanceScreen,  HomeScreen, MapsScreen, SearchScreen } from "../screens"
 import { DarkTheme, DefaultTheme, NavigationContainer } from "@react-navigation/native"
 import { createNativeStackNavigator } from "@react-navigation/native-stack"
 import UserScreen from "../screens/user/user-screen"
@@ -32,7 +32,6 @@ import { AuthStack } from "./auth/auth-navigator"
 export type NavigatorParamList = {
   welcome: undefined
   MapsScreen: undefined
-  Signup: undefined
   SearchScreen: undefined
   UserScreen: undefined
   HistoryScreen: undefined
@@ -69,8 +68,6 @@ const AppStack = () => {
         }}
       />
       <Stack.Screen name={"UserScreen"} component={UserScreen} />
-      <Stack.Screen name={"HistoryScreen"} component={HistoryScreen} />
-      <Stack.Screen name={"Signup"} component={SignupScreen} />
       <Stack.Screen
         options={{
           headerTransparent: true,

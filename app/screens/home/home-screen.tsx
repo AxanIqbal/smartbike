@@ -6,11 +6,13 @@ import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityI
 import { AnimatedCircularProgress } from "react-native-circular-progress"
 import { NavigatorParamList } from "../../navigators"
 import { StackScreenProps } from "@react-navigation/stack"
-import { useAppSelector } from "../../store/store"
-import { isLoaded } from "react-redux-firebase"
+import { useAppDispatch, useAppSelector } from "../../store/store"
+import { isLoaded, useFirebase } from "react-redux-firebase"
 import * as Location from "expo-location"
 import { useKeepAwake } from "expo-keep-awake"
 import { MyWebsocket } from "../../services/websocket"
+import { LocationAccuracy } from "expo-location"
+import { setLocation } from "../../store/slices"
 
 const ROOT: ViewStyle = {
   backgroundColor: color.palette.white,
@@ -82,17 +84,36 @@ const kmStyle: TextStyle = {
 export const HomeScreen: FC<StackScreenProps<NavigatorParamList, "welcome">> = ({ navigation }) => {
   useKeepAwake()
   const { profile } = useAppSelector((state) => state.firebase)
+  const dispatch = useAppDispatch()
+  const firebase = useFirebase()
 
   React.useEffect(() => {
     StatusBar.setHidden(true)
     const test = new MyWebsocket()
-    test.setup("ws://192.168.2.110/ws")
+    test.setup("ws://192.168.8.110/ws")
+    let subsLoc: Location.LocationSubscription
     ;(async () => {
       const { status } = await Location.requestForegroundPermissionsAsync()
       if (status !== "granted") {
         Alert.alert("Permission Error", "Permission to access location was denied")
       }
+      subsLoc = await Location.watchPositionAsync(
+        {
+          accuracy: LocationAccuracy.Highest,
+        },
+        (location) => {
+          // console.log(location)
+          dispatch(setLocation(location.coords))
+          firebase.updateProfile({
+            ...location.coords,
+          })
+        },
+      )
     })()
+
+    return () => {
+      subsLoc.remove()
+    }
   }, [])
 
   return (
@@ -149,14 +170,6 @@ export const HomeScreen: FC<StackScreenProps<NavigatorParamList, "welcome">> = (
           <Button style={buttonStyle}>
             <MaterialCommunityIcons
               onPress={() => navigation.navigate("UserScreen")}
-              size={25}
-              name="account"
-              color={color.appcolor}
-            />
-          </Button>
-          <Button style={buttonStyle}>
-            <MaterialCommunityIcons
-              onPress={() => navigation.navigate("Signup")}
               size={25}
               name="account"
               color={color.appcolor}
