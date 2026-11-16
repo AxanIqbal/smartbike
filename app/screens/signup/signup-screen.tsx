@@ -1,18 +1,16 @@
-import React, { FC, useCallback } from "react"
-import { Dimensions, Image, ImageStyle, ScrollView, TextStyle, View, ViewStyle } from "react-native"
+import React, { FC } from "react"
+import { Dimensions, Image, ImageStyle, TextStyle, View, ViewStyle } from "react-native"
 import { StackScreenProps } from "@react-navigation/stack"
-import { AuthParamList } from "../../navigators"
-import { Button, Text } from "../../components"
+import { NavigatorParamList } from "../../navigators"
+import { Button, Screen, Text } from "../../components"
 import { color } from "../../theme"
 import * as Yup from "yup"
-import { Controller, useForm } from "react-hook-form"
+import { Formik } from "formik"
 import { HelperText, TextInput } from "react-native-paper"
-import { useFirebase } from "react-redux-firebase"
-import database from "@react-native-firebase/database"
-import { Bike } from "../../store/slices/firebase.types"
 
 const ROOT: ViewStyle = {
   backgroundColor: color.palette.white,
+  flex: 1,
 }
 
 const imageStyle: ImageStyle = {
@@ -28,262 +26,167 @@ const headingStyle: TextStyle = {
   fontWeight: "700",
 }
 
-const useYupValidationResolver = (validationSchema) =>
-  useCallback(
-    async (data) => {
-      try {
-        const values = await validationSchema.validate(data, {
-          abortEarly: false,
-        })
-
-        return {
-          values,
-          errors: {},
-        }
-      } catch (errors) {
-        return {
-          values: {},
-          errors: errors.inner.reduce(
-            (allErrors, currentError) => ({
-              ...allErrors,
-              [currentError.path]: {
-                type: currentError.type ?? "validation",
-                message: currentError.message,
-              },
-            }),
-            {},
-          ),
-        }
-      }
-    },
-    [validationSchema],
-  )
-
 const LogInSchema = Yup.object().shape({
   email: Yup.string().email().required("Email is required"),
   password: Yup.string().required("Password is required"),
-  confirmPassword: Yup.string()
-    .required("Confirm your password")
-    .oneOf([Yup.ref("password")], "Passwords do not match"),
-  bikeId: Yup.string()
-    .required("Bike id is required")
-    .test("bike_async_validation", "Bike Validation Error", function(value) {
-      return database()
-        .ref("/bikes")
-        .once("value")
-        .then((value1) => {
-          const bikeList: Record<string, Bike> = value1.val()
-          if (bikeList[value] === undefined) {
-            return this.createError({ message: "Bike not found" })
-          }
-          if (bikeList[value].owner !== undefined) {
-            return this.createError({ message: "Bike already have an owner" })
-          }
-          return true
-        })
-    }),
+  confirmPassword: Yup.string().required("Confirm password is required"),
+  bikeId: Yup.string().required("Bike id is required"),
 })
 
-interface LogInTypes {
-  email: string
-  password: string
-  confirmPassword: string
-  bikeId: string
-}
+export const SignupScreen: FC<StackScreenProps<NavigatorParamList, "Signup">> = ({ navigation }) => {
+  // Pull in one of our MST stores
+  // const { someStore, anotherStore } = useStores()
 
-export const SignupScreen: FC<StackScreenProps<AuthParamList, "signUp">> = ({ navigation }) => {
-  const resolver = useYupValidationResolver(LogInSchema)
-  const {
-    handleSubmit,
-    control,
-    formState: { isSubmitting },
-  } = useForm<LogInTypes>({ resolver })
-  const firebase = useFirebase()
-
-  const onSubmit = (data: LogInTypes) =>
-    firebase
-      .createUser(
-        { email: data.email, password: data.password, signIn: false },
-        { bikes: [data.bikeId] },
-      )
-      .then((value) => firebase.update("/bikes/" + data.bikeId, { owner: value.uid }))
-
-  const onError = (error) => {
-    console.log(error)
-  }
-
+  // Pull in navigation via hook
+  // const navigation = useNavigation()
   return (
-    <ScrollView style={ROOT}>
+    <Screen style={ROOT} preset="scroll">
       <Image source={require("../maps/BikeMarker.png")} style={imageStyle} />
       <Text style={headingStyle}>Smart Electric Bike</Text>
-
-      <Controller
-        name={"email"}
-        control={control}
-        render={({ field, fieldState, formState }) => (
-          <View
-            style={{
-              width: Dimensions.get("screen").width,
-              paddingHorizontal: 20,
-            }}
-          >
-            <TextInput
-              label={"Email"}
-              mode={"outlined"}
-              onChangeText={field.onChange}
-              onBlur={field.onBlur}
-              value={field.value}
-              style={{
-                paddingHorizontal: 10,
-                backgroundColor: "#ffff",
-                color: "black",
-              }}
-              placeholder="Enter Your Email..."
-              placeholderTextColor="grey"
-              error={fieldState.isTouched && Boolean(fieldState.error?.message)}
-            />
-            <HelperText
-              type="error"
-              visible={fieldState.isTouched && Boolean(fieldState.error?.message)}
-            >
-              {fieldState.error?.message}
-            </HelperText>
-          </View>
-        )}
-      />
-      <Controller
-        name={"bikeId"}
-        control={control}
-        render={({ field, fieldState, formState }) => (
-          <View
-            style={{
-              width: Dimensions.get("screen").width,
-              paddingHorizontal: 20,
-            }}
-          >
-            <TextInput
-              label={"Bike ID"}
-              mode={"outlined"}
-              onChangeText={field.onChange}
-              onBlur={field.onBlur}
-              value={field.value}
-              style={{
-                paddingHorizontal: 10,
-                backgroundColor: "#ffff",
-                color: "black",
-              }}
-              placeholder="Enter Your Bike ID..."
-              placeholderTextColor="grey"
-              error={fieldState.isTouched && Boolean(fieldState.error?.message)}
-            />
-            <HelperText
-              type="error"
-              visible={fieldState.isTouched && Boolean(fieldState.error?.message)}
-            >
-              {fieldState.error?.message}
-            </HelperText>
-          </View>
-        )}
-      />
-      <Controller
-        name={"password"}
-        control={control}
-        render={({ field, fieldState, formState }) => (
-          <View
-            style={{
-              width: Dimensions.get("screen").width,
-              paddingHorizontal: 20,
-            }}
-          >
-            <TextInput
-              label={"password"}
-              mode={"outlined"}
-              secureTextEntry
-              onChangeText={field.onChange}
-              onBlur={field.onBlur}
-              value={field.value}
-              style={{
-                paddingHorizontal: 10,
-                backgroundColor: "#ffff",
-                color: "black",
-              }}
-              placeholder="Enter Your Password..."
-              placeholderTextColor="grey"
-              error={fieldState.isTouched && Boolean(fieldState.error?.message)}
-            />
-            <HelperText
-              type="error"
-              visible={fieldState.isTouched && Boolean(fieldState.error?.message)}
-            >
-              {fieldState.error?.message}
-            </HelperText>
-          </View>
-        )}
-      />
-      <Controller
-        name={"confirmPassword"}
-        control={control}
-        render={({ field, fieldState, formState }) => (
-          <View
-            style={{
-              width: Dimensions.get("screen").width,
-              paddingHorizontal: 20,
-            }}
-          >
-            <TextInput
-              label={"Confirm Password"}
-              mode={"outlined"}
-              secureTextEntry
-              onChangeText={field.onChange}
-              onBlur={field.onBlur}
-              value={field.value}
-              style={{
-                paddingHorizontal: 10,
-                backgroundColor: "#ffff",
-                color: "black",
-              }}
-              placeholder="Confirm Your Password..."
-              placeholderTextColor="grey"
-              error={fieldState.isTouched && Boolean(fieldState.error?.message)}
-            />
-            <HelperText
-              type="error"
-              visible={fieldState.isTouched && Boolean(fieldState.error?.message)}
-            >
-              {fieldState.error?.message}
-            </HelperText>
-          </View>
-        )}
-      />
-      <Button
-        style={{
-          marginHorizontal: 20,
-          marginBottom: 20,
-          height: 50,
-          borderRadius: 5,
+      <Formik
+        initialValues={{
+          email: "",
+          password: "",
+          confirmPassword: "",
+          bikeId: "",
         }}
-        onPress={handleSubmit(onSubmit, onError)}
-        disabled={isSubmitting}
-      >
-        <Text style={{ color: color.palette.white, fontSize: 17 }}>Sign Up</Text>
-      </Button>
-      <Button
-        style={{
-          marginHorizontal: 20,
-          marginBottom: 20,
-          height: 50,
-          borderRadius: 5,
-          backgroundColor: color.palette.white,
-          borderColor: color.appcolor,
-          borderWidth: 1,
-        }}
-        onPress={() => {
-          navigation.goBack()
-        }}
-        disabled={isSubmitting}
-      >
-        <Text style={{ color: color.palette.black, fontSize: 17 }}>Back</Text>
-      </Button>
-    </ScrollView>
+        validationSchema={LogInSchema}
+        onSubmit={async values => {
+          console.log(values)
+        }}>
+        {({
+            handleChange,
+            handleBlur,
+            handleSubmit,
+            touched,
+            values,
+            errors,
+          }) => (
+          <>
+            <View
+              style={{
+                width: Dimensions.get("screen").width,
+                paddingHorizontal: 20,
+              }}>
+              <TextInput
+                label={"Email"}
+                mode={"outlined"}
+                onChangeText={handleChange("email")}
+                onBlur={handleBlur("email")}
+                value={values.email}
+                style={{
+                  paddingHorizontal: 10,
+                  backgroundColor: "#ffff",
+                  color: "black",
+                }}
+                placeholder="Enter Your Email..."
+                placeholderTextColor="grey"
+                error={touched.email && Boolean(errors.email)}
+              />
+              <HelperText
+                type="error"
+                visible={
+                  touched.email && Boolean(errors.email)
+                }>
+                {touched.email && errors.email}
+              </HelperText>
+            </View>
+            <View
+              style={{
+                width: Dimensions.get("screen").width,
+                paddingHorizontal: 20,
+              }}>
+              <TextInput
+                label={"Bike Id"}
+                mode={"outlined"}
+                onChangeText={handleChange("bikeId")}
+                onBlur={handleBlur("bikeId")}
+                value={values.bikeId}
+                style={{
+                  paddingHorizontal: 10,
+                  backgroundColor: "#ffff",
+                  color: "black",
+                }}
+                placeholder="Enter Your Bike Id..."
+                placeholderTextColor="grey"
+                error={touched.bikeId && Boolean(errors.bikeId)}
+              />
+              <HelperText
+                type="error"
+                visible={
+                  touched.bikeId && Boolean(errors.bikeId)
+                }>
+                {touched.bikeId && errors.bikeId}
+              </HelperText>
+            </View>
+            <View
+              style={{
+                width: Dimensions.get("screen").width,
+                paddingHorizontal: 20,
+              }}>
+              <TextInput
+                label={"Password"}
+                mode={"outlined"}
+                onChangeText={handleChange("password")}
+                onBlur={handleBlur("password")}
+                value={values.password}
+                style={{
+                  paddingHorizontal: 10,
+                  backgroundColor: "#ffff",
+                  color: "black",
+                }}
+                placeholder="Enter Your Password..."
+                placeholderTextColor="grey"
+                error={touched.password && Boolean(errors.password)}
+              />
+              <HelperText
+                type="error"
+                visible={
+                  touched.password && Boolean(errors.password)
+                }>
+                {touched.password && errors.password}
+              </HelperText>
+            </View>
+            <View
+              style={{
+                width: Dimensions.get("screen").width,
+                paddingHorizontal: 20,
+              }}>
+              <TextInput
+                label={"Confirm Password"}
+                mode={"outlined"}
+                onChangeText={handleChange("confirmPassword")}
+                onBlur={handleBlur("confirmPassword")}
+                value={values.confirmPassword}
+                style={{
+                  paddingHorizontal: 10,
+                  backgroundColor: "#ffff",
+                  color: "black",
+                }}
+                placeholder="Confirm Your Password..."
+                placeholderTextColor="grey"
+                error={touched.confirmPassword && Boolean(errors.confirmPassword)}
+              />
+              <HelperText
+                type="error"
+                visible={
+                  touched.confirmPassword && Boolean(errors.confirmPassword)
+                }>
+                {touched.confirmPassword && errors.confirmPassword}
+              </HelperText>
+            </View>
+            <Button
+            style={{
+              marginHorizontal: 20,
+              height: 50,
+              borderRadius: 5,
+            }}
+            >
+              <Text style={{color: color.palette.white, fontSize: 17,}}>Sign Up</Text>
+            </Button>
+          </>
+        )}
+      </Formik>
+    </Screen>
   )
 }

@@ -7,7 +7,7 @@ import {
 } from "react-redux-firebase"
 import { TypedUseSelectorHook, useDispatch, useSelector } from "react-redux"
 import LocationState from "./slices/location_slices"
-import { DBSchema, UserProfile } from "./slices/firebase.types"
+import { UserProfile } from "./slices/firebase.types"
 
 export const store = configureStore({
   reducer: {
@@ -18,13 +18,6 @@ export const store = configureStore({
     getDefaultMiddleware({
       serializableCheck: {
         ignoredActions: [
-          // just ignore every redux-firebase and react-redux-firebase action type
-          // FLUSH,
-          // REHYDRATE,
-          // PAUSE,
-          // PERSIST,
-          // PURGE,
-          // REGISTER,
           ...Object.keys(rrfActionTypes).map((type) => `@@reactReduxFirebase/${type}`),
         ],
         ignoredPaths: ["firebase"],
@@ -40,7 +33,7 @@ export const store = configureStore({
 // }
 
 export interface RootStateAlter extends ReturnType<typeof store.getState> {
-  firebase: FirebaseReducer.Reducer<UserProfile, DBSchema>
+  firebase: FirebaseReducer.Reducer<UserProfile>
 }
 
 // Infer the `RootState` and `AppDispatch` types from the store itself

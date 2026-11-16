@@ -1,38 +1,42 @@
 import React, { FC } from "react"
-import { ImageStyle, TextStyle, View, ViewStyle } from "react-native"
-import { Battery, Button, Screen, Text, TimeLine } from "../../components"
+import { Alert, ImageStyle, StatusBar, TextStyle, View, ViewStyle } from "react-native"
+import { Battery, Button, Screen, Text } from "../../components"
 import { color } from "../../theme"
-import { Header } from "react-native-elements"
 import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons"
 import { AnimatedCircularProgress } from "react-native-circular-progress"
 import { NavigatorParamList } from "../../navigators"
 import { StackScreenProps } from "@react-navigation/stack"
-import { useAppSelector } from "../../store/store"
-import { isEmpty, isLoaded, populate, useFirebase, useFirebaseConnect } from "react-redux-firebase"
-import { UserProfile } from "../../store/slices/firebase.types"
-// import messaging from "@react-native-firebase/messaging"
-import { saveTokenToDatabase } from "../../services/firebasetokens"
+import { useAppDispatch, useAppSelector } from "../../store/store"
+import { isLoaded, useFirebase } from "react-redux-firebase"
+import * as Location from "expo-location"
+import { useKeepAwake } from "expo-keep-awake"
+import { MyWebsocket } from "../../services/websocket"
+import { LocationAccuracy } from "expo-location"
+import { setLocation } from "../../store/slices"
 
 const ROOT: ViewStyle = {
   backgroundColor: color.palette.white,
+  top: 50,
 }
 
-const Textstyle: TextStyle = {
+const kmStyle1: TextStyle = {
   fontSize: 20,
   marginTop: 10,
-  color: `${color.palette.white}`,
+  color: `${color.appcolor}`,
 }
 
-const HeaderStyle: ViewStyle = {
-  backgroundColor: color.appcolor,
-  justifyContent: "space-around",
-  shadowOpacity: 0.34,
-  shadowRadius: 6.27,
-  elevation: 5,
-}
+// const HeaderStyle: ViewStyle = {
+//   backgroundColor: color.appcolor,
+//   justifyContent: "space-around",
+//   shadowOpacity: 0.34,
+//   shadowRadius: 6.27,
+//   elevation: 5,
+// }
 
 const animationStyle: ViewStyle = {
   alignItems: "center",
+  justifyContent: "space-evenly",
+  flexDirection: "row",
   paddingTop: 20,
 }
 
@@ -47,9 +51,7 @@ const buttonStyle: ViewStyle = {
   elevation: 5,
 }
 
-const imageStyle: ViewStyle = {
-  // width: 100,
-  // height: 220,
+const imageStyle: ImageStyle = {
   marginTop: -50,
   alignItems: "center",
 }
@@ -60,19 +62,19 @@ const buttonView: ViewStyle = {
   alignSelf: "center",
 }
 
-const timeLIneStyle: ViewStyle = {
-  padding: 20,
-  paddingTop: 45,
-  backgroundColor: "white",
-  height: "100%",
-}
+// const timeLIneStyle: ViewStyle = {
+//   padding: 20,
+//   paddingTop: 45,
+//   backgroundColor: "white",
+//   height: "100%",
+// }
 
-const headerButton: ViewStyle = {
-  backgroundColor: "transparent",
-}
+// const headerButton: ViewStyle = {
+//   backgroundColor: "transparent",
+// }
 
-const HeadingStyle: TextStyle = {
-  fontSize: 25,
+const kmStyle: TextStyle = {
+  fontSize: 40,
   textAlign: "center",
   color: `${color.appcolor}`,
   paddingTop: 5,
@@ -80,77 +82,83 @@ const HeadingStyle: TextStyle = {
 }
 
 export const HomeScreen: FC<StackScreenProps<NavigatorParamList, "welcome">> = ({ navigation }) => {
-  const firebase = useAppSelector((state) => state.firebase)
-  useFirebaseConnect([{ path: "bikes" }])
-  const populatedProfile: UserProfile = populate(firebase, "profile", [
-    { child: "bikes", root: "bikes", keyProp: "id" },
-  ])
-  // const Firebase = useFirebase()
+  useKeepAwake()
+  const { profile } = useAppSelector((state) => state.firebase)
+  const dispatch = useAppDispatch()
+  const firebase = useFirebase()
 
-  // React.useEffect(() => {
-  //   messaging()
-  //     .getToken()
-  //     .then((token) => {
-  //       return saveTokenToDatabase(token, Firebase.updateProfile)
-  //     })
-  //
-  //   return messaging().onTokenRefresh(async (token) => {
-  //     await saveTokenToDatabase(token, Firebase.updateProfile)
-  //   })
-  // }, [])
+  React.useEffect(() => {
+    StatusBar.setHidden(true)
+    const test = new MyWebsocket()
+    test.setup("ws://192.168.8.110/ws")
+    let subsLoc: Location.LocationSubscription
+    ;(async () => {
+      const { status } = await Location.requestForegroundPermissionsAsync()
+      if (status !== "granted") {
+        Alert.alert("Permission Error", "Permission to access location was denied")
+      }
+      subsLoc = await Location.watchPositionAsync(
+        {
+          accuracy: LocationAccuracy.Highest,
+        },
+        (location) => {
+          // console.log(location)
+          dispatch(setLocation(location.coords))
+          firebase.updateProfile({
+            ...location.coords,
+          })
+        },
+      )
+    })()
+
+    return () => {
+      subsLoc.remove()
+    }
+  }, [])
 
   return (
     <>
-      <Header
-        centerComponent={<Text style={Textstyle}>HOME</Text>}
-        rightComponent={
-          <Button style={headerButton} onPress={() => navigation.navigate("MapsScreen")}>
-            <MaterialCommunityIcons color="#ffff" name="bike" size={25} />
-          </Button>
-        }
-        containerStyle={HeaderStyle}
-        backgroundColor={color.appcolor}
-      />
       <Screen unsafe={true} preset={"scroll"} style={ROOT}>
         <View style={animationStyle}>
           <AnimatedCircularProgress
-            size={250}
+            size={200}
             width={20}
-            fill={
-              isLoaded(populatedProfile) && !isEmpty(populatedProfile)
-                ? populatedProfile?.bikes[0].battery
-                : 0
+            fill={profile.speed}
+            rotation={225}
+            arcSweepAngle={270}
+            tintColor={color.appcolor}
+            backgroundColor="#eeee">
+            {
+              () => (
+                <Text style={kmStyle}>
+                  {Math.round(profile.speed)}<Text style={kmStyle1}>m/s</Text>
+                </Text>
+              )
             }
+          </AnimatedCircularProgress>
+          <AnimatedCircularProgress
+            size={200}
+            width={20}
+            fill={isLoaded(profile) ? profile.battery : 0}
             rotation={0}
             tintColor={color.appcolor}
             onAnimationComplete={() => console.log("onAnimationComplete")}
             backgroundColor={color.palette.offWhite}
           >
             {() =>
-              isLoaded(populatedProfile) &&
-              !isEmpty(populatedProfile) && (
-                <View style={imageStyle}>
+              isLoaded(profile) && (
                 <Battery
-                  // style={imageStyle}
-                  isCharging={populatedProfile.bikes[0].isCharging}
-                  percentage={populatedProfile.bikes[0].battery}
-                  width={200}
-                  height={150}
+                  style={imageStyle}
+                  isCharging={profile.isCharging}
+                  percentage={profile.battery}
+                  height={200}
+                  width={90}
                 />
-                </View>
               )
             }
           </AnimatedCircularProgress>
         </View>
         <View style={buttonView}>
-          <Button style={buttonStyle}>
-            <MaterialCommunityIcons
-              onPress={() => navigation.navigate("HistoryScreen")}
-              size={25}
-              name="history"
-              color={color.appcolor}
-            />
-          </Button>
           <Button style={buttonStyle}>
             <MaterialCommunityIcons
               onPress={() => navigation.navigate("MapsScreen")}
@@ -167,16 +175,6 @@ export const HomeScreen: FC<StackScreenProps<NavigatorParamList, "welcome">> = (
               color={color.appcolor}
             />
           </Button>
-        </View>
-        <Text style={HeadingStyle} text="Your TimeLine" />
-        <View style={timeLIneStyle}>
-          <TimeLine
-            history={
-              isLoaded(populatedProfile) &&
-              !isEmpty(populatedProfile) &&
-              populatedProfile.bikes[0].history
-            }
-          />
         </View>
       </Screen>
     </>

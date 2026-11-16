@@ -10,12 +10,12 @@ import { useColorScheme } from "react-native"
 // import { createNativeStackNavigator } from "@react-navigation/native-stack"
 import { navigationRef, useBackButtonHandler } from "./navigation-utilities"
 // import { createDrawerNavigator } from "@react-navigation/drawer"
-import { DistanceScreen, HistoryScreen, HomeScreen, MapsScreen, SearchScreen } from "../screens"
+import { DistanceScreen,  HomeScreen, MapsScreen, SearchScreen } from "../screens"
 import { DarkTheme, DefaultTheme, NavigationContainer } from "@react-navigation/native"
-import { AuthStack } from "./auth/auth-navigator"
-import { useAppSelector } from "../store/store"
 import { createNativeStackNavigator } from "@react-navigation/native-stack"
 import UserScreen from "../screens/user/user-screen"
+import { useAppSelector } from "../store/store"
+import { AuthStack } from "./auth/auth-navigator"
 
 /**
  * This type allows TypeScript to know what routes are defined in this navigator
@@ -68,7 +68,6 @@ const AppStack = () => {
         }}
       />
       <Stack.Screen name={"UserScreen"} component={UserScreen} />
-      <Stack.Screen name={"HistoryScreen"} component={HistoryScreen} />
       <Stack.Screen
         options={{
           headerTransparent: true,
@@ -82,11 +81,12 @@ const AppStack = () => {
   )
 }
 
-interface NavigationProps extends Partial<React.ComponentProps<typeof NavigationContainer>> {}
+interface NavigationProps extends Partial<React.ComponentProps<typeof NavigationContainer>> {
+}
 
 export const AppNavigator = (props: NavigationProps) => {
   const colorScheme = useColorScheme()
-  const auth = useAppSelector((state) => state.firebase.auth)
+  const { auth } = useAppSelector(state => state.firebase)
   useBackButtonHandler(canExit)
   return (
     <NavigationContainer
@@ -110,5 +110,5 @@ AppNavigator.displayName = "AppNavigator"
  *
  * `canExit` is used in ./app/app.tsx in the `useBackButtonHandler` hook.
  */
-const exitRoutes = ["welcome", "login"]
+const exitRoutes = []
 export const canExit = (routeName: string) => exitRoutes.includes(routeName)

@@ -1,12 +1,13 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit"
 import { RootStateAlter } from "../store"
+import { LocationObjectCoords } from "expo-location"
 
 // interface LocationState {
 //   latitude: number,
 //   longitude: number
 // }
 
-const initialState = {
+const initialState: LocationObjectCoords = {
   latitude: 0,
   longitude: 0,
   accuracy: 0,
@@ -20,7 +21,7 @@ const locationSlice = createSlice({
   name: "geolocation",
   initialState,
   reducers: {
-    setLocation: (state, action: PayloadAction<any>) => {
+    setLocation: (state, action: PayloadAction<LocationObjectCoords>) => {
       state = action.payload
       // console.log(state, action.payload)
       return state

@@ -1,13 +1,13 @@
 import React, { FC, useState } from "react"
 import {
-  ActivityIndicator,
-  Dimensions,
-  Image,
-  ImageStyle,
-  TextStyle,
   ToastAndroid,
   View,
   ViewStyle,
+  TextStyle,
+  Image,
+  ImageStyle,
+  Dimensions,
+  ActivityIndicator,
 } from "react-native"
 import { Button, Screen, Text } from "../../components"
 import { color } from "../../theme"
@@ -41,6 +41,8 @@ const ButtonTextStyle: TextStyle = {
 
 const iconStyle: ViewStyle = {
   backgroundColor: "transparent",
+  borderBottomColor: "black",
+  borderBottomWidth: 1,
 }
 
 const imageStyle: ImageStyle = {
@@ -196,19 +198,21 @@ export const LoginScreen: FC<StackScreenProps<AuthParamList, "login">> = ({ navi
           disabled={isSubmitting}
           onPress={handleSubmit(onSubmit, onError)}
         >
-          {loading ? (
-            <ActivityIndicator animating={true} size="small" color={color.palette.white} />
-          ) : (
-            <Text style={ButtonTextStyle} text="Login" />
-          )}
+          {loading ? <ActivityIndicator animating={true} size="small" color={color.palette.white}/> : <Text style={ButtonTextStyle} text="Login" />}
         </Button>
         <View style={{ alignSelf: "center", marginVertical: 15 }}>
           <Text style={{ textAlign: "center" }}>OR</Text>
-          <Text style={{ textAlign: "center" }}>Sign Up With</Text>
+          <Text style={{ textAlign: "center" }}>Sign In With</Text>
         </View>
       </View>
       <View style={signUpStyle}>
-        <Button style={iconStyles} onPress={() => navigation.push("signUp")}>
+        <Button style={iconStyles}>
+          <MaterialIcons style={icons} size={25} color="white" name="facebook" />
+        </Button>
+        <Button style={iconStyles}>
+          <MaterialIcons style={icons} size={25} color="white" name="google" />
+        </Button>
+        <Button style={iconStyles}>
           <MaterialIcons style={icons} size={25} color="white" name="email-open" />
         </Button>
       </View>

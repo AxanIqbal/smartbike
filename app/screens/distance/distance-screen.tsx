@@ -11,8 +11,6 @@ import MapViewDirections from "react-native-maps-directions"
 import { useAppSelector } from "../../store/store"
 import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons"
 import MaterialIcons from "react-native-vector-icons/MaterialIcons"
-import { populate, useFirebaseConnect } from "react-redux-firebase"
-import { UserProfile } from "../../store/slices/firebase.types"
 
 const ROOT: ViewStyle = {
   backgroundColor: color.palette.white,
@@ -85,11 +83,7 @@ export const DistanceScreen: FC<StackScreenProps<NavigatorParamList, "DistanceSc
                                                                                              },
                                                                                            }) => {
   const [distance, setDistance] = useState(null)
-  const firebase = useAppSelector((state) => state.firebase)
-  useFirebaseConnect([{ path: "bikes" }])
-  const populatedProfile: UserProfile = populate(firebase, "profile", [
-    { child: "bikes", root: "bikes", keyProp: "id" },
-  ])
+  const { profile } = useAppSelector((state) => state.firebase)
   const origin = { latitude: originLat, longitude: originLng }
   const destination = { latitude: destinationLat, longitude: destinationLng }
   const GOOGLE_MAPS_APIKEY = "AIzaSyBoPTw9FBO7ZadMxWNHpf84JSMXEw2dsps"
@@ -155,8 +149,8 @@ export const DistanceScreen: FC<StackScreenProps<NavigatorParamList, "DistanceSc
         <View style={innerContainer}>
           <Battery
             style={imageStyle1}
-            isCharging={populatedProfile.bikes[0].isCharging}
-            percentage={populatedProfile.bikes[0].battery}
+            isCharging={profile.isCharging}
+            percentage={profile.battery}
             width={50}
             height={100}
           />
@@ -165,7 +159,7 @@ export const DistanceScreen: FC<StackScreenProps<NavigatorParamList, "DistanceSc
         <View style={innerContainer}>
           <MaterialCommunityIcons style={{ alignSelf: "center" }} name="speedometer-slow" size={50}
                                   color={color.appcolor} />
-          <Text style={{ textAlign: "center", fontSize: 20 }}>{Math.round(populatedProfile.bikes[0].speed)}m/s</Text>
+          <Text style={{ textAlign: "center", fontSize: 20 }}>{Math.round(profile.speed)}m/s</Text>
         </View>
         <View style={innerContainer}>
           <MaterialCommunityIcons style={{ alignSelf: "center" }} name="motorbike" size={50} color={color.appcolor} />

@@ -16,7 +16,7 @@ export interface BatteryProps {
   /**
    * An optional style override useful for padding & margin.
    */
-  style?: StyleProp<ImageStyle>
+  style: StyleProp<ImageStyle>
   isCharging: boolean
   percentage: number
   width: number
@@ -52,8 +52,8 @@ export function Battery(props: BatteryProps) {
   const BAR1: ImageStyle = {
     position: "absolute",
     bottom: height * 0.06,
-    left: width * 0.3,
-    width: width * 0.4,
+    left: width * 0.1,
+    width: width * 0.8,
     height: height * 0.09,
   }
 

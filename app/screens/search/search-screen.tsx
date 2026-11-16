@@ -1,8 +1,17 @@
 import { StackScreenProps } from "@react-navigation/stack"
 import React, { FC, useEffect, useState } from "react"
-import { Dimensions, Image, ImageStyle, KeyboardAvoidingView, Platform, TextStyle, View, ViewStyle } from "react-native"
+import {
+  Dimensions,
+  Image,
+  ImageStyle,
+  KeyboardAvoidingView,
+  Platform,
+  TextStyle,
+  View,
+  ViewStyle,
+} from "react-native"
 import { Header } from "react-native-elements"
-import { GooglePlacesAutocomplete } from "react-native-google-places-autocomplete"
+import { GooglePlaceData, GooglePlaceDetail, GooglePlacesAutocomplete } from "react-native-google-places-autocomplete"
 import { Button, PlaceRow, Text } from "../../components"
 import { NavigatorParamList } from "../../navigators"
 import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons"
@@ -11,7 +20,8 @@ import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityI
 import Ionicons from "react-native-vector-icons/Ionicons"
 import { color } from "../../theme"
 import MapView, { Marker, PROVIDER_GOOGLE } from "react-native-maps"
-
+import { useFirebase } from "react-redux-firebase"
+import { useAppSelector } from "../../store/store"
 
 const container: ViewStyle = {
   marginVertical: 10,
@@ -54,8 +64,12 @@ const headerButton: ViewStyle = {
 
 const listViewStyle: ViewStyle = {
   position: "absolute",
-  height: Dimensions.get("screen").height * 0.5,
   top: 113,
+  height: Dimensions.get("screen").height * 0.3,
+}
+
+const listViewStyle1: ViewStyle = {
+  height: Dimensions.get("screen").height * 0.3,
 }
 
 const seperatorStyle: ViewStyle = {
@@ -110,7 +124,7 @@ const searchStyle: ViewStyle = {
   alignSelf: "center",
   borderColor: color.appcolor,
   borderWidth: 1,
-  bottom: -50,
+  // top: 150
 }
 
 const ROOT: ViewStyle = {
@@ -133,14 +147,14 @@ const imageStyle: ImageStyle = {
 
 const MapStyle: ViewStyle = {
   zIndex: -1,
-  height: "85%",
+  height: "70%",
   width: "95%",
   margin: 10,
   borderWidth: 1,
   borderColor: color.palette.white,
   borderRadius: 20,
   overflow: "hidden",
-  bottom: -150,
+  bottom: -100,
   position: "absolute",
 }
 
@@ -154,13 +168,15 @@ export const SearchScreen: FC<StackScreenProps<NavigatorParamList, "SearchScreen
                                                                                          navigation,
                                                                                        }) => {
   // Pull in one of our MST stores
-  // const { someStore, anotherStore } = useStores()
+  const firebase = useFirebase()
+  const { auth } = useAppSelector((state) => state.firebase)
   const [originPlace, setOriginPlace] = useState(null)
-  const [destinationPlace, setDestinationPlace] = useState(null)
+  const [destinationPlace, setDestinationPlace] =
+    useState<{ data: GooglePlaceData; details?: GooglePlaceDetail }>(null)
   const [map, setMap] = useState(null)
   const [disabled, setDisabled] = useState(true)
 
-  console.log(originPlace?.details, "==> origin", destinationPlace, "==>destination")
+  // console.log(originPlace?.details, "==> origin", destinationPlace, "==>destination")
 
   useEffect(() => {
     if (originPlace && destinationPlace) {
@@ -220,6 +236,7 @@ export const SearchScreen: FC<StackScreenProps<NavigatorParamList, "SearchScreen
             placeholder="Where to?"
             onPress={(data, details = null) => {
               setDestinationPlace({ data, details })
+              console.log(data, "====>ansia")
               map.animateToRegion({
                 latitude: details.geometry.location.lat,
                 longitude: details.geometry.location.lng,
@@ -235,10 +252,8 @@ export const SearchScreen: FC<StackScreenProps<NavigatorParamList, "SearchScreen
                 ...googleContainer,
                 top: 55,
               },
+              listView: listViewStyle1,
               separator: seperatorStyle,
-              listView: {
-                height: Dimensions.get("screen").height * 0.4,
-              },
             }}
             numberOfLines={1}
             fetchDetails
@@ -299,7 +314,12 @@ export const SearchScreen: FC<StackScreenProps<NavigatorParamList, "SearchScreen
         </View>
       </View>
       <Button
-        onPress={() => {
+        onPress={async () => {
+          // @ts-ignore
+          await firebase.push(`bikes/${auth.uid}/history`, {
+            address: destinationPlace.data.description,
+            timeStamp: Date.now(),
+          })
           navigation.navigate("DistanceScreen", {
             destinationLat: destinationPlace.details?.geometry.location.lat,
             destinationLng: destinationPlace.details?.geometry.location.lng,

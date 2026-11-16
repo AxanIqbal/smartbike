@@ -1,12 +1,4 @@
 export interface UserProfile {
-  name: string
-  bikes: string[] & Bike[]
-  token: string
-  isEmpty: boolean
-  isLoaded: boolean
-}
-
-export interface Bike {
   id: string | undefined
   battery: number
   isCharging: boolean
@@ -15,15 +7,12 @@ export interface Bike {
   model: string
   speed: number
   heading: number
-  owner: string
-  history: LocationHistory[]
+  history: history[]
 }
 
-export interface LocationHistory {
-  description: string
-  time: Date | string
+interface history {
+  address: string
+  timeStamp: Date
 }
 
-export interface DBSchema {
-  bikes: Bike[]
-}
+export interface DBSchema {}

@@ -1,17 +1,14 @@
 import React, { FC } from "react"
-import { Dimensions, Image, ImageStyle, TextStyle, View, ViewStyle } from "react-native"
-import { Button, Screen, Text } from "../../components"
+import { Dimensions, ImageStyle, TextStyle, View, ViewStyle } from "react-native"
+import { Battery, Button, Screen, Text } from "../../components"
 import { NavigatorParamList } from "../../navigators"
 import { color } from "../../theme"
 import { Header } from "react-native-elements"
 import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons"
-import { populate, useFirebase, useFirebaseConnect } from "react-redux-firebase"
+import { isLoaded } from "react-redux-firebase"
 import { useAppSelector } from "../../store/store"
-import { UserProfile } from "../../store/slices/firebase.types"
 import { AnimatedCircularProgress } from "react-native-circular-progress"
 import { StackScreenProps } from "@react-navigation/stack"
-import { connect } from "react-redux"
-// import messaging from "@react-native-firebase/messaging"
 
 const ROOT: ViewStyle = {
   backgroundColor: color.palette.white,
@@ -53,26 +50,30 @@ const heading: TextStyle = {
   paddingLeft: 10,
   fontSize: 15,
   fontWeight: "700",
+  color: "rgba(82,82,82,0.76)",
 }
 
-const imageStyle: ImageStyle = {
-  width: 100,
-  height: 220,
-  marginTop: -50,
+const content: TextStyle = {
+  color: "rgba(82,82,82,0.76)",
+}
+
+const imageStyle1: ImageStyle = {
+  marginTop: -60,
   alignItems: "center",
 }
 
-interface UserScreenProps {
-  populatedProfile: UserProfile
-}
+// const ButtonStyle: ViewStyle = {
+//   marginHorizontal: 10,
+//   height: 50,
+//   borderRadius: 10,
+//   backgroundColor: color.palette.white,
+//   borderWidth: 1,
+//   borderColor: color.appcolor,
+//   marginVertical: 20,
+// }
 
-const UserScreen: FC<StackScreenProps<NavigatorParamList, "UserScreen"> & UserScreenProps> = ({
-  navigation,
-  populatedProfile,
-}) => {
-  const { auth } = useAppSelector((state) => state.firebase)
-  useFirebaseConnect([{ path: "bikes" }])
-  const firebase = useFirebase()
+const UserScreen: FC<StackScreenProps<NavigatorParamList, "UserScreen">> = ({ navigation }) => {
+  const { profile } = useAppSelector((state) => state.firebase)
 
   return (
     <>
@@ -97,56 +98,50 @@ const UserScreen: FC<StackScreenProps<NavigatorParamList, "UserScreen"> & UserSc
             onAnimationComplete={() => console.log("onAnimationComplete")}
             backgroundColor={color.palette.offWhite}
           >
-            {() => <Image source={require("../home/ChargingAnimation.png")} style={imageStyle} />}
+            {() =>
+              isLoaded(profile) && (
+                <Battery
+                  style={imageStyle1}
+                  isCharging={profile.isCharging}
+                  percentage={profile.battery}
+                  height={250}
+                  width={110}
+                />
+              )
+            }
           </AnimatedCircularProgress>
         </View>
         <View>
           <View style={innerContainer}>
             <Text style={heading}>Bike Id:</Text>
-            <Text>{populatedProfile.bikes[0].id}</Text>
+            <Text style={content}>uaidnca899q3ne328</Text>
           </View>
           <View style={innerContainer}>
             <Text style={heading}>Bike Model:</Text>
-            <Text>{populatedProfile.bikes[0].model}</Text>
+            <Text style={content}>i8wqind832dj82jqo</Text>
           </View>
           <View style={innerContainer}>
             <Text style={heading}>User name:</Text>
-            <Text>{populatedProfile.name}</Text>
+            <Text style={content}>uacuicnaiuc9320</Text>
           </View>
           <View style={innerContainer}>
             <Text style={heading}>User Email:</Text>
-            <Text>{auth.email}</Text>
+            <Text style={content}>aciuniuaciw8d9</Text>
           </View>
         </View>
-        <Button
-          style={{
-            marginHorizontal: 20,
-            height: 50,
-            borderRadius: 5,
-            backgroundColor: color.error,
-          }}
-          onPress={async () => {
-            try {
-              // await messaging().deleteToken()
-              await firebase.updateProfile({
-                token: null,
-              })
-              await firebase.logout()
-            } catch (e) {
-              console.log(e)
-            }
-          }}
-        >
-          <Text style={{ color: color.palette.white, fontSize: 17 }}>LogOut</Text>
-        </Button>
+        {/* <Button */}
+        {/*  style={ButtonStyle} */}
+        {/*  onPress={async () => { */}
+        {/*    // await firebase.updateProfile({ */}
+        {/*    //   bikes: ["a"], */}
+        {/*    // }) */}
+        {/*  }} */}
+        {/* > */}
+        {/*  <Text style={{ color: color.appcolor, fontSize: 17 }}>Logout</Text> */}
+        {/* </Button> */}
       </Screen>
     </>
   )
 }
 
-export default connect(({ firebase }) => ({
-  profile: firebase.profile,
-  populatedProfile: populate(firebase, "profile", [
-    { child: "bikes", root: "bikes", keyProp: "id" },
-  ]),
-}))(UserScreen)
+export default UserScreen

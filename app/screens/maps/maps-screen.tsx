@@ -6,26 +6,24 @@ import { NavigatorParamList } from "../../navigators"
 import MapView, { Marker, PROVIDER_GOOGLE } from "react-native-maps"
 import Ionicons from "react-native-vector-icons/Ionicons"
 import MaterialIcons from "react-native-vector-icons/MaterialIcons"
-import { useAppSelector } from "../../store/store"
+import { useAppDispatch, useAppSelector } from "../../store/store"
 import { StackScreenProps } from "@react-navigation/stack"
-import { UserProfile } from "../../store/slices/firebase.types"
-import { populate, useFirebaseConnect } from "react-redux-firebase"
+import * as Location from "expo-location"
+import { LocationAccuracy } from "expo-location"
+import { useFirebase } from "react-redux-firebase"
+import { setLocation } from "../../store/slices"
 
 const ROOT: ViewStyle = { width: "100%", height: "100%" }
 // const blankScreen: ViewStyle = {
 //   backgroundColor: color.palette.white,
 //   zIndex: 10,
-// const buttonStyle: ViewStyle = {
-//   position: 'absolute',
-//   backgroundColor: 'transparent',
-//   width: '100%',
-//   bottom: 20,
 // }
-//   // backgroundColor: "transparent",
-//   position: "absolute",
-//   width: "100%",
-//   bottom: 20,
-// }
+const buttonStyle: ViewStyle = {
+  backgroundColor: "transparent",
+  position: "absolute",
+  width: "100%",
+  bottom: 20,
+}
 const buttonStyle1: ViewStyle = {
   backgroundColor: "transparent",
   position: "absolute",
@@ -38,7 +36,7 @@ const buttonStyle2: ViewStyle = {
   position: "relative",
   backgroundColor: "transparent",
   alignSelf: "flex-start",
-  bottom: Dimensions.get("screen").height * 0.87,
+  bottom: Dimensions.get("screen").height * 0.95,
 }
 
 const searchStyle: ViewStyle = {
@@ -60,17 +58,12 @@ const searchStyle1: ViewStyle = {
 }
 
 export const MapsScreen: FC<StackScreenProps<NavigatorParamList, "MapsScreen">> = ({
-  navigation,
-}) => {
-  const firebase = useAppSelector((state) => state.firebase)
-  useFirebaseConnect([{ path: "bikes" }])
-  const populatedProfile: UserProfile = populate(firebase, "profile", [
-    { child: "bikes", root: "bikes", keyProp: "id" },
-  ])
-  const bikes = populatedProfile.bikes
-  console.log(bikes[0])
-  // const dispatch = useAppDispatch()
+                                                                                     navigation,
+                                                                                   }) => {
+  const firebase = useFirebase()
+  const dispatch = useAppDispatch()
   const [map, setMap] = useState(null)
+  const location = useAppSelector((state) => state.location)
   // watchCurrentLocation().then(r => {
   //   console.log(r)
   // })
@@ -100,28 +93,25 @@ export const MapsScreen: FC<StackScreenProps<NavigatorParamList, "MapsScreen">> 
   }
 
   React.useEffect(() => {
-    console.log("sub")
-    // watchCurrentLocation().then(position => {
-    //   console.log(position)
-    //   dispatch(setLocation(position.coords))
-    // },reason => {
-    //   console.warn(reason)
-    // })
-    // Geolocation.watchPosition(
-    //   (position) => {
-    //     console.log(position.coords)
-    // dispatch(setLocation(position.coords))
-    //   },
-    //   (error) => {
-    //     console.warn(error)
-    //   },
-    //   {
-    //     enableHighAccuracy: true,
-    //     distanceFilter: 10,
-    //     forceRequestLocation: true,
-    //     showLocationDialog: true,
-    //   },
-    // )
+    let subsLoc: Location.LocationSubscription
+    ;(async () => {
+      subsLoc = await Location.watchPositionAsync(
+        {
+          accuracy: LocationAccuracy.Highest,
+        },
+        (location) => {
+          // console.log(location)
+          dispatch(setLocation(location.coords))
+          firebase.updateProfile({
+            ...location.coords,
+          })
+        },
+      )
+    })()
+
+    return () => {
+      subsLoc.remove()
+    }
   }, [])
 
   return (
@@ -129,7 +119,7 @@ export const MapsScreen: FC<StackScreenProps<NavigatorParamList, "MapsScreen">> 
       <MapView
         style={ROOT}
         provider={PROVIDER_GOOGLE}
-        loadingEnabled={true}
+        // loadingEnabled={true}
         initialRegion={{
           latitude: 24.942114588644632,
           longitude: 67.07928649736084,
@@ -144,8 +134,8 @@ export const MapsScreen: FC<StackScreenProps<NavigatorParamList, "MapsScreen">> 
         <Marker
           title="Your Location"
           coordinate={{
-            latitude: bikes[0].latitude || 24.942114588644632,
-            longitude: bikes[0].longitude || 67.07928649736084,
+            latitude: location.latitude || 24.942114588644632,
+            longitude: location.longitude || 67.07928649736084,
           }}
         >
           <Image style={imageStyle} source={require("./BikeMarker.png")} />
@@ -164,8 +154,8 @@ export const MapsScreen: FC<StackScreenProps<NavigatorParamList, "MapsScreen">> 
       <Button
         onPress={() => {
           map.animateToRegion({
-            latitude: bikes[0].latitude,
-            longitude: bikes[0].longitude,
+            latitude: location.latitude,
+            longitude: location.longitude,
             latitudeDelta: 0.002,
             longitudeDelta: 0.001,
           })
@@ -180,12 +170,7 @@ export const MapsScreen: FC<StackScreenProps<NavigatorParamList, "MapsScreen">> 
         onPress={() => {
           navigation.navigate("SearchScreen")
         }}
-        style={{
-          position: 'absolute',
-          backgroundColor: 'transparent',
-          width: '100%',
-          bottom: 20,
-        }}
+        style={buttonStyle}
       >
         <View style={searchStyle}>
           <View style={{ flexDirection: "row" }}>

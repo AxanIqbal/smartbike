@@ -9,10 +9,6 @@
 // It's easier just to leave it here.
 import App from "./app/app.tsx"
 import { AppRegistry } from "react-native"
-// import messaging from "@react-native-firebase/messaging"
-// import { onMessageReceived } from "./app/services/firebasetokens"
-
-// messaging().setBackgroundMessageHandler(onMessageReceived)
 
 AppRegistry.registerComponent("main", () => App)
 export default App
