@@ -33,7 +33,6 @@ export function Header(props: HeaderProps) {
     headerText,
     headerTx,
     style,
-    children,
     titleStyle,
   } = props
   const header = headerText || (headerTx && translate(headerTx)) || ""
@@ -47,14 +46,9 @@ export function Header(props: HeaderProps) {
       ) : (
         <View style={LEFT} />
       )}
-      {!children ? (
-        <View style={TITLE_MIDDLE}>
-          <Text style={[TITLE, titleStyle]} text={header} />
-        </View>
-      ) : (
-        <View style={TITLE_MIDDLE}>{children}</View>
-      )}
-
+      <View style={TITLE_MIDDLE}>
+        <Text style={[TITLE, titleStyle]} text={header} />
+      </View>
       {rightIcon ? (
         <Button preset="link" onPress={onRightPress}>
           <Icon icon={rightIcon} />

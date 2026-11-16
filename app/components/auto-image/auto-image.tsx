@@ -37,13 +37,8 @@ export function AutoImage(props: ImageProps) {
         setImageSize({ width, height })
       })
     } else {
-      const dimention = RNImage.resolveAssetSource(props.source)
-      if (dimention !== null) {
-        const { width, height } = dimention
-        setImageSize({ width, height })
-      } else {
-        setImageSize({ height: 0, width: 0 })
-      }
+      const { width, height } = RNImage.resolveAssetSource(props.source)
+      setImageSize({ width, height })
     }
   }, [])
 

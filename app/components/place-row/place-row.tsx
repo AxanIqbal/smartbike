@@ -10,7 +10,6 @@ const CONTAINER: ViewStyle = {
   flexDirection: "row",
   padding: 10,
   borderRadius: 30,
-  zIndex: 10,
 }
 
 const TEXT: TextStyle = {

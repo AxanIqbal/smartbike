@@ -1,17 +1,12 @@
 import React, { FC } from "react"
-import { ImageStyle, TextStyle, View, ViewStyle } from "react-native"
-import { Battery, Button, Screen, Text, TimeLine } from "../../components"
+import { Image, ImageStyle, TextStyle, View, ViewStyle } from "react-native"
+import { Button, Screen, Text, TimeLine } from "../../components"
 import { color } from "../../theme"
 import { Header } from "react-native-elements"
 import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons"
 import { AnimatedCircularProgress } from "react-native-circular-progress"
 import { NavigatorParamList } from "../../navigators"
-import { StackScreenProps } from "@react-navigation/stack"
-import { useAppSelector } from "../../store/store"
-import { isEmpty, isLoaded, populate, useFirebase, useFirebaseConnect } from "react-redux-firebase"
-import { UserProfile } from "../../store/slices/firebase.types"
-// import messaging from "@react-native-firebase/messaging"
-import { saveTokenToDatabase } from "../../services/firebasetokens"
+import { DrawerScreenProps } from "@react-navigation/drawer"
 
 const ROOT: ViewStyle = {
   backgroundColor: color.palette.white,
@@ -47,9 +42,9 @@ const buttonStyle: ViewStyle = {
   elevation: 5,
 }
 
-const imageStyle: ViewStyle = {
-  // width: 100,
-  // height: 220,
+const imageStyle: ImageStyle = {
+  width: 100,
+  height: 220,
   marginTop: -50,
   alignItems: "center",
 }
@@ -79,29 +74,30 @@ const HeadingStyle: TextStyle = {
   fontWeight: "bold",
 }
 
-export const HomeScreen: FC<StackScreenProps<NavigatorParamList, "welcome">> = ({ navigation }) => {
-  const firebase = useAppSelector((state) => state.firebase)
-  useFirebaseConnect([{ path: "bikes" }])
-  const populatedProfile: UserProfile = populate(firebase, "profile", [
-    { child: "bikes", root: "bikes", keyProp: "id" },
-  ])
-  // const Firebase = useFirebase()
+export const HomeScreen: FC<DrawerScreenProps<NavigatorParamList, "welcome">> = ({
+  navigation,
+}) => {
+  React.useEffect(() => {
+    // getCurrentLocation().then(r => {
+    //   console.log(r)
+    //   dispatch(setLocation(r.coords))
+    // }, reason => {
+    //   console.log(reason)
+    // })
 
-  // React.useEffect(() => {
-  //   messaging()
-  //     .getToken()
-  //     .then((token) => {
-  //       return saveTokenToDatabase(token, Firebase.updateProfile)
-  //     })
-  //
-  //   return messaging().onTokenRefresh(async (token) => {
-  //     await saveTokenToDatabase(token, Firebase.updateProfile)
-  //   })
-  // }, [])
+    return () => {
+      // stopObserving()
+    }
+  }, [])
 
   return (
     <>
       <Header
+        leftComponent={
+          <Button style={headerButton} onPress={() => navigation.openDrawer()}>
+            <MaterialCommunityIcons color="#ffff" name="format-align-left" size={25} />
+          </Button>
+        }
         centerComponent={<Text style={Textstyle}>HOME</Text>}
         rightComponent={
           <Button style={headerButton} onPress={() => navigation.navigate("MapsScreen")}>
@@ -116,67 +112,29 @@ export const HomeScreen: FC<StackScreenProps<NavigatorParamList, "welcome">> = (
           <AnimatedCircularProgress
             size={250}
             width={20}
-            fill={
-              isLoaded(populatedProfile) && !isEmpty(populatedProfile)
-                ? populatedProfile?.bikes[0].battery
-                : 0
-            }
-            rotation={0}
+            fill={75}
+            rotation={180}
             tintColor={color.appcolor}
             onAnimationComplete={() => console.log("onAnimationComplete")}
             backgroundColor={color.palette.offWhite}
           >
-            {() =>
-              isLoaded(populatedProfile) &&
-              !isEmpty(populatedProfile) && (
-                <View style={imageStyle}>
-                <Battery
-                  // style={imageStyle}
-                  isCharging={populatedProfile.bikes[0].isCharging}
-                  percentage={populatedProfile.bikes[0].battery}
-                  width={200}
-                  height={150}
-                />
-                </View>
-              )
-            }
+            {(fill) => <Image source={require("./ChargingAnimation.png")} style={imageStyle} />}
           </AnimatedCircularProgress>
         </View>
         <View style={buttonView}>
           <Button style={buttonStyle}>
-            <MaterialCommunityIcons
-              onPress={() => navigation.navigate("HistoryScreen")}
-              size={25}
-              name="history"
-              color={color.appcolor}
-            />
+            <MaterialCommunityIcons size={25} name="history" color={color.appcolor} />
           </Button>
           <Button style={buttonStyle}>
-            <MaterialCommunityIcons
-              onPress={() => navigation.navigate("MapsScreen")}
-              size={25}
-              name="map-marker"
-              color={color.appcolor}
-            />
+            <MaterialCommunityIcons size={25} name="map-marker" color={color.appcolor} />
           </Button>
           <Button style={buttonStyle}>
-            <MaterialCommunityIcons
-              onPress={() => navigation.navigate("UserScreen")}
-              size={25}
-              name="account"
-              color={color.appcolor}
-            />
+            <MaterialCommunityIcons size={25} name="account" color={color.appcolor} />
           </Button>
         </View>
         <Text style={HeadingStyle} text="Your TimeLine" />
         <View style={timeLIneStyle}>
-          <TimeLine
-            history={
-              isLoaded(populatedProfile) &&
-              !isEmpty(populatedProfile) &&
-              populatedProfile.bikes[0].history
-            }
-          />
+          <TimeLine />
         </View>
       </Screen>
     </>

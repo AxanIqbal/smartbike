@@ -23,7 +23,7 @@
     "node_modules"
   ],
   "include": [
-    "index.js",
+    "App.js",
     "app",
     "test",
     "storybook"

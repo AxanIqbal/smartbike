@@ -1,12 +1,7 @@
 import * as React from "react"
-import { useEffect, useState } from "react"
 import { StyleProp, TextStyle, View, ViewStyle } from "react-native"
 import { color } from "../../theme"
 import Timeline from "react-native-timeline-flatlist"
-import { LocationHistory } from "../../store/slices/firebase.types"
-import _ from "lodash"
-import moment from "moment"
-
 
 const CONTAINER: ViewStyle = {
   height: "100%",
@@ -37,32 +32,29 @@ export interface TimeLineProps {
    * An optional style override useful for padding & margin.
    */
   style?: StyleProp<ViewStyle>
-  history: LocationHistory[]
 }
 
+const data = [
+  { time: "October, 11 2021 \n 09:00", description: "Event 1 Description" },
+  { time: "October, 11 2021 \n 10:45", description: "Event 2 Description" },
+  { time: "October, 11 2021 \n 12:00", description: "Event 3 Description" },
+  { time: "October, 11 2021 \n 14:00", description: "Event 4 Description" },
+  { time: "October, 11 2021 \n 16:30", description: "Event 5 Description" },
+  { time: "October, 11 2021 \n 16:30", description: "Event 5 Description" },
+  { time: "October, 11 2021 \n 16:30", description: "Event 5 Description" },
+]
 /**
  * Describe your component here
  */
 export const TimeLine = function TimeLine(props: TimeLineProps) {
-  const { history } = props
-  const [timeValues, setTimeValues] = useState([])
-  // let historyFormat
-  useEffect(() => {
-    if (history) {
-      const historyFormat = []
-      _.map(history, (values) => {
-        historyFormat.push({ time: String(moment(values.timeStamp).format("hh:mm a")), title: "", description: values.address })
-      })
-      setTimeValues(historyFormat)
-      console.log(historyFormat)
-    }
-  }, [history])
+  // const { style } = props
+  // const styles = flatten([CONTAINER, style])
 
   return (
     <View style={CONTAINER}>
       <Timeline
         style={ListStyle}
-        data={timeValues}
+        data={data}
         circleSize={20}
         circleColor={color.appcolor}
         lineColor={color.appcolor}

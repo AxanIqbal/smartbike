@@ -4,18 +4,21 @@
  * Generally speaking, it will contain an auth flow (registration, login, forgot password)
  * and a "main" flow which the user will use once logged in.
  */
-import React from "react"
-import { useColorScheme } from "react-native"
+import React, { useEffect, useState } from "react"
+import { Dimensions, useColorScheme, View, ViewStyle } from "react-native"
 // import { DarkTheme, DefaultTheme, NavigationContainer } from "@react-navigation/native"
 // import { createNativeStackNavigator } from "@react-navigation/native-stack"
 import { navigationRef, useBackButtonHandler } from "./navigation-utilities"
 // import { createDrawerNavigator } from "@react-navigation/drawer"
-import { DistanceScreen, HistoryScreen, HomeScreen, MapsScreen, SearchScreen } from "../screens"
+import { DistanceScreen, HomeScreen, MapsScreen, SearchScreen } from "../screens"
+import Icon from "react-native-vector-icons/FontAwesome5"
+import { color } from "../theme"
+import { Button } from "../components"
+import { createNativeStackNavigator } from "@react-navigation/native-stack"
+import { createDrawerNavigator } from "@react-navigation/drawer"
 import { DarkTheme, DefaultTheme, NavigationContainer } from "@react-navigation/native"
 import { AuthStack } from "./auth/auth-navigator"
-import { useAppSelector } from "../store/store"
-import { createNativeStackNavigator } from "@react-navigation/native-stack"
-import UserScreen from "../screens/user/user-screen"
+import { firebase } from "@react-native-firebase/auth"
 
 /**
  * This type allows TypeScript to know what routes are defined in this navigator
@@ -30,21 +33,110 @@ import UserScreen from "../screens/user/user-screen"
  *   https://reactnavigation.org/docs/typescript#type-checking-the-navigator
  */
 export type NavigatorParamList = {
+  Demo: undefined
+  drawer: undefined
   welcome: undefined
   MapsScreen: undefined
   SearchScreen: undefined
-  UserScreen: undefined
-  HistoryScreen: undefined
   DistanceScreen: {
     destinationLat: number
     destinationLng: number
     originLat: number
     originLng: number
   }
+  Maps: any
+}
+const buttonStyle: ViewStyle = {
+  backgroundColor: `${color.palette.white}`,
+  height: 50,
+  marginHorizontal: 20,
+  borderRadius: 100,
+  width: 50,
 }
 
 // Documentation: https://reactnavigation.org/docs/stack-navigator/
 const Stack = createNativeStackNavigator<NavigatorParamList>()
+const DStack = createDrawerNavigator<NavigatorParamList>()
+const MapStack = createDrawerNavigator<NavigatorParamList>()
+
+const MapStackScreen = ({ navigation }) => {
+  return (
+    <MapStack.Navigator initialRouteName="MapsScreen">
+      <MapStack.Screen
+        name="MapsScreen"
+        component={MapsScreen}
+        options={{
+          headerTransparent: true,
+          title: "",
+          headerLeft: headerLeft,
+        }}
+      />
+      <MapStack.Screen
+        options={{
+          headerTransparent: true,
+          title: "",
+          headerLeft: headerLeft1,
+        }}
+        name="DistanceScreen"
+        component={DistanceScreen}
+      />
+      <MapStack.Screen
+        options={{ headerShown: false }}
+        name="SearchScreen"
+        component={SearchScreen}
+      />
+    </MapStack.Navigator>
+  )
+
+  function headerLeft1() {
+    return <View
+      style={{
+        flexDirection: "row",
+        alignSelf: "center",
+        width: Dimensions.get("window").width - 60,
+        marginTop: 20,
+      }}
+    >
+      <Button onPress={() => navigation.goBack()} style={buttonStyle}>
+        <Icon name="arrow-left" color={color.appcolor} size={25} />
+      </Button>
+    </View>
+  }
+
+  function headerLeft() {
+    return <View
+      style={{
+        flexDirection: "row",
+        alignSelf: "center",
+        width: Dimensions.get("window").width - 60,
+        marginTop: 20,
+      }}
+    >
+      <Button onPress={() => navigation.goBack()} style={buttonStyle}>
+        <Icon name="arrow-left" color={color.appcolor} size={25} />
+      </Button>
+    </View>
+  }
+}
+
+const DrawerStack = () => {
+  return (
+    <DStack.Navigator initialRouteName="welcome">
+      <DStack.Screen
+        options={{ headerShown: false, title: "Welcome" }}
+        name="welcome"
+        component={HomeScreen}
+      />
+      <DStack.Screen
+        options={{
+          headerShown: false,
+        }}
+        name="Maps"
+        component={MapStackScreen}
+      />
+    </DStack.Navigator>
+  )
+}
 
 const AppStack = () => {
   return (
@@ -52,32 +144,9 @@ const AppStack = () => {
       screenOptions={{
         headerShown: false,
       }}
-      initialRouteName="welcome"
+      initialRouteName="drawer"
     >
-      <Stack.Screen
-        options={{ headerShown: false, title: "Welcome" }}
-        name="welcome"
-        component={HomeScreen}
-      />
-      <Stack.Screen
-        name="MapsScreen"
-        component={MapsScreen}
-        options={{
-          headerTransparent: true,
-          title: "",
-        }}
-      />
-      <Stack.Screen name={"UserScreen"} component={UserScreen} />
-      <Stack.Screen name={"HistoryScreen"} component={HistoryScreen} />
-      <Stack.Screen
-        options={{
-          headerTransparent: true,
-          title: "",
-        }}
-        name="DistanceScreen"
-        component={DistanceScreen}
-      />
-      <Stack.Screen options={{ headerShown: false }} name="SearchScreen" component={SearchScreen} />
+      <Stack.Screen name="drawer" component={DrawerStack} />
     </Stack.Navigator>
   )
 }
@@ -85,16 +154,31 @@ const AppStack = () => {
 interface NavigationProps extends Partial<React.ComponentProps<typeof NavigationContainer>> {}
 
 export const AppNavigator = (props: NavigationProps) => {
+  const [isLoggedIn, setIsLoggedIn] = useState(false)
   const colorScheme = useColorScheme()
-  const auth = useAppSelector((state) => state.firebase.auth)
   useBackButtonHandler(canExit)
+
+  useEffect(() => {
+    const unsubscribe = firebase.auth().onAuthStateChanged((user)=> {
+      if (user) {
+        setIsLoggedIn(true)
+      } else {
+        setIsLoggedIn(false)
+      }
+    })
+    return () => {
+      unsubscribe()
+    }
+  }, [])
+
   return (
     <NavigationContainer
       ref={navigationRef}
       theme={colorScheme === "dark" ? DarkTheme : DefaultTheme}
       {...props}
     >
-      {auth.isEmpty ? <AuthStack /> : <AppStack />}
+      {/* {isEmpty(auth) ? <AuthStack /> : <AppStack />} */}
+       {isLoggedIn ? <AppStack/>  : <AuthStack />}
     </NavigationContainer>
   )
 }
@@ -110,5 +194,5 @@ AppNavigator.displayName = "AppNavigator"
  *
  * `canExit` is used in ./app/app.tsx in the `useBackButtonHandler` hook.
  */
-const exitRoutes = ["welcome", "login"]
+const exitRoutes = ["drawer", "login"]
 export const canExit = (routeName: string) => exitRoutes.includes(routeName)

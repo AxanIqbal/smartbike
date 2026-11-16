@@ -1,6 +1,16 @@
 import { StackScreenProps } from "@react-navigation/stack"
 import React, { FC, useEffect, useState } from "react"
-import { Dimensions, Image, ImageStyle, KeyboardAvoidingView, Platform, TextStyle, View, ViewStyle } from "react-native"
+import {
+  Image,
+  Platform,
+  ImageStyle,
+  KeyboardAvoidingView,
+  SafeAreaView,
+  TextStyle,
+  View,
+  ViewStyle,
+  Dimensions,
+} from "react-native"
 import { Header } from "react-native-elements"
 import { GooglePlacesAutocomplete } from "react-native-google-places-autocomplete"
 import { Button, PlaceRow, Text } from "../../components"
@@ -10,8 +20,14 @@ import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityI
 // import { useStores } from "../../models"
 import Ionicons from "react-native-vector-icons/Ionicons"
 import { color } from "../../theme"
+import { DistanceScreen } from "../distance/distance-screen"
 import MapView, { Marker, PROVIDER_GOOGLE } from "react-native-maps"
+import MapViewDirections from "react-native-maps-directions"
 
+// const ROOT: ViewStyle = {
+//   backgroundColor: color.palette.black,
+//   flex: 1,
+// }
 
 const container: ViewStyle = {
   marginVertical: 10,
@@ -54,7 +70,6 @@ const headerButton: ViewStyle = {
 
 const listViewStyle: ViewStyle = {
   position: "absolute",
-  height: Dimensions.get("screen").height * 0.5,
   top: 113,
 }
 
@@ -146,13 +161,13 @@ const MapStyle: ViewStyle = {
 
 const KeyBoardStyle: ViewStyle = { flex: 1, backgroundColor: "white" }
 
-// const origin = { latitude: 24.859142640646972, longitude: 67.03130068682259 }
-// const destination = { latitude: 24.89536668796498, longitude: 67.06446083144998 }
-// const GOOGLE_MAPS_APIKEY = "AIzaSyDEXI0NflTOvRTBLOpA8w5zG7ZzHww_YtU"
+const origin = { latitude: 24.859142640646972, longitude: 67.03130068682259 }
+const destination = { latitude: 24.89536668796498, longitude: 67.06446083144998 }
+const GOOGLE_MAPS_APIKEY = "AIzaSyDEXI0NflTOvRTBLOpA8w5zG7ZzHww_YtU"
 
 export const SearchScreen: FC<StackScreenProps<NavigatorParamList, "SearchScreen">> = ({
-                                                                                         navigation,
-                                                                                       }) => {
+  navigation,
+}) => {
   // Pull in one of our MST stores
   // const { someStore, anotherStore } = useStores()
   const [originPlace, setOriginPlace] = useState(null)
@@ -211,7 +226,7 @@ export const SearchScreen: FC<StackScreenProps<NavigatorParamList, "SearchScreen
             enablePoweredByContainer={false}
             fetchDetails
             query={{
-              key: "AIzaSyBoPTw9FBO7ZadMxWNHpf84JSMXEw2dsps",
+              key: "AIzaSyDEXI0NflTOvRTBLOpA8w5zG7ZzHww_YtU",
               language: "en",
             }}
             renderRow={(data) => <PlaceRow data={data} />}
@@ -236,15 +251,12 @@ export const SearchScreen: FC<StackScreenProps<NavigatorParamList, "SearchScreen
                 top: 55,
               },
               separator: seperatorStyle,
-              listView: {
-                height: Dimensions.get("screen").height * 0.4,
-              },
             }}
             numberOfLines={1}
             fetchDetails
             enablePoweredByContainer={false}
             query={{
-              key: "AIzaSyBoPTw9FBO7ZadMxWNHpf84JSMXEw2dsps",
+              key: "AIzaSyDEXI0NflTOvRTBLOpA8w5zG7ZzHww_YtU",
               language: "en",
             }}
             renderRow={(data) => <PlaceRow data={data} />}
